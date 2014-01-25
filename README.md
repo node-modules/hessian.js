@@ -28,6 +28,8 @@ one special contruct:
 
 1. ref for shared and circular object references
 
+## Encoder
+
 ### Simple javascript type
 
 ```
@@ -68,6 +70,25 @@ var testObject = {
   }
 };
 encoder.write(testObject);
+```
+
+## Decoder
+
+```
+var decoder = new Decoder(buf);
+
+decoder.read(); //return what it is
+decoder.readNull();
+decoder.readBool();
+decoder.readInt();
+decoder.readLong();
+decoder.readDouble();
+decoder.readDate();
+decoder.readObect();
+decoder.readMap();
+decoder.readArray();
+decoder.readList();
+decoder.readRef();
 ```
 
 ## Licences
