@@ -7,5 +7,5 @@
  *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
  */
 
-exports.V1Encoder = require('./lib/encoder_v1');
-exports.Decoder = require('./lib/decoder');
+exports.V1Encoder = require('./lib/v1/encoder');
+exports.Decoder = require('./lib/v1/decoder');
