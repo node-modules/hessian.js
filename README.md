@@ -5,7 +5,7 @@ Hessian protocal written by pure javascipt. Support all kind of types in java.
 
 [![NPM](https://nodei.co/npm/hessian-protocal.png?downloads=true)](https://nodei.co/npm/hessian-protocal/)
 
-### Support Types
+## Support Types
 
 8 primitive types:
 
@@ -27,10 +27,53 @@ Hessian protocal written by pure javascipt. Support all kind of types in java.
 one special contruct:
 
 1. ref for shared and circular object references
+
+### Simple javascript type
+
+```
+var encoder = new Encoder();
+
+encoder.write(1); // int
+encoder.write(1.1); // double
+encoder.write(1e100); // double
+encoder.write(Math.pow(2, 18)); // long
+encoder.write(true); // boolean
+encoder.write(null); // null
+encoder.write('test'); // string
+
+var object = {};
+object.prop1 = [1, 2, 3];
+object.prop2 = 'string';
+object.prop3 = {key: 'value'};
+object.prop4 = object;  // circular
+encoder.write(object); // object
+```
+
+### Complex java type
+
+```
+var encoder = new Encoder();
+var long = {
+  $class: 'java.lang.Long',
+  $: 1
+}
+encoder.write(long); // long type
+
+var testObject = {
+  $class: 'com.hessian.TestObject',
+  $: {
+    a: 1,
+    b: 'test',
+    c: {$class: 'java.lang.Long', $: 123}
+  }
+};
+encoder.write(testObject);
+```
+
 ## Licences
 (The MIT License)
 
-Copyright (c) 2013 dead-horse and other contributors
+Copyright (c) 2014 dead-horse and other contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
