@@ -41,6 +41,7 @@
     "blanket": ">=1.1.6",
     "coveralls": "*",
     "mocha": "*",
+    "mocha-lcov-reporter": "*",
     "travis-cov": "*",
     "should": "3.1.0"
   }
