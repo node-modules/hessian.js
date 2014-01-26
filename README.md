@@ -91,6 +91,12 @@ decoder.readList();
 decoder.readRef();
 ```
 
+## Todo
+
+1. more unit test, include test with other language.
+2. benchmark test.
+3. maybe support hessian 2.x.
+
 ## Licences
 (The MIT License)
 
