@@ -39,6 +39,7 @@
   "devDependencies": {
     "autod": "~0.0.13",
     "blanket": ">=1.1.6",
+    "coveralls": "*",
     "mocha": "*",
     "travis-cov": "*",
     "should": "3.1.0"
