@@ -1,0 +1,3514 @@
+1
+程序员编程艺术第一~三十七章集锦
+作者：July、编程艺术创作组
+时间：二零一一年四月~二零一三年十二月
+出处：http://blog.csdn.net/v_july_v
+本PDF 制作者：吴新隆
+前言
+从2011 年4 月写下第一篇至今，编程艺术系列已经写了37 章，也就是说详细阐述了
+37 个编程问题，在创作的过程当中，得到了很多朋友的支持，特别是博客上随时都会有朋
+友不断留言，或提出改进建议，或show 出自己的思路、代码，或指正bug，非常感激。
+本系列越写到最后，越会发觉无论是面试，还是编程当中遇到的绝大部分问题，都是有
+规律可循的，而且可以不断优化，这也是自己愿一直写下去的原因。再者，能给每一年找工
+作的毕业生带去或多或少的参考，给早已参加工作的人提供思维锻炼的机会，何尝不是一种
+思考与编程的双重乐趣！
+编程艺术的继续创作仍需要得到广大读者的更多支持，最近，正在review 和优化编程
+艺术系列，即在徐徐创作新的章节的同时，不断回顾已写的37 章，希望能找出所有显而易
+见的bug，包括优化相关代码，希望有更多的朋友可以随我一起加入review 当中。
+如你发现任何bug、问题，或有任何建议，欢迎随时在博客上留言反馈，或联系我，我
+的微博：http://weibo.com/julyweibo，异常感谢。
+愿你享受旅途，不断思考，不断收获，have fun！
+2
+目录
+程序员编程艺术第一~三十七章集锦......................................................................................1
+前言.............................................................................................................................................1
+目录.............................................................................................................................................2
+第一章、左旋转字符串.............................................................................................................3
+第二章、字符串是否包含问题.............................................................................................. 23
+第三章、寻找最小的k 个数...................................................................................................37
+第三章续、Top K 算法问题的实现.........................................................................................84
+十四、亦第三章再续：快速选择SELECT 算法的深入分析与实现.................................. 125
+第三章三续、求数组中给定下标区间内的第K 小（大）元素........................................145
+第四章、现场编写类似strstr/strcpy/strpbrk 的函数......................................................... 156
+第五章、寻找和为定值的两个或多个数............................................................................ 173
+第六章、亲和数问题--求解500 万以内的亲和数..............................................................185
+第七章、求连续子数组的最大和........................................................................................ 191
+第八章、从头至尾漫谈虚函数............................................................................................ 199
+第九章、闲话链表追赶问题................................................................................................ 215
+第十章、如何给10^7 个数据量的磁盘文件排序.............................................................. 225
+第十一章：最长公共子序列(LCS)问题..............................................................................259
+第十二~十五章：中签概率，IP 访问次数，回文等问题（初稿）..................................271
+第十六~第二十章：全排列，跳台阶，奇偶排序，第一个只出现一次等问题..............285
+第二十一~二十二章：出现次数超过一半的数字，最短摘要的生成............................. 303
+第二十三、四章：杨氏矩阵查找，倒排索引关键词Hash 不重复编码实践..................323
+第二十五章：二分查找实现（Jon Bentley：90%程序员无法正确实现）...................... 345
+第二十六章：基于给定的文档生成倒排索引的编码与实践............................................349
+第二十七章：不改变正负数之间相对顺序重新排列数组.时间O(N)，空间O(1)..........374
+第二十八~二十九章：最大连续乘积子串、字符串编辑距离..........................................382
+第三十~三十一章：字符串转换成整数，带通配符的字符串匹配................................. 403
+第三十二~三十三章：最小操作数，木块砌墙问题..........................................................434
+第三十四~三十五章：格子取数，完美洗牌算法..............................................................468
+第三十六~三十七章、搜索智能提示suggestion，附近地点搜索................................... 496
+后记.........................................................................................................................................513
+3
+第一章、左旋转字符串
+作者：July，yansha、caopengcs。
+时间：二零一一年四月十四日。
+题目描述：
+定义字符串的左旋转操作：把字符串前面的若干个字符移动到字符串的尾
+部，如把字符串abcdef 左旋转2 位得到字符串cdefab。请实现字符串左旋转的
+函数，要求对长度为n 的字符串操作的时间复杂度为O(n)，空间复杂度为O(1)。
+思路一、暴力移位法
+初看此题，咱们最先想到的笨方法可能就是一位一位移动，故咱们写一个函
+数叫做leftshiftone(char *s,int n) 完成左移动一位的功能
+void leftshiftone(char *s,int n) {
+char t = s[0]; //保存第一个字符
+for (int i = 1; i < n; ++i) {
+s[i - 1] = s[i];
+}
+s[n - 1] = t;
+}
+如此，左移m 位的话，可以如下实现：
+void leftshift(char *s,int n,int m) {
+while (m--) {
+leftshiftone(s, n);
+}
+}
+思路二、指针翻转法
+咱们先来看个例子，如下：abc defghi，若要让abc 移动至最后的过程可以
+是：abc defghi->def abcghi->def ghiabc
+4
+如此，我们可定义俩指针，p1 指向ch[0]，p2 指向ch[m]；
+一下过程循环m 次，交换p1 和p2 所指元素，然后p1++, p2++；。
+1. 第一步，交换abc 和def ，abc defghi->def abcghi
+2. 第二步，交换abc 和ghi，def abcghi->def ghiabc
+整个过程，看起来，就是abc 一步一步向后移动
+ abc defghi
+ def abcghi
+ def ghi abc
+//最后的复杂度是O（m+n）
+图解如下：
+5
+由上述例子九个元素的序列abcdefghi，您已经看到，m=3 时，p2 恰好指到
+了数组最后一个元素，于是，上述思路没有问题。但如果上面例子中i 的后面
+还有元素列?
+即，如果是要左旋十个元素的序列：abcdefghij，ok，下面，就举这个例子，
+对abcdefghij 序列进行左旋转操作：
+如果abcdef ghij 要变成defghij abc：
+abcdef ghij
+1. def abc ghij
+2. def ghi abc j //接下来，j 步步前移
+3. def ghi ab jc
+4. def ghi a j bc
+5. def ghi j abc
+下面，再针对上述过程，画个图清晰说明下，如下所示：
+6
+ok，咱们来好好彻底总结一下此思路二：（就4 点，请仔细阅读）：
+1、首先让p1=ch[0]，p2=ch[m]，即让p1，p2 相隔m 的距离；
+2、判断p2+m-1 是否越界，如果没有越界转到3，否则转到4（abcdefgh 这
+8 个字母的字符串，以4 左旋，那么初始时p2 指向e，p2+4 越界了，但事实
+上p2 至p2+m-1 是m 个字符，可以再做一个交换）。
+3、不断交换*p1 与*p2，然后p1++，p2++，循环m 次，然后转到2。
+4、此时p2+m-1 已经越界，在此只需处理尾巴。过程如下：
+4.1 通过n-p2 得到p2 与尾部之间元素个数r，即我们要前移的元素个数。
+4.2 以下过程执行r 次：ch[p2]<->ch[p2-1]，ch[p2-1]<->ch[p2-2]，....，
+ch[p1+1]<->ch[p1]；p1++；p2++；
+7
+所以，之前最初的那个左旋转九个元素abcdefghi 的思路在末尾会出现问题
+的（如果p2 后面有元素就不能这么变，例如，如果是处理十个元素，abcdefghij
+列?对的，就是这个意思），解决办法有两个：
+方法一（即如上述思路总结所述）：
+def ghi abc jk
+当p1 指向a，p2 指向j 时，由于p2+m 越界，那么此时p1，p2 不要变
+这里p1 之后（abcjk)就是尾巴，处理尾巴只需将j,k 移到abc 之前，得到最终
+序列，代码编写如下：
+//copyright@July、颜沙
+//最终代码，July，updated again，2011.04.17。
+#include <iostream>
+#include <string>
+using namespace std;
+void rotate(string &str, int m)
+{
+if (str.length() == 0 || m <= 0)
+return;
+int n = str.length();
+if (m % n <= 0)
+return;
+int p1 = 0, p2 = m;
+int k = (n - m) - n % m;
+// 交换p1，p2 指向的元素，然后移动p1，p2
+while (k --)
+{
+swap(str[p1], str[p2]);
+p1++;
+p2++;
+}
+// 重点，都在下述几行。
+// 处理尾部，r 为尾部左移次数
+int r = n - p2;
+while (r--)
+{
+int i = p2;
+8
+while (i > p1)
+{
+swap(str[i], str[i-1]);
+i--;
+}
+p2++;
+p1++;
+}
+//比如一个例子，abcdefghijk
+// p1 p2
+//当执行到这里时，defghi a b c j k
+//p2+m 出界了，
+//r=n-p2=2，所以以下过程，要执行循环俩次。
+//第一次：j 步步前移，abcjk->abjck->ajbck->jabck
+//然后，p1++，p2++，p1 指a，p2 指k。
+// p1 p2
+//第二次：defghi j a b c k
+//同理，此后，k 步步前移，abck->abkc->akbc->kabc。
+}
+int main()
+{
+string ch="abcdefghijk";
+rotate(ch,3);
+cout<<ch<<endl;
+return 0;
+}
+方法二：
+def ghi abc jk
+当p1 指向a，p2 指向j 时，那么交换p1 和p2，
+此时为:
+def ghi jbc ak
+p1++，p2++,p1 指向b，p2 指向k，继续上面步骤得:
+def ghi jkc ab
+p1++，p2 不动,p1 指向c，p2 指向b，p1 和p2 之间（cab)也就是尾巴，
+那么处理尾巴（cab)需要循环左移一定次数（而后的具体操作步骤已在下述程序
+的注释中已详细给出）。
+根据方案二，不难写出下述代码（已测试正确）：
+#include <iostream>
+#include <string>
+9
+using namespace std;
+//颜沙，思路二之方案二，
+//July、updated，2011.04.16。
+void rotate(string &str, int m)
+{
+if (str.length() == 0 || m < 0)
+return;
+//初始化p1，p2
+int p1 = 0, p2 = m;
+int n = str.length();
+// 处理m 大于n
+if (m % n == 0)
+return;
+// 循环直至p2 到达字符串末尾
+while(true)
+{
+swap(str[p1], str[p2]);
+p1++;
+if (p2 < n - 1)
+p2++;
+else
+break;
+}
+// 处理尾部，r 为尾部循环左移次数
+int r = m - n % m; // r = 1.
+while (r--) //外循环执行一次
+{
+int i = p1;
+char temp = str[p1];
+while (i < p2) //内循环执行俩次
+{
+str[i] = str[i+1];
+i++;
+}
+str[p2] = temp;
+}
+//举一个例子
+//abcdefghijk
+//当执行到这里的时候，defghiabcjk
+10
+// p1 p2
+//defghi a b c j k，a 与j 交换，jbcak，然后，p1++，p2++
+// p1 p2
+// j b c a k，b 与k 交换，jkcab，然后，p1++，p2 不动，
+//r = m - n % m= 3-11%3=1，即循环移位1 次。
+// p1 p2
+// j k c a b
+//p1 所指元素c 实现保存在temp 里，
+//然后执行此条语句：str[i] = str[i+1]; 即a 跑到c 的位置处，a_b
+//i++，再次执行：str[i] = str[i+1]，ab_
+//最后，保存好的c 填入，为abc，所以，最终序列为defghi jk abc。
+//July、updated，2011.04.17 晚，送走了她。
+}
+int main()
+{
+string ch="abcdefghijk";
+rotate(ch,3);
+cout<<ch<<endl;
+return 0;
+}
+注意：上文中都是假设m<n，且如果鲁棒点的话令m=m%n，这样m 允许大于n。
+另外，各位要记得处理指针为空的情况。
+还可以看下这段代码：
+/*
+* myinvert2.cpp
+*
+* Created on: 2011-5-11
+* Author: BigPotato
+*/
+#include<iostream>
+#include<string>
+#define positiveMod(m,n) ((m) % (n) + (n)) % (n)
+/*
+*左旋字符串str，m 为负数时表示右旋abs（m）个字母
+*/
+void rotate(std::string &str, int m) {
+if (str.length() == 0)
+return;
+11
+int n = str.length();
+//处理大于str 长度及m 为负数的情况,positiveMod 可以取得m 为负数时对n 取余得到正数
+m = positiveMod(m,n);
+if (m == 0)
+return;
+// if (m % n <= 0)
+// return;
+int p1 = 0, p2 = m;
+int round;
+//p2 当前所指和之后的m-1 个字母共m 个字母，就可以和p2 前面的m 个字母交换。
+while (p2 + m - 1 < n) {
+round = m;
+while (round--) {
+std::swap(str[p1], str[p2]);
+p1++;
+p2++;
+}
+}
+//剩下的不足m 个字母逐个交换
+int r = n - p2;
+while (r--) {
+int i = p2;
+while (i > p1) {
+std::swap(str[i], str[i - 1]);
+i--;
+}
+p2++;
+p1++;
+}
+}
+//测试
+int main(int argc, char **argv) {
+// std::cout << ((-15) % 7 + 7) % 7 << std::endl;
+// std::cout << (-15) % 7 << std::endl;
+std::string ch = "abcdefg";
+int len = ch.length();
+for (int m = -2 * len; m <= len * 2; m++) {
+//由于传给rotate 的是string 的引用，所以这里每次调用都用了一个新的字符串
+std::string s = "abcdefg";
+rotate(s, m);
+std::cout << positiveMod(m,len) << ": " << s << std::endl;
+}
+12
+return 0;
+}
+思路三、递归转换法
+本文最初发布时，网友留言bluesmic 说：楼主，谢谢你提出的研讨主题，
+很有学术和实践价值。关于思路二，本人提一个建议：思路二的代码，如果用递
+归的思想去简化，无论代码还是逻辑都会更加简单明了。
+就是说，把一个规模为N 的问题化解为规模为M(M<N)的问题。
+举例来说，设字符串总长度为L，左侧要旋转的部分长度为s1，那么当从左
+向右循环交换长度为s1 的小段，直到最后，由于剩余的部分长度为s2(s2==L%s1)
+而不能直接交换。
+该问题可以递归转化成规模为s1+s2 的，方向相反(从右向左)的同一个问题。
+随着递归的进行，左右反复回荡，直到某一次满足条件L%s1==0 而交换结束。
+举例解释一下：
+设原始问题为：将“123abcdefg”左旋转为“abcdefg123”，即总长度为10，
+旋转部("123")长度为3 的左旋转。按照思路二的运算，演变过程为
+“123abcdefg”->"abc123defg"->"abcdef123g"。这时，"123"无法和"g"作对调，
+该问题递归转化为：将“123g”右旋转为"g123"，即总长度为4，旋转部("g")
+长度为1 的右旋转。
+updated：
+Ys：
+Bluesmic 的思路没有问题，他的思路以前很少有人提出。思路是通过递归
+将问题规模变小。当字符串总长度为n，左侧要旋转的部分长度为m，那么当从
+左向右循环交换长度为m 的小段直到剩余部分为m’(n % m)，此时m’ < m，
+已不能直接交换了。
+此后，我们换一个思路，把该问题递归转化成规模大小为m’ +m，方向相反
+的同一问题。随着递归的进行，直到满足结束条件n % m==0。
+举个具体事例说明，如下：
+1、对于字符串abc def ghi gk，
+13
+将abc 右移到def ghi gk 后面，此时n = 11，m = 3，
+m’ = n % m = 2;
+abc def ghi gk -> def ghi abc gk
+2、问题变成gk 左移到abc 前面，此时n = m’ + m = 5，m = 2，
+m’ = n % m 1;
+abc gk -> a gk bc
+3、问题变成a 右移到gk 后面，此时n = m’ + m = 3，m = 1，
+m’ = n % m = 0;
+a gk bc-> gk a bc。由于此刻，n % m = 0，满足结束条件，
+返回结果。
+即从左至右，后从右至左，再从左至右，如此反反复复，直到满足条件，返
+回退出。
+代码如下，已测试正确（有待优化）：
+//递归，
+//感谢网友Bluesmic 提供的思路
+//copyright@ yansha 2011.04.19
+//July，updated，2011.04.20.
+#include <iostream>
+using namespace std;
+void rotate(string &str, int n, int m, int head, int tail, bool flag)
+{
+//n 待处理部分的字符串长度，m：待处理部分的旋转长度
+//head：待处理部分的头指针，tail：待处理部分的尾指针
+//flag = true 进行左旋，flag = false 进行右旋
+// 返回条件
+if (head == tail || m <= 0)
+return;
+if (flag == true)
+{
+int p1 = head;
+int p2 = head + m; //初始化p1，p2
+//1、左旋：对于字符串abc def ghi gk，
+//将abc 右移到def ghi gk 后面，此时n = 11，m = 3，m’ = n % m = 2;
+//abc def ghi gk -> def ghi abc gk
+14
+//（相信，经过上文中那么多繁杂的叙述，此类的转换过程，你应该是了如指掌了。）
+int k = (n - m) - n % m; //p1，p2 移动距离，向右移六步
+/*---------------------
+解释下上面的k = (n - m) - n % m 的由来：
+yansha：
+以p2 为移动的参照系：
+n-m 是开始时p2 到末尾的长度，n%m 是尾巴长度
+(n-m)-n%m 就是p2 移动的距离
+比如abc def efg hi
+开始时p2->d,那么n-m 为def efg hi 的长度8，
+n%m 为尾巴hi 的长度2，
+因为我知道abc 要移动到hi 的前面，所以移动长度是
+(n-m)-n%m = 8-2 = 6。
+*/
+for (int i = 0; i < k; i++, p1++, p2++)
+swap(str[p1], str[p2]);
+rotate(str, n - k, n % m, p1, tail, false); //flag 标志变为false，结束左旋，
+下面，进入右旋
+}
+else
+{
+//2、右旋：问题变成gk 左移到abc 前面，此时n = m’ + m = 5，m = 2，m’ = n % m 1;
+//abc gk -> a gk bc
+int p1 = tail;
+int p2 = tail - m;
+// p1，p2 移动距离，向左移俩步
+int k = (n - m) - n % m;
+for (int i = 0; i < k; i++, p1--, p2--)
+swap(str[p1], str[p2]);
+rotate(str, n - k, n % m, head, p1, true); //再次进入上面的左旋部分，
+//3、左旋：问题变成a 右移到gk 后面，此时n = m’ + m = 3，m = 1，m’ = n % m = 0;
+//a gk bc-> gk a bc。由于此刻，n % m = 0，满足结束条件，返回结果。
+}
+}
+15
+int main()
+{
+int i=3;
+string str = "abcdefghijk";
+int len = str.length();
+rotate(str, len, i % len, 0, len - 1, true);
+cout << str.c_str() << endl; //转化成字符数组的形式输出
+return 0;
+}
+非常感谢。
+稍后，由下文，您将看到，其实上述思路二的本质即是下文将要阐述的stl
+rotate 算法，详情，请继续往下阅读。
+思路四、循环移位法
+下面，我将再具体深入阐述下此STL 里的rotate 算法，由于stl 里的rotate
+算法，用到了gcd 的原理，下面，我将先介绍辗转相除法(又称欧几里得算法、
+gcd 算法）的算法思路及原理。
+gcd，即辗转相除法，又称欧几里得算法，是求最大公约数的算法，即求两
+个正整数之最大公因子的算法。此算法作为TAOCP 第一个算法被阐述，足见此算
+法被重视的程度。
+gcd 算法：给定俩个正整数m，n（m>=n），求它们的最大公约数。（注意，
+一般要求m>=n，若m<n，则要先交换m<->n。下文，会具体解释）。
+用数学定理表示即为：“定理：gcd(a,b) = gcd(b,a mod b) (a>b 且a mod
+b 不为0)”。以下，是此算法的具体流程：
+1、[求余数]，令r=m%n，r 为n 除m 所得余数（0<=r<n）；
+2、[余数为0?]，若r=0，算法结束，此刻，n 即为所求答案，否则，继续，
+转到3；
+3、[重置]，置m<-n，n<-r，返回步骤1.
+16
+此算法的证明，可参考计算机程序设计艺术第一卷：基本算法。证明，此处
+略。
+ok，下面，举一个例子，你可能看的更明朗点。
+比如，给定m=544，n=119，
+则余数r=m%n=544%119=68; 因r!=0，所以跳过上述步骤2，执行步骤3。；
+置m<-119，n<-68，=>r=m%n=119%68=51;
+置m<-68，n<-51，=>r=m%n=68%51=17；
+置m<-51，n<-17，=>r=m%n=51%17=0，算法结束，
+此时的n=17，即为m=544，n=119 所求的俩个数的最大公约数。
+再解释下上述gcd(m，n)算法开头处的，要求m>=n 的原因：举这样一个例
+子，如m<n，即m=119，n=544 的话，那么r=m%n=119%544=119,
+因为r!=0,所以执行上述步骤3，注意，看清楚了：m<-544，n<-119。看到
+了没，尽管刚开始给的m<n，但最终执行gcd 算法时，还是会把m，n 的值交换
+过来，以保证m>=n。
+ok，我想，现在，你已经彻底明白了此gcd 算法，下面，咱们进入主题，stl
+里的rotate 算法的具体实现。//待续。
+熟悉stl 里的rotate 算法的人知道，对长度为n 的数组(ab)左移m 位，可
+以用stl 的rotate 函数（stl 针对三种不同的迭代器，提供了三个版本的
+rotate）。但在某些情况下，用stl 的rotate 效率极差。
+对数组循环移位，可以采用的方法有（也算是对上文思路一，和思路二的总
+结）：
+flyinghearts：
+1 动态分配一个同样长度的数组，将数据复制到该数组并改变次序，再复
+制回原数组。（最最普通的方法）
+② 利用ba=(br)^T(ar)^T=(arbr)^T，通过三次反转字符串。（即上述思路
+一，首先对序列前部分逆序，再对序列后部分逆序，再对整个序列全部逆序）
+③ 分组交换（尽可能使数组的前面连续几个数为所要结果）：
+17
+若a 长度大于b，将ab 分成a0a1b，交换a0 和b，得ba1a0，只需再交换a1
+和a0。
+若a 长度小于b，将ab 分成ab0b1，交换a 和b0，得b0ab1，只需再交换a 和
+b0。
+通过不断将数组划分，和交换，直到不能再划分为止。分组过程与求最大公
+约数很相似。
+④ 所有序号为(j+i *m) % n (j 表示每个循环链起始位置，i 为计数变
+量，m 表示左旋转位数，n 表示字符串长度)，会构成一个循环链（共有gcd(n,m)
+个，gcd 为n、m 的最大公约数），每个循环链上的元素只要移动一个位置即
+可，最后整个过程总共交换了n 次（每一次循环链，是交换n/gcd(n,m)次，
+总共gcd(n,m)个循环链。所以，总共交换n 次）。
+stl 的rotate 的三种迭代器，即是，分别采用了后三种方法。
+在给出stl rotate 的源码之前，先来看下我的朋友ys 对上述第4 种方法的
+评论：
+ys：这条思路个人认为绝妙，也正好说明了数学对算法的重要影响。
+通过前面思路的阐述，我们知道对于循环移位，最重要的是指针所指单元不
+能重复。例如要使abcd 循环移位变成dabc(这里m=3,n=4)，经过以下一系列眼
+花缭乱的赋值过程就可以实现：ch[0]->temp, ch[3]->ch[0], ch[2]->ch[3],
+ch[1]->ch[2], temp->ch[1]; （*）
+字符串变化为：abcd->_bcd->dbc_->db_c->d_bc->dabc;
+是不是很神奇？其实这是有规律可循的。
+请先看下面的说明再回过头来看。
+对于左旋转字符串，我们知道每个单元都需要且只需要赋值一次，什么样的
+序列能保证每个单元都只赋值一次呢？
+1、对于正整数m、n 互为质数的情况，通过以下过程得到序列的满足上面的
+要求：
+for i = 0: n-1
+18
+k = i * m % n;
+end
+举个例子来说明一下，例如对于m=3,n=4 的情况，
+1、我们得到的序列：即通过上述式子求出来的k 序列，是0, 3, 2, 1。
+2、然后，你只要只需按这个顺序赋值一遍就达到左旋3 的目的了：
+ch[0]->temp, ch[3]->ch[0], ch[2]->ch[3], ch[1]->ch[2],
+temp->ch[1]; （*）
+ok，这是不是就是按上面（*）式子的顺序所依次赋值的序列阿?哈哈，很巧
+妙吧。当然，以上只是特例，作为一个循环链，相当于rotate 算法的一次内循
+环。
+2、对于正整数m、n 不是互为质数的情况（因为不可能所有的m，n 都是互
+质整数对），那么我们把它分成一个个互不影响的循环链，正如flyinghearts
+所言，所有序号为(j + i * m) % n（j 为0 到gcd(n, m)-1 之间的某一整数，
+i = 0:n-1）会构成一个循环链，一共有gcd(n, m)个循环链，对每个循环链分
+别进行一次内循环就行了。
+综合上述两种情况，可简单编写代码如下：
+//④ 所有序号为(j+i *m) % n (j 表示每个循环链起始位置，i 为计数变量，m 表示左旋转位数，n
+表示字符串长度)，
+//会构成一个循环链（共有gcd(n,m)个，gcd 为n、m 的最大公约数），
+//每个循环链上的元素只要移动一个位置即可，最后整个过程总共交换了n 次
+//（每一次循环链，是交换n/gcd(n,m)次，共有gcd(n,m)个循环链，所以，总共交换n 次）。
+void rotate(string &str, int m)
+{
+int lenOfStr = str.length();
+int numOfGroup = gcd(lenOfStr, m);
+int elemInSub = lenOfStr / numOfGroup;
+for(int j = 0; j < numOfGroup; j++)
+//对应上面的文字描述，外循环次数j 为循环链的个数，即gcd(n, m)个循环链
+{
+char tmp = str[j];
+19
+for (int i = 0; i < elemInSub - 1; i++)
+//内循环次数i 为，每个循环链上的元素个数，n/gcd(m,n)次
+str[(j + i * m) % lenOfStr] = str[(j + (i + 1) * m) % lenOfStr];
+str[(j + i * m) % lenOfStr] = tmp;
+}
+}
+后来有网友针对上述的思路④，给出了下述的证明：
+1、首先，直观的看肯定是有循环链，关键是有几条以及每条有多长，根据(i+j
+*m) % n 这个表达式可以推出一些东东，一个j 对应一条循环链，现在要证明(i+j
+*m) % n 有n/gcd(n,m)个不同的数。
+2、假设j 和k 对应的数字是相同的， 即(i+j*m)%n = (i+k*m)%n， 可以推
+出n|(j-k)*m，m=m’*gcd(n.m), n=n’*gcd(n,m), 可以推出n’|(j-k)*m’，
+而m’和n’互素，于是n’|(j-k)，即(n/gcd(n,m))|(j-k)，
+3、所以(i+j*m) % n 有n/gcd(n,m)个不同的数。则总共有gcd(n，m)个循环
+链。符号“|”是整除的意思。
+以上的3 点关于为什么一共有gcd(n, m)个循环链的证明，应该是来自
+qq3128739xx 的，非常感谢这位朋友。
+由于上述stl rotate 源码中，方案④ 的代码，较复杂，难以阅读，下面是
+对上述第④ 方案的简单改写：
+//对上述方案4 的改写。
+//④ 所有序号为(i+t*k) % n (i 为指定整数，t 为任意整数)，....
+//copyright@ hplonline && July 2011.04.18。
+//July、sahala、yansha，updated，2011.06.02。
+void my_rotate(char *begin, char *mid, char *end)
+{
+int n = end - begin;
+int k = mid - begin;
+int d = gcd(n, k);
+int i, j;
+for (i = 0; i < d; i ++)
+{
+int tmp = begin[i];
+int last = i;
+20
+//i+k 为i 右移k 的位置，%n 是当i+k>n 时从左重新开始。
+for (j = (i + k) % n; j != i; j = (j + k) % n) //多谢laocpp 指正。
+{
+begin[last] = begin[j];
+last = j;
+}
+begin[last] = tmp;
+}
+}
+对上述程序的解释：关于第二个for 循环中，j 初始化为（i+k）%n，程序注
+释中已经说了，i+k 为i 右移k 的位置，%n 是当i+k>n 时从左重新开始。为什么
+要这么做呢?很简单，n 个数的数组不管循环左移多少位，用上述程序的方法一
+共需要交换n 次。当i+k>=n 时i+k 表示的位置在数组中不存在了，所以又从左
+边开始的(i+k)%n 是下一个交换的位置。
+1. 好比5 个学生,，编号从0 开始，即0 1 2 3 4，老师说报数，规则是从
+第一个学生开始，中间隔一个学生报数。报数的学生编号肯定是0 2 4 1
+3。这里就相当于i 为0，k 为2，n 为5；
+2. 然后老师又说，编号为0 的学生出列，其他学生到在他前一个报数的学生
+位置上去，那么学生从0 1 2 3 4=》2 3 4 _ 1，最后老师说，编号0 到
+剩余空位去，得到最终排位2 3 4 0 1。此时的结果，实际上就是相当于
+上述程序中左移k=2 个位置了。而至于为什么让编号为0 的学生出列。
+实际是这句：int last = i; 因为要达到这样的效果0 1 2 3 4 => 2 3 4
+0 1，那么2 3 4 必须要移到前面去。怎么样，明白了么?。
+关于本题，不少网友也给出了他们的意见，具体请参见此帖子微软100 题，维
+护地址。
+思路五、三步翻转法
+对于这个问题，咱们换一个角度，可以这么做：
+将一个字符串分成两部分，X 和Y 两个部分，在字符串上定义反转的操作X^T，
+即把X 的所有字符反转（如，X="abc"，那么X^T="cba"），那么我们可以得到
+下面的结论：(X^TY^T)^T=YX。显然我们这就可以转化为字符串的反转的问题了。
+21
+不是么?ok,就拿abcdef 这个例子来说，若要让def 翻转到abc 的前头，那
+么只要按下述3 个步骤操作即可：
+1、首先分为俩部分，X:abc，Y:def；
+2、X->X^T，abc->cba， Y->Y^T，def->fed。
+3、(X^TY^T)^T=YX，cbafed->defabc，即整个翻转。
+我想，这下，你应该一目了然了。
+其次，在《编程珠玑》上也有这样一个类似的问题，它的解法同本思路一致，
+如下图所示：
+然后，代码可以这么写：
+//Copyright@ 小桥流水&& July
+//c 代码实现，已测试正确。
+//http://www.smallbridge.co.cc/2011/03/13/100%E9%A2%98
+//_21-%E5%B7%A6%E6%97%8B%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2.html
+//July、updated，2011.04.17。
+char * invert(char *start, char *end)
+{
+char tmp, *ptmp = start;
+while (start != NULL && end != NULL && start < end)
+{
+22
+tmp = *start;
+*start = *end;
+*end = tmp;
+start ++;
+end --;
+}
+return ptmp;
+}
+char *left(char *s, int pos) //pos 为要旋转的字符个数，或长度，下面主函数测试中，
+pos=3。
+{
+int len = strlen(s);
+invert(s, s + (pos - 1)); //如上，X->X^T，即abc->cba
+invert(s + pos, s + (len - 1)); //如上，Y->Y^T，即def->fed
+invert(s, s + (len - 1)); //如上，整个翻转，(X^TY^T)^T=YX，
+即cbafed->defabc。
+return s;
+}
+完。
+23
+第二章、字符串是否包含问题
+作者：July，yansha，caopengcs。
+时间：二零一一年四月二十三日。
+致谢：老梦，nossiac，Hession，Oliver，luuillu，啊菜，雨翔，及微软100
+题实现小组所有成员。
+题目描述：
+假设这有一个各种字母组成的字符串A，和另外一个字符串B，字符串里B
+的字母数相对少一些。什么方法能最快的查出所有小字符串B 里的字母在大字符
+串A 里都有？
+比如，如果是下面两个字符串：
+String 1: ABCDEFGHLMNOPQRS
+String 2: DCGSRQPO
+答案是true，所有在string2 里的字母string1 也都有。
+如果是下面两个字符串：
+String 1: ABCDEFGHLMNOPQRS
+String 2: DCGSRQPZ
+答案是false，因为第二个字符串里的Z 字母不在第一个字符串里。
+点评：
+1、题目描述虽长，但题意简单明了，就是给定一长一短的俩个字符串A，B，
+假设A 长B 短，现在，要你判断B 是否包含在字符串A 中，即B?(-A。
+2、题意虽简单，但实现起来并不轻松，且当如果面试官步步紧逼，一个一
+个否决你能想到的方法，要你给出更好、最好的方案时，你恐怕就要伤不少
+脑筋了。
+24
+ok，在继续往下阅读之前，您最好先想个几分钟，看你能想到的最好方案是
+什么，是否与本文最后实现的方法一致。
+第一节、几种常规解法
+1.1、O（n*m）的轮询方法
+判断string2 中的字符是否在string1 中?：
+String 1: ABCDEFGHLMNOPQRS
+String 2: DCGSRQPO
+判断一个字符串是否在另一个字符串中，最直观也是最简单的思路是，针对
+第二个字符串string2 中每一个字符，一一与第一个字符串string1 中每个字符
+依次轮询比较，看它是否在第一个字符串string1 中。
+代码可如下编写：
+//copyright@啊菜2011
+//updated@July&Image 丶时光2013
+#include <iostream>
+#include <string>
+using namespace std;
+int CompareString(string LongString,string ShortString)
+{
+int i,j;
+for (i=0; i<ShortString.length(); i++)
+{
+for (j=0; j<LongString.length(); j++) //O(n*m)
+{
+if (LongString[j] == ShortString[i]) //一一比较
+{
+break;
+}
+}
+if (j==LongString.length())
+{
+cout << "false" << endl;
+return 0;
+25
+}
+}
+cout << "true" << endl;
+return 1;
+}
+int main()
+{
+string LongString="ABCDEFGHLMNOPQRS";
+string ShortString="DCGSRQPO";
+CompareString(LongString,ShortString);
+return 0;
+}
+假设n 是字符串string1 的长度，m 是字符串string2 的长度，那么此算法，
+需要O（n*m）次操作，拿上面的例子来说，最坏的情况下将会有16*8 = 128 次
+操作。显然，时间开销太大，我们需要找到一种更好的办法。
+1.2、O(mlogm)+O(nlogn)+O(m+n)的排序方法
+一个稍微好一点的方案是先对这两个字符串的字母进行排序，然后同时对两
+个字串依次轮询。两个字串的排序需要(常规情况)O(m log m) + O(n log n)次
+操作，之后的线性扫描需要O(m+n)次操作。
+同样拿上面的字串做例子，将会需要16*4 + 8*3 = 88，再加上对两个字串
+线性扫描的16 + 8 = 24 的操作。(随着字串长度的增长，你会发现这个算法的
+效果会越来越好)
+关于采用何种排序方法，我们采用最常用的快速排序，下面的快速排序的代
+码用的是以前写的，比较好懂，并且，我执意不用库函数的qsort 代码。唯一的
+问题是，此前写的代码是针对整数进行排序的，不过，难不倒我们，稍微改一下
+参数，即可，如下：
+//copyright@ 2011 July && yansha
+//July，updated，2011.04.23.
+#include <iostream>
+#include <string>
+using namespace std;
+26
+//以前的注释，还让它保留着
+int partition(string &str,int lo,int hi)
+{
+int key = str[hi]; //以最后一个元素，data[hi]为主元
+int i = lo - 1;
+for(int j = lo; j < hi; j++) ///注，j 从p 指向的是r-1，不是r。
+{
+if(str[j] <= key)
+{
+i++;
+swap(str[i], str[j]);
+}
+}
+swap(str[i+1], str[hi]); //不能改为swap(&data[i+1],&key)
+return i + 1;
+}
+//递归调用上述partition 过程，完成排序。
+void quicksort(string &str, int lo, int hi)
+{
+if (lo < hi)
+{
+int k = partition(str, lo, hi);
+quicksort(str, lo, k - 1);
+quicksort(str, k + 1, hi);
+}
+}
+//比较，上述排序O(m log m) + O(n log n)，加上下面的O(m+n)，
+//时间复杂度总计为：O(mlogm)+O(nlogn)+O(m+n)。
+void compare(string str1,string str2)
+{
+int posOne = 0;
+int posTwo = 0;
+while (posTwo < str2.length() && posOne < str1.length())
+{
+while (str1[posOne] < str2[posTwo] && posOne < str1.length() - 1)
+posOne++;
+//如果和str2 相等，那就不能动。只有比str2 小，才能动。
+if (str1[posOne] != str2[posTwo])
+break;
+27
+//posOne++;
+//归并的时候，str1[str1Pos] == str[str2Pos]的时候，只能str2Pos++,str1Pos 不可以
+自增。
+//多谢helloword 指正。
+posTwo++;
+}
+if (posTwo == str2.length())
+cout << "true" << endl;
+else
+cout << "false" << endl;
+}
+int main()
+{
+string str1 = "ABCDEFGHLMNOPQRS";
+string str2 = "DCGDSRQPOM";
+//之前上面加了那句posOne++之所以有bug，是因为，@helloword：
+//因为str1 如果也只有一个D，一旦posOne++，就到了下一个不是'D'的字符上去了，
+//而str2 有俩D，posTwo++后，下一个字符还是'D'，就不等了，出现误判。
+quicksort(str1, 0, str1.length() - 1);
+quicksort(str2, 0, str2.length() - 1); //先排序
+compare(str1, str2); //后线性扫描
+return 0;
+}
+1.3、O（n+m）的计数排序方法
+此方案与上述思路相比，就是在排序的时候采用线性时间的计数排序方法，
+排序O（n+m），线性扫描O（n+m），总计时间复杂度为：O（n+m）+O（n+m）=O
+（n+m）。
+代码如下：
+#include <iostream>
+#include <string>
+using namespace std;
+// 计数排序，O（n+m）
+void CounterSort(string str, string &help_str)
+28
+{
+// 辅助计数数组
+int help[26] = {0};
+// help[index]存放了等于index + 'A'的元素个数
+for (int i = 0; i < str.length(); i++)
+{
+int index = str[i] - 'A';
+help[index]++;
+}
+// 求出每个元素对应的最终位置
+for (int j = 1; j < 26; j++)
+help[j] += help[j-1];
+// 把每个元素放到其对应的最终位置
+for (int k = str.length() - 1; k >= 0; k--)
+{
+int index = str[k] - 'A';
+int pos = help[index] - 1;
+help_str[pos] = str[k];
+help[index]--;
+}
+}
+//线性扫描O（n+m）
+void Compare(string long_str,string short_str)
+{
+int pos_long = 0;
+int pos_short = 0;
+while (pos_short < short_str.length() && pos_long < long_str.length())
+{
+// 如果pos_long 递增直到long_str[pos_long] >= short_str[pos_short]
+while (long_str[pos_long] < short_str[pos_short] && pos_long < long_str.len
+gth
+() - 1)
+pos_long++;
+// 如果short_str 有连续重复的字符，pos_short 递增
+while (short_str[pos_short] == short_str[pos_short+1])
+pos_short++;
+if (long_str[pos_long] != short_str[pos_short])
+29
+break;
+pos_long++;
+pos_short++;
+}
+if (pos_short == short_str.length())
+cout << "true" << endl;
+else
+cout << "false" << endl;
+}
+int main()
+{
+string strOne = "ABCDAK";
+string strTwo = "A";
+string long_str = strOne;
+string short_str = strTwo;
+// 对字符串进行计数排序
+CounterSort(strOne, long_str);
+CounterSort(strTwo, short_str);
+// 比较排序好的字符串
+Compare(long_str, short_str);
+return 0;
+}
+不过上述方法，空间复杂度为O（n+m），即消耗了一定的空间。有没有在线
+性时间，且空间复杂度较小的方案列?
+第二节、寻求线性时间的解法
+2.1、O（n+m）的hashtable 的方法
+上述方案中，较好的方法是先对字符串进行排序，然后再线性扫描，总的时
+间复杂度已经优化到了：O（m+n），貌似到了极限，还有没有更好的办法列?
+30
+我们可以对短字串进行轮询（此思路的叙述可能与网上的一些叙述有出入，
+因为我们最好是应该把短的先存储，那样，会降低题目的时间复杂度），把其中
+的每个字母都放入一个Hashtable 里(我们始终设m 为短字符串的长度，那么此
+项操作成本是O(m)或8 次操作)。然后轮询长字符串，在Hashtable 里查询短字
+符串的每个字符，看能否找到。如果找不到，说明没有匹配成功，轮询长字符串
+将消耗掉16 次操作，这样两项操作加起来一共只有8+16=24 次。
+当然，理想情况是如果长字串的前缀就为短字串，只需消耗8 次操作，这样
+总共只需8+8=16 次。
+或如梦想天窗所说： 我之前用散列表做过一次，算法如下：
+1、hash[26]，先全部清零，然后扫描短的字符串，若有相应的置1，
+2、计算hash[26]中1 的个数，记为m
+3、扫描长字符串的每个字符a；若原来hash[a] == 1 ，则修改hash[a] = 0，
+并将m 减1；若hash[a] == 0，则不做处理
+4、若m == 0 or 扫描结束，退出循环。
+代码实现，也不难，如下：
+//copyright@ 2011 yansha
+//July、updated，2011.04.25。
+#include <iostream>
+#include <string>
+using namespace std;
+int main()
+{
+string str1="ABCDEFGHLMNOPQRS";
+string str2="DCGSRQPOM";
+// 开辟一个辅助数组并清零
+int hash[26] = {0};
+// num 为辅助数组中元素个数
+int num = 0;
+// 扫描短字符串
+31
+for (int j = 0; j < str2.length(); j++)
+{
+// 将字符转换成对应辅助数组中的索引
+int index = str1[j] - 'A';
+// 如果辅助数组中该索引对应元素为0，则置1，且num++;
+if (hash[index] == 0)
+{
+hash[index] = 1;
+num++;
+}
+}
+// 扫描长字符串
+for (int k = 0; k < str1.length(); k++)
+{
+int index = str1[k] - 'A';
+// 如果辅助数组中该索引对应元素为1，则num--;为零的话，不作处理（不写语句）。
+if(hash[index] ==1)
+{
+hash[index] = 0;
+num--;
+if(num == 0) //m==0，即退出循环。
+break;
+}
+}
+// num 为0 说明长字符串包含短字符串内所有字符
+if (num == 0)
+cout << "true" << endl;
+else
+cout << "false" << endl;
+return 0;
+}
+2.2、O（n+m）的数组存储方法
+有两个字符串short_str 和long_str。
+32
+第一步：你标记short_str 中有哪些字符，在store 数组中标记为true。
+(store 数组起一个映射的作用，如果有A，则将第1 个单元标记true，如果有B,
+则将第2 个单元标记true，... 如果有Z, 则将第26 个单元标记true）
+第二步：遍历long_str，如果long_str 中的字符包括short_str 中的字符
+则将store 数组中对应位置标记为false。(如果有A，则将第1 个单元标记false，
+如果有B,则将第2 个单元标记false，... 如果有Z, 则将第26 个单元标记
+false)，如果没有，则不作处理。
+第三步：此后，遍历store 数组，如果所有的元素都是false，也就说明
+store_str 中字符都包含在long_str 内，输出true。否则，输出false。
+举个简单的例子好了，如abcd，abcdefg 两个字符串，
+1、先遍历短字符串abcd，在store 数组中相对应的abcd 的位置上的单元元
+素置为true，
+2、然后遍历abcdefg，在store 数组中相应的abcd 位置上，发现已经有了
+abcd，则前4 个的单元元素都置为false，当我们已经遍历了4 个元素，等于了
+短字符串abcd 的4 个数目，所以，满足条件，退出。
+（不然，继续遍历的话，我们会发现efg 在store 数组中没有元素，不作处
+理。最后，自然，就会发现store 数组中的元素单元都是false 的。）
+3、遍历store 数组，发现所有的元素都已被置为false，所以程序输出true。
+其实，这个思路和上一节中，O（n+m）的hashtable 的方法代码，原理是完
+全一致的，且本质上都采用的数组存储（hash 表也是一个数组），但我并不认
+为此思路多此一举，所以仍然贴出来。ok，代码如下：
+//copyright@ 2011 Hession
+//July、updated，2011.04.23.
+#include<iostream>
+#include<string.h>
+using namespace std;
+int main()
+{
+char long_ch[]="ABCDEFGHLMNOPQRS";
+33
+char short_ch[]="DEFGHXLMNOPQ";
+int i;
+bool store[58];
+memset(store,false,58);
+//前两个是遍历两个字符串, 后面一个是遍历数组
+for(i=0;i<sizeof(short_ch)-1;i++)
+store[short_ch[i]-65]=true;
+for(i=0;i<sizeof(long_ch)-1;i++)
+{
+if(store[long_ch[i]-65]!=false)
+store[long_ch[i]-65]=false;
+}
+for(i=0;i<58;i++)
+{
+if(store[i]!=false)
+{
+cout<<"short_ch is not in long_ch"<<endl;
+break;
+}
+if(i==57)
+cout<<"short_ch is in long_ch"<<endl;
+}
+return 0;
+}
+第三节、O（n）到O（n+m）的素数方法
+我想问的是，还有更好的方案么?
+你可能会这么想：O(n+m)是你能得到的最好的结果了，至少要对每个字母至
+少访问一次才能完成这项操作，而上一节最后的俩个方案是刚好是对每个字母只
+访问一次。
+ok，下面给出一个更好的方案：
+假设我们有一个一定个数的字母组成字串，我给每个字母分配一个素数，从
+2 开始，往后类推。这样A 将会是2，B 将会是3，C 将会是5，等等。现在我遍
+34
+历第一个字串，把每个字母代表的素数相乘。你最终会得到一个很大的整数，对
+吧？
+然后——轮询第二个字符串，用每个字母除它。如果除的结果有余数，这说
+明有不匹配的字母。如果整个过程中没有余数，你应该知道它是第一个字串恰好
+的子集了。
+思路总结如下：
+1.定义最小的26 个素数分别与字符'A'到'Z'对应。
+2.遍历长字符串，求得每个字符对应素数的乘积。
+3.遍历短字符串，判断乘积能否被短字符串中的字符对应的素数整除。
+4.输出结果。
+至此，如上所述，上述算法的时间复杂度为O(m+n)，时间复杂度最好的情况
+为O(n)（遍历短的字符串的第一个数，与长字符串素数的乘积相除，即出现余
+数，便可退出程序，返回false），n 为长字串的长度，空间复杂度为O(1)。如
+你所见，我们已经优化到了最好的程度。
+不过，正如原文中所述：“现在我想告诉你—— Guy 的方案在算法上并不
+能说就比我的好。而且在实际操作中，你很可能仍会使用我的方案，因为它更通
+用，无需跟麻烦的大型数字打交道。但从”巧妙水平“上讲，Guy 提供的是一种
+更、更、更有趣的方案。”
+ok，如果你有更好的思路，欢迎在本文的评论中给出，非常感谢。
+#include <iostream>
+#include <string>
+#include "BigInt.h"
+using namespace std;
+// 素数数组
+int primeNumber[26] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
+59,
+61, 67, 71, 73, 79, 83, 89, 97, 101};
+int main()
+35
+{
+string strOne = "ABCDEFGHLMNOPQRS";
+string strTwo = "DCGSRQPOM";
+// 这里需要用到大整数
+CBigInt product = 1; //大整数除法的代码，下头给出。
+// 遍历长字符串，得到每个字符对应素数的乘积
+for (int i = 0; i < strOne.length(); i++)
+{
+int index = strOne[i] - 'A';
+product = product * primeNumber[index];
+}
+// 遍历短字符串
+for (int j = 0; j < strTwo.length(); j++)
+{
+int index = strTwo[j] - 'A';
+// 如果余数不为0，说明不包括短字串中的字符，跳出循环
+if (product % primeNumber[index] != 0)
+break;
+}
+// 如果积能整除短字符串中所有字符则输出"true"，否则输出"false"。
+if (strTwo.length() == j)
+cout << "true" << endl;
+else
+cout << "false" << endl;
+return 0;
+}
+上述程序待改进的地方
+1.只考虑大写字符，如果考虑小写字符和数组的话，素数数组需要更多素数
+2.没有考虑重复的字符，可以加入判断重复字符的辅助数组。
+大整数除法的代码，后续公布下载地址。
+说明：此次的判断字符串是否包含问题，来自一位外国网友提供的gofish、
+google 面试题，这个题目出自此篇文章：
+36
+http://www.aqee.net/2011/04/11/google-interviewing-story/，文章记录了整个面试的过
+程，比较有趣，值得一读。
+扩展：正如网友安逸所说：其实这个问题还可以转换为：a 和b 两个字符串，
+求b 串包含a 串的最小长度。包含指的就是b 的字串包含a 中每个字符。
+updated：我们假设字母都由大写字母组成……，我们先对小字符串预处理，
+可以得到B 里包含哪些字符，这里可以用位运算，或者用bool 数组。位运算简
+单些，用一个int 中的26bit 表示其是否在B 中出现即可。
+//copyright@ caopengcs 2013
+bool AcontainsB(char *A,char *B) {
+int have = 0;
+while (*B) {
+have |= 1 << (*(B++) - 'A'); // 把A..Z 对应为0..26
+}
+while (*A) {
+if ((have & (1 << (*(A++) - 'A'))) == 0) {
+return false;
+}
+}
+return true;
+}
+完。
+37
+第三章、寻找最小的k 个数
+作者：July。
+时间：二零一一年四月二十八日。
+致谢：litaoye， strugglever，yansha，luuillu，Sorehead，及狂想曲创作
+组。
+微博：http://weibo.com/julyweibo。
+出处：http://blog.csdn.net/v_JULY_v。
+----------------------------------
+前奏
+@July_____：1、当年明月：“我写文章有个习惯，由于早年读了太多学究
+书，所以很痛恨那些故作高深的文章，其实历史本身很精彩，所有的历史都可以
+写得很好看，...。”2、IT 技术文章，亦是如此，可以写得很通俗，很有趣，
+而非故作高深。希望，我可以做到。
+下面，我试图用最清晰易懂，最易令人理解的思维或方式阐述有关寻找最小
+的k 个数这个问题（这几天一直在想，除了计数排序外，这题到底还有没有其它
+的O（n）的算法? ）。希望，有任何问题，欢迎不吝指正。谢谢。
+寻找最小的k 个数
+题目描述：5.查找最小的k 个元素
+题目：输入n 个整数，输出其中最小的k 个。
+例如输入1，2，3，4，5，6，7 和8 这8 个数字，则最小的4 个数字为1，2，
+3 和4。
+第一节、各种思路，各种选择
+ 0、咱们先简单的理解，要求一个序列中最小的k 个数，按照惯有的思维
+方式，很简单，先对这个序列从小到大排序，然后输出前面的最小的k
+个数即可。
+38
+ 1、至于选取什么的排序方法，我想你可能会第一时间想到快速排序，我
+们知道，快速排序平均所费时间为n*logn，然后再遍历序列中前k 个元
+素输出，即可，总的时间复杂度为O（n*logn+k）=O（n*logn）。
+ 2、咱们再进一步想想，题目并没有要求要查找的k 个数，甚至后n-k
+个数是有序的，既然如此，咱们又何必对所有的n 个数都进行排序列?
+这时，咱们想到了用选择或交换排序，即遍历n 个数，先把最先遍历到得
+k 个数存入大小为k 的数组之中，对这k 个数，利用选择或交换排序，找
+到k 个数中的最大数kmax（kmax 设为k 个元素的数组中最大元素），用
+时O（k）（你应该知道，插入或选择排序查找操作需要O（k）的时间），
+后再继续遍历后n-k 个数，x 与kmax 比较：如果x<kmax，则x 代替kmax，
+并再次重新找出k 个元素的数组中最大元素kmax‘（多谢kk791159796 提
+醒修正）；如果x>kmax，则不更新数组。这样，每次更新或不更新数组
+的所用的时间为O（k）或O（0），整趟下来，总的时间复杂度平均下来
+为：n*O（k）=O（n*k）。
+ 3、当然，更好的办法是维护k 个元素的最大堆，原理与上述第2 个方案
+一致，即用容量为k 的最大堆存储最先遍历到的k 个数，并假设它们即是
+最小的k 个数，建堆费时O（k）后，有k1<k2<...<kmax（kmax 设为大顶
+堆中最大元素）。继续遍历数列，每次遍历一个元素x，与堆顶元素比较，
+x<kmax，更新堆（用时logk），否则不更新堆。这样下来，总费时O（k+
+（n-k）*logk）=O（n*logk）。此方法得益于在堆中，查找等各项操作时
+间复杂度均为logk（不然，就如上述思路2 所述：直接用数组也可以找
+出前k 个小的元素，用时O（n*k））。
+ 4、按编程之美第141 页上解法二的所述，类似快速排序的划分方法，N
+个数存储在数组S 中，再从数组中随机选取一个数X（随机选取枢纽元，
+可做到线性期望时间O（N）的复杂度，在第二节论述），把数组划分为
+Sa 和Sb 俩部分，Sa<=X<=Sb，如果要查找的k 个元素小于Sa 的元素个数，
+则返回Sa 中较小的k 个元素，否则返回Sa 中所有元素+Sb 中小的k-|Sa|
+个元素。像上述过程一样，这个运用类似快速排序的partition 的快速选
+择SELECT 算法寻找最小的k 个元素，在最坏情况下亦能做到O（N）的复
+杂度。不过值得一提的是，这个快速选择SELECT 算法是选取数组中“中
+位数的中位数”作为枢纽元，而非随机选取枢纽元。
+ 5、RANDOMIZED-SELECT，每次都是随机选取数列中的一个元素作为主元，
+在0（n）的时间内找到第k 小的元素，然后遍历输出前面的k 个小的元
+39
+素。如果能的话，那么总的时间复杂度为线性期望时间：O（n+k）=O（n）
+（当k 比较小时）。
+Ok，稍后第二节中，我会具体给出RANDOMIZED-SELECT(A, p, r, i)的整体
+完整伪码。在此之前，要明确一个问题：我们通常所熟知的快速排序是以固定的
+第一个或最后一个元素作为主元，每次递归划分都是不均等的，最后的平均时间
+复杂度为：O（n*logn）,但RANDOMIZED-SELECT 与普通的快速排序不同的是，每
+次递归都是随机选择序列从第一个到最后一个元素中任一一个作为主元。
+ 6、线性时间的排序，即计数排序，时间复杂度虽能达到O（n），但限
+制条件太多，不常用。
+ 7、updated： huaye502 在本文的评论下指出：“可以用最小堆初始化
+数组，然后取这个优先队列前k 个值。复杂度O(n)+k*O(log n)”。
+huaye502 的意思是针对整个数组序列建最小堆，建堆所用时间为O（n）
+（算法导论一书上第6 章第6.3 节已经论证，在线性时间内，能将一个无
+序的数组建成一个最小堆），然后取堆中的前k 个数，总的时间复杂度即
+为：O（n+k*logn）。
+关于上述第7 点思路的继续阐述：至于思路7 的O（n+k*logn）是否小于上
+述思路3 的O（n*logk），即O（n+k*logn）?< O（n*logk）。粗略数学证明可
+参看如下第一幅图，我们可以这么解决：当k 是常数，n 趋向于无穷大时，求
+（n*logk）/（n+k*logn）的极限T，如果T>1，那么可得O（n*logk）>O（n+k*logn），
+也就是O（n+k*logn）< O（n*logk）。虽然这有违我们惯常的思维，然事实最
+终证明的确如此，这个极值T=logk>1，即采取建立n 个元素的最小堆后取其前k
+个数的方法的复杂度小于采取常规的建立k 个元素最大堆后通过比较寻找最小
+的k 个数的方法的复杂度。但，最重要的是，如果建立n 个元素的最小堆的话，
+那么其空间复杂度势必为O（N），而建立k 个元素的最大堆的空间复杂度为O
+（k）。所以，综合考虑，我们一般还是选择用建立k 个元素的最大堆的方法解
+决此类寻找最小的k 个数的问题。
+思路3 准确的时间复杂度表述为：O（k+（n-k）*logk），思路7 准确的时间复
+杂度表述为：O（n+k*logn），也就是如gbb21 所述粗略证明：要证原式
+k+n*logk-n-k*logn>0，等价于证（logk-1）n-k*logn+k>，要证思路3 的时间复
+杂度大于思路7 的时间复杂度，等价于要证原式k+n*logk-klogk-n-k*logn>0，
+即证（logk-1）n - k*logn + k - klogk > 0。当when n -> +/inf（n 趋向于
+正无穷大）时，logk-1-0-0>0，即只要满足logk-1>0 即可。原式得证。即O
+40
+（k+n*logk）>O（n+k*logn） =>O（n+k*logn）< O（n*logk），与上面得到的
+结论一致。
+事实上，是建立最大堆还是建立最小堆，其实际的程序运行时间相差并不大，
+运行时间都在一个数量级上。因为后续，我们还专门写了个程序进行测试，即针
+对1000w 的数据寻找其中最小的k 个数的问题，采取两种实现，一是采取常规的
+建立k 个元素最大堆后通过比较寻找最小的k 个数的方案，一是采取建立n 个元
+素的最小堆，然后取其前k 个数的方法，发现两相比较，运行时间实际上相差无
+几。结果可看下面的第二幅图。
+41
+ 8、@lingyun310：与上述思路7 类似，不同的是在对元素数组原地建最
+小堆O(n)后，然后提取K 次，但是每次提取时，换到顶部的元素只需要
+下移顶多k 次就足够了，下移次数逐次减少（而上述思路7 每次提取都需
+42
+要logn，所以提取k 次，思路7 需要k*logn。而本思路8 只需要K^2）。
+此种方法的复杂度为O(n+k^2)。@July：对于这个O（n+k^2）的复杂度，
+我相当怀疑。因为据我所知，n 个元素的堆，堆中任何一项操作的复杂度
+皆为logn，所以按理说，lingyun310 方法的复杂度应该跟下述思路8 一
+样，也为O（n+k*logn），而非O（n+k*k）。ok，先放到这，待时间考证。
+06.02。
+updated：
+经过和几个朋友的讨论，已经证实，上述思路7lingyun310 所述的思路应该
+是完全可以的。下面，我来具体解释下他的这种方法。
+我们知道，n 个元素的最小堆中，可以先取出堆顶元素得到我们第1 小的元
+素，然后把堆中最后一个元素（较大的元素）上移至堆顶，成为新的堆顶元素（取
+出堆顶元素之后，把堆中下面的最后一个元素送到堆顶的过程可以参考下面的第
+一幅图。至于为什么是怎么做，为什么是把最后一个元素送到堆顶成为堆顶元素，
+而不是把原来堆顶元素的儿子送到堆顶呢?具体原因可参考相关书籍）。
+此时，堆的性质已经被破坏了，所以此后要调整堆。怎么调整呢?就是一般人
+所说的针对新的堆顶元素shiftdown，逐步下移（因为新的堆顶元素由最后一个
+元素而来，比较大嘛，既然是最小堆，当然大的元素就要下沉到堆的下部了）。
+下沉多少步呢?即如lingyun310 所说的，下沉k 次就足够了。
+下移k 次之后，此时的堆顶元素已经是我们要找的第2 小的元素。然后，取
+出这个第2 小的元素（堆顶元素），再次把堆中的最后一个元素送到堆顶，又经
+过k-1 次下移之后（此后下移次数逐步减少，k-2，k-3,...k=0 后算法中断）....，
+如此重复k-1 趟操作，不断取出的堆顶元素即是我们要找的最小的k 个数。虽然
+上述算法中断后整个堆已经不是最小堆了，但是求得的k 个最小元素已经满足我
+们题目所要求的了，就是说已经找到了最小的k 个数，那么其它的咱们不管了。
+我可以再举一个形象易懂的例子。你可以想象在一个水桶中，有很多的气泡，
+这些气泡从上到下，总体的趋势是逐渐增大的，但却不是严格的逐次大（正好这
+也符合最小堆的性质）。ok，现在我们取出第一个气泡，那这个气泡一定是水桶
+中所有气泡中最小的，把它取出来，然后把最下面的那个大气泡（但不一定是最
+大的气泡）移到最上面去，此时违反了气泡从上到下总体上逐步变大的趋势，所
+以，要把这个大气泡往下沉，下沉到哪个位置呢?就是下沉k 次。下沉k 次后，
+43
+最上面的气泡已经肯定是最小的气泡了，把他再次取出。然后又将最下面最后的
+那个气泡移至最上面，移到最上面后，再次让它逐次下沉，下沉k-1 次...，如
+此循环往复，最终取到最小的k 个气泡。
+ok，所以，上面方法所述的过程，更进一步来说，其实是第一趟调整保持第
+0 层到第k 层是最小堆，第二趟调整保持第0 层到第k-1 层是最小堆...，依次
+类推。但这个思路只是下述思路8 中正规的最小堆算法（因为它最终对全部元素
+都进行了调整，算法结束后，整个堆还是一个最小堆）的调优，时间复杂度O
+（n+k^2）没有量级的提高，空间复杂度为O（N）也不会减少。
+原理理解透了，那么写代码，就不难了，完整粗略代码如下（有问题烦请批评指
+正）：
+//copyright@ 泡泡鱼
+//July、2010.06.02。
+//@lingyun310：先对元素数组原地建最小堆，O(n)。然后提取K 次，但是每次
+提取时，
+//换到顶部的元素只需要下移顶多k 次就足够了，下移次数逐次减少。此种方
+法的复杂度为O（n+k^2）。
+#include <stdio.h>
+#include <stdlib.h>
+44
+#define MAXLEN 123456
+#define K 100
+//
+void HeapAdjust(int array[], int i, int Length)
+{
+int child,temp;
+for(temp=array[i];2*i+1<Length;i=child)
+{
+child = 2*i+1;
+if(child<Length-1 && array[child+1]<array[child])
+child++;
+if (temp>array[child])
+array[i]=array[child];
+else
+break;
+array[child]=temp;
+}
+}
+void Swap(int* a,int* b)
+{
+*a=*a^*b;
+*b=*a^*b;
+*a=*a^*b;
+}
+int GetMin(int array[], int Length,int k)
+{
+int min=array[0];
+Swap(&array[0],&array[Length-1]);
+int child,temp;
+int i=0,j=k-1;
+for (temp=array[0]; j>0 && 2*i+1<Length; --j,i=child)
+{
+child = 2*i+1;
+if(child<Length-1 && array[child+1]<array[child])
+child++;
+if (temp>array[child])
+array[i]=array[child];
+45
+else
+break;
+array[child]=temp;
+}
+return min;
+}
+void Kmin(int array[] , int Length , int k)
+{
+for(int i=Length/2-1;i>=0;--i)
+//初始建堆，时间复杂度为O(n)
+HeapAdjust(array,i,Length);
+int j=Length;
+for(i=k;i>0;--i,--j)
+//k 次循环，每次循环的复杂度最多为k 次交换，复杂度为
+o(k^2)
+{
+int min=GetMin(array,j,i);
+printf("%d,", min);
+}
+}
+int main()
+{
+int array[MAXLEN];
+for(int i=MAXLEN;i>0;--i)
+array[MAXLEN-i] = i;
+Kmin(array,MAXLEN,K);
+return 0;
+}
+在算法导论第6 章有下面这样一张图，因为开始时曾一直纠结过这个问
+题，“取出堆顶元素之后，把堆中下面的最后一个元素送到堆顶”。因为算法导
+论上下面这张图给了我一个假象，从a）->b）中，让我误以为是取出堆顶元素
+之后，是把原来堆顶元素的儿子送到堆顶。而事实上不是这样的。因为在下面的
+图中，16 被删除后，堆中最后一个元素1 代替16 成为根结点，然后1 下沉（注
+意下图所示的过程是最大堆的堆排序过程，不再是上面的最小堆了，所以小的元
+素当然要下移），14 上移到堆顶。所以，图中小图图b）是已经在小图a）之和
+被调整过的最大堆了，只是调整了logn 次，非上面所述的k 次。
+46
+ok，接下来，咱们再着重分析下上述思路4。或许，你不会相信上述思路4
+的观点，但我马上将用事实来论证我的观点。这几天，我一直在想，也一直在找
+资料查找类似快速排序的partition 过程的分治算法（即上述在编程之美上提到
+的第4 点思路），是否能做到O（N）的论述或证明，
+然找了三天，不但在算法导论上找到了RANDOMIZED-SELECT，在平均情况下
+为线性期望时间O（N）的论证（请参考本文第二节），还在mark allen weiss
+所著的数据结构与算法分析--c 语言描述一书（还得多谢朋友sheguang 提醒）
+中，第7 章第7.7.6 节（本文下面的第4 节末，也有关此问题的阐述）也找到了
+在最坏情况下，为线性时间O（N）（是的，不含期望，是最坏情况下为O（N））
+的快速选择算法（此算法，本文文末，也有阐述），请看下述文字（括号里的中
+文解释为本人添加）：
+Quicksort can be modified to solve the selection problem, which we
+have seen in chapters 1 and 6. Recall that by using a priority queue, we
+can find the kth largest (or smallest) element in O(n + k log n)（即上
+述思路7）. For the special case of finding the median, this gives an O(n
+log n) algorithm.
+Since we can sort the file in O(nlog n) time, one might expect to obtain
+a better time bound for selection. The algorithm we present to find the
+47
+kth smallest element in a set S is almost identical to quicksort. In fact,
+the first three steps are the same. We will call this algorithm
+quickselect（叫做快速选择）. Let |Si| denote the number of elements in
+Si（令|Si|为Si 中元素的个数）. The steps of quickselect are（快速选择，
+即上述编程之美一书上的，思路4，步骤如下）:
+1. If |S| = 1, then k = 1 and return the elements in S as the answer.
+If a cutoff for small files is being used and |S| <=CUTOFF, then sort S
+and return the kth smallest element.
+2. Pick a pivot element, v (- S.（选取一个枢纽元v 属于S）
+3. Partition S - {v} into S1 and S2, as was done with quicksort.
+（将集合S-{v}分割成S1 和S2，就像我们在快速排序中所作的那样）
+4. If k <= |S1|, then the kth smallest element must be in S1. In this
+case, return quickselect (S1, k). If k = 1 + |S1|, then the pivot is the
+kth smallest element and we can return it as the answer. Otherwise, the
+kth smallest element lies in S2, and it is the (k - |S1| - 1)st smallest
+element in S2. We make a recursive call and return quickselect (S2, k -
+|S1| - 1).
+（如果k<=|S1|，那么第k 个最小元素必然在S1 中。在这种情况下，返回
+quickselect（S1,k）。如果k=1+|S1|，那么枢纽元素就是第k 个最小元素，即
+找到，直接返回它。否则，这第k 个最小元素就在S2 中，即S2 中的第（k-|S1|-1）
+（多谢王洋提醒修正）个最小元素，我们递归调用并返回quickselect（S2，
+k-|S1|-1））。
+In contrast to quicksort, quickselect makes only one recursive call
+instead of two. The worst case of quickselect is identical to that of
+quicksort and is O(n2). Intuitively, this is because quicksort's worst
+case is when one of S1 and S2 is empty; thus, quickselect（快速选择） is
+not really saving a recursive call. The average running time, however,
+is O(n)（不过，其平均运行时间为O（N）。看到了没，就是平均复杂度为O（N）
+这句话）. The analysis is similar to quicksort's and is left as an exercise.
+48
+The implementation of quickselect is even simpler than the abstract
+description might imply. The code to do this shown in Figure 7.16. When
+the algorithm terminates, the kth smallest element is in position k. This
+destroys the original ordering; if this is not desirable, then a copy must
+be made.
+并给出了代码示例：
+//copyright@ mark allen weiss
+//July、updated，2011.05.05 凌晨.
+//q_select places the kth smallest element in a[k]
+void q_select( input_type a[], int k, int left, int right )
+{
+int i, j;
+input_type pivot;
+if( left + CUTOFF <= right )
+{
+pivot = median3( a, left, right );
+//取三数中值作为枢纽元，可以消除最坏情况而保证此算法
+是O（N）的。不过，这还只局限在理论意义上。
+//稍后，除了下文的第二节的随机选取枢纽元，在第四节末，
+您将看到另一种选取枢纽元的方法。
+i=left; j=right-1;
+for(;;)
+{
+while( a[++i] < pivot );
+while( a[--j] > pivot );
+if (i < j )
+swap( &a[i], &a[j] );
+else
+break;
+}
+swap( &a[i], &a[right-1] ); /* restore pivot
+*/
+if( k < i)
+q_select( a, k, left, i-1 );
+else
+if( k > i )
+q-select( a, k, i+1, right );
+49
+}
+else
+insert_sort(a, left, right );
+}
+结论：
+1. 与快速排序相比，快速选择只做了一次递归调用而不是两次。快速选择的
+最坏情况和快速排序的相同，也是O（N^2），最坏情况发生在枢纽元的
+选取不当，以致S1，或S2 中有一个序列为空。
+2. 这就好比快速排序的运行时间与划分是否对称有关，划分的好或对称，那
+么快速排序可达最佳的运行时间O（n*logn），划分的不好或不对称，则
+会有最坏的运行时间为O（N^2）。而枢纽元的选取则完全决定快速排序
+的partition 过程是否划分对称。
+3. 快速选择也是一样，如果枢纽元的选取不当，则依然会有最坏的运行时间
+为O（N^2）的情况发生。那么，怎么避免这个最坏情况的发生，或者说
+就算是最坏情况下，亦能保证快速选择的运行时间为O（N）列?对了，关
+键，还是看你的枢纽元怎么选取。
+4. 像上述程序使用三数中值作为枢纽元的方法可以使得最坏情况发生的概
+率几乎可以忽略不计。然而，稍后，在本文第四节末，及本文文末，您将
+看到：通过一种更好的方法，如“五分化中项的中项”，或“中位数的中
+位数”等方法选取枢纽元，我们将能彻底保证在最坏情况下依然是线性O
+（N）的复杂度。
+至于编程之美上所述：从数组中随机选取一个数X，把数组划分为Sa 和
+Sb 俩部分，那么这个问题就转到了下文第二节RANDOMIZED-SELECT，以线性
+期望时间做选择，无论如何，编程之美上的解法二的复杂度为O（n*logk）
+都是有待商榷的。至于最坏情况下一种全新的，为O（N）的快速选择算法，
+直接跳转到本文第四节末，或文末部分吧）。
+不过，为了公正起见，把编程之美第141 页上的源码贴出来，由大家来评判：
+Kbig(S, k):
+if(k <= 0):
+return [] // 返回空数组
+if(length S <= k):
+return S
+(Sa, Sb) = Partition(S)
+return Kbig(Sa, k).Append(Kbig(Sb, k – length Sa)
+50
+Partition(S):
+Sa = [] // 初始化为空数组
+Sb = [] // 初始化为空数组
+Swap(s[1], S[Random()%length S])
+// 随机选择一个数作为分组标准，以
+// 避免特殊数据下的算法退化，也可
+// 以通过对整个数据进行洗牌预处理
+// 实现这个目的
+p = S[1]
+for i in [2: length S]:
+S[i] > p ? Sa.Append(S[i]) : Sb.Append(S[i])
+// 将p 加入较小的组，可以避免分组失败，也使分组
+// 更均匀，提高效率
+length Sa < length Sb ? Sa.Append(p) : Sb.Append(p)
+return (Sa, Sb)
+你已经看到，它是随机选取数组中的任一元素为枢纽的，这就是本文下面的
+第二节RANDOMIZED-SELECT 的问题了，只是要修正的是，此算法的平均时间复杂
+度为线性期望O（N）的时间。而，稍后在本文的第四节或本文文末，您还将会
+看到此问题的进一步阐述（SELECT 算法，即快速选择算法），此SELECT 算法能
+保证即使在最坏情况下，依然是线性O（N）的复杂度。
+updated：
+1、为了照顾手中没编程之美这本书的friends，我拍了张照片，现贴于下供
+参考（提醒：1、书上为寻找最大的k 个数，而我们面对的问题是寻找最小的k
+个数，两种形式，一个本质（该修改的地方，上文已经全部修改）。2、书中描
+述与上文思路4 并无原理性出入，不过，勿被图中记的笔记所误导，因为之前也
+曾被书中的这个n*logk 复杂度所误导过。ok，相信，看完本文后，你不会再有
+此疑惑）：
+51
+2、同时，在编程之美原书上此节的解法五的开头提到，“上面类似快速排
+序的方法平均时间复杂度是线性的”，我想上面的类似快速排序的方法，应该是
+指解法（即如上所述的类似快速排序partition 过程的方法），但解法二得出的
+平均时间复杂度却为O（N*logk），明摆着前后矛盾（参见下图）。
+3、此文创作后的几天，已把本人的意见反馈给邹欣等人，下面是编程之美
+bop1 的改版修订地址的页面截图（本人也在参加其改版修订的工作），下面的
+文字是我的记录（同时，本人声明，此狂想曲系列文章系我个人独立创作，与其
+它的事不相干）：
+52
+第二节、Randomized-Select，线性期望时间
+下面是RANDOMIZED-SELECT(A, p, r)完整伪码（来自算法导论），我给了注
+释，或许能给你点启示。在下结论之前，我还需要很多的时间去思量，以确保结
+论之完整与正确。
+PARTITION(A, p, r) //partition 过程p 为第一个数，r 为最后一个数
+1 x ← A[r] //以最后一个元素作为主元
+2 i ← p - 1
+3 for j ← p to r - 1
+4 do if A[j] ≤ x
+5 then i ← i + 1
+6 exchange A[i] <-> A[j]
+7 exchange A[i + 1] <-> A[r]
+8 return i + 1
+RANDOMIZED-PARTITION(A, p, r) //随机快排的partition 过程
+1 i ← RANDOM(p, r) //i 随机取p 到r 中个一个值
+2 exchange A[r] <-> A[i] //以随机的i 作为主元
+3 return PARTITION(A, p, r) //调用上述原来的partition 过程
+RANDOMIZED-SELECT(A, p, r, i) //以线性时间做选择，目的是返回数组A[p..r]
+中的第i 小的元素
+1 if p = r //p=r，序列中只有一个元素
+53
+2 then return A[p]
+3 q ← RANDOMIZED-PARTITION(A, p, r) //随机选取的元素q 作为主元
+4 k ← q - p + 1 //k 表示子数组A[p…q]内的元素个数，处于划分
+低区的元素个数加上一个主元元素
+5 if i == k //检查要查找的i 等于子数组中A[p....q]中的元素个数k
+6 then return A[q] //则直接返回A[q]
+7 else if i < k
+8 then return RANDOMIZED-SELECT(A, p, q - 1, i)
+//得到的k 大于要查找的i 的大小，则递归到低区间A[p，q-1]中去查找
+9 else return RANDOMIZED-SELECT(A, q + 1, r, i - k)
+//得到的k 小于要查找的i 的大小，则递归到高区间A[q+1，r]中去查
+找。
+写此文的目的，在于起一个抛砖引玉的作用。希望，能引起你的重视及好的
+思路，直到有个彻底明白的结果。
+updated：算法导论原英文版有关于RANDOMIZED-SELECT(A, p, r)为O（n）
+的证明。为了一个彻底明白的阐述，我现将其原文的证明自个再翻译加工后，阐
+述如下：
+此RANDOMIZED-SELECT 最坏情况下时间复杂度为Θ(n2),即使是要选择最小
+元素也是如此，因为在划分时可能极不走运，总是按余下元素中的最大元素进行
+划分，而划分操作需要O（n）的时间。
+然而此算法的平均情况性能极好，因为它是随机化的，故没有哪一种特别的
+输入会导致其最坏情况的发生。
+算法导论上，针对此RANDOMIZED-SELECT 算法平均时间复杂度为O（n）的
+证明，引用如下，或许，能给你我多点的启示（本来想直接引用第二版中文版的
+翻译文字，但在中英文对照阅读的情况下，发现第二版中文版的翻译实在不怎么
+样，所以，得自己一个一个字的敲，最终敲完修正如下），分4 步证明：
+1、当RANDOMIZED-SELECT 作用于一个含有n 个元素的输入数组A[p ..r]
+上时，所需时间是一个随机变量，记为T(n),我们可以这样得到线性期望值E
+[T(n)]的下界：程序RANDOMIZED-PARTITION 会以等同的可能性返回数组中任何
+一个元素为主元，因此，对于每一个k，（1 ≤k ≤n）,子数组A[p ..q]有k
+个元素，它们全部小于或等于主元元素的概率为1/n.对k = 1, 2,...,n,我们
+定指示器Xk，为：
+Xk = I{子数组A[p ..q]恰有k 个元素} ,
+54
+我们假定元素的值不同，因此有
+E[Xk]=1/n
+当调用RANDOMIZED-SELECT 并且选择A[q]作为主元元素的时候,我们事先不
+知道是否会立即找到我们所想要的第i 小的元素，因为，我们很有可能需要在子
+数组A[p ..q - 1], 或A[q + 1 ..r]上递归继续进行寻找.具体在哪一个子
+数组上递归寻找，视第i 小的元素与A[q]的相对位置而定.
+2、假设T(n)是单调递增的，我们可以将递归所需时间的界限限定在输入数
+组时可能输入的所需递归调用的最大时间（此句话，原中文版的翻译也是有问题
+的）.换言之,我们断定,为得到一个上界，我们假定第i 小的元素总是在划分的
+较大的一边，对一个给定的RANDOMIZED-SELECT,指示器Xk 刚好在一个k 值上取
+1，在其它的k 值时，都是取0.当Xk =1 时，可能要递归处理的俩个子数组的大
+小分别为k-1，和n-k，因此可得到递归式为
+取期望值为：
+为了能应用等式(C.23),我们依赖于Xk 和T(max(k - 1,n - k))是独立的
+随机变量（这个可以证明，证明此处略）。
+3、下面，我们来考虑下表达式max(k - 1,n -k)的结果.我们有：
+55
+如果n 是偶数，从T(⌉)到T(n - 1)每个项在总和中刚好出现俩次，T(⌋)出
+现一次。因此，有
+我们可以用替换法来解上面的递归式。假设对满足这个递归式初始条件的某
+个常数c，有T(n) ≤cn。我们假设对于小于某个常数c（稍后再来说明如何选
+取这个常数）的n，有T(n) =O(1)。同时，还要选择一个常数a，使得对于所
+有的n>0，由上式中O(n)项(用来描述这个算法的运行时间中非递归的部分)所描
+述的函数，可由an 从上方限界得到（这里，原中文版的翻译的确是有点含糊）。
+利用这个归纳假设，可以得到：
+（此段原中文版翻译有点问题，上述文字已经修正过来，对应的此段原英文
+为：We solve the recurrence by substitution. Assume thatT(n)≤cn for some
+constant c that satisfies the initial conditions of the recurrence. We
+assume thatT(n) =O(1) forn less than some constant; we shall pick this
+constant later. We also pick a constanta such that the function described
+by theO(n) term above (which describes the non-recursive component of the
+running time of the algorithm) is bounded from above byan for alln> 0.
+Using this inductive hypothesis, we have）
+56
+4、为了完成证明，还需要证明对足够大的n，上面最后一个表达式最大为
+cn，即要证明：cn/4 -c/2 -an ≥ 0.如果在俩边加上c/2，并且提取因子n，
+就可以得到n(c/4 -a) ≥c/2.只要我们选择的常数c 能满足c/4 -a > 0, i.e.,
+即c > 4a,我们就可以将俩边同时除以c/4 -a, 最终得到：
+综上，如果假设对n < 2c/(c -4a),有T(n) =O(1)，我们就能得到
+E[T(n)] =O(n)。所以，最终我们可以得出这样的结论，并确认无疑：在平均情
+况下，任何顺序统计量（特别是中位数）都可以在线性时间内得到。
+结论： 如你所见，RANDOMIZED-SELECT 有线性期望时间O（N）的复杂度，
+但此RANDOMIZED-SELECT 算法在最坏情况下有O（N^2）的复杂度。所以，我们
+得找出一种在最坏情况下也为线性时间的算法。稍后，在本文的第四节末，及本
+文文末部分，你将看到一种在最坏情况下是线性时间O（N）的复杂度的快速选
+择SELECT 算法。
+第三节、各执己见，百家争鸣
+updated ：本文昨晚发布后，现在朋友们之间，主要有以下几种观点（在彻底
+弄清之前，最好不要下结论）：
+1. luuillu：我不认为随机快排比直接快排的时间复杂度小。使用快排处理数据
+前，我们是不知道数据的排列规律的，因此一般情况下，被处理的数据本来
+就是一组随机数据，对于随机数据再多进行一次随机化处理，数据仍然保持
+随机性，对排序没有更好的效果。对一组数据采用随选主元的方法，在
+极端的情况下，也可能出现每次选出的主元恰好是从大到小排列的，此时时
+间复杂度为O（n^2）.当然这个概率极低。随机选主元的好处在于，由于在
+现实中常常需要把一些数据保存为有序数据，因此，快速排序碰到有序数据
+的概率就会高一些，使用随机快排可以提高对这些数据的处理效率。这个概
+率虽然高一些，但仍属于特殊情况，不影响一般情况的时间复杂度。我觉得
+楼主上面提到的的思路4 和思路5 的时间复杂度是一样的。
+2. 571 楼得分：0 Sorehead 回复于：2011-03-09 16:29:58
+关于第五题：
+Sorehead： 这两天我总结了一下，有以下方法可以实现：
+1、第一次遍历取出最小的元素，第二次遍历取出第二小的元素，依次直到第
+57
+k 次遍历取出第k 小的元素。这种方法最简单，时间复杂度是O(k*n)。看上
+去效率很差，但当k 很小的时候可能是最快的。
+2、对这n 个元素进行排序，然后取出前k 个数据即可，可以采用比较普遍的
+堆排序或者快速排序，时间复杂度是O(n*logn)。这种方法有着很大的弊端，
+题目并没有要求这最小的k 个数是排好序的，更没有要求对其它数据进行排
+序，对这些数据进行排序某种程度上来讲完全是一种浪费。而且当k=1 时，
+时间复杂度依然是O(n*logn)。
+3、可以把快速排序改进一下，应该和楼主的kth_elem 一样，这样的好处是
+不用对所有数据都进行排序。平均时间复杂度应该是O(n*logk)。（在本文
+最后一节，你或将看到，复杂度可能应该为O（n））
+4、使用我开始讲到的平衡二叉树或红黑树，树只用来保存k 个数据即可，这
+样遍历所有数据只需要一次。时间复杂度为O(n*logk)。后来我发现这个思
+路其实可以再改进，使用堆排序中的堆，堆中元素数量为k，这样堆中最大
+元素就是头节点，遍历所有数据时比较次数更少，当然时间复杂度并没有变
+化。
+5、使用计数排序的方法，创建一个数组，以元素值为该数组下标，数组的值
+为该元素在数组中出现的次数。这样遍历一次就可以得到这个数组，然后查
+询这个数组就可以得到答案了。时间复杂度为O(n)。如果元素值没有重复的，
+还可以使用位图方式。这种方式有一定局限性，元素必须是正整数，并且取
+值范围不能太大，否则就造成极大的空间浪费，同时时间复杂度也未必就是
+O(n)了。当然可以再次改进，使用一种比较合适的哈希算法来代替元素值直
+接作为数组下标。
+3. litaoye：按照算法导论上所说的，最坏情况下线性时间找第k 大的数。证明
+一下：把数组中的元素，5 个分为1 组排序，排序需要进行7 次比较(2^7 > 5!)，
+这样需要1.4 * n 次比较，可以完成所有组的排序。取所有组的中位数，形
+成一个新的数组，有n/5 个元素，5 个分为1 组排序，重复上面的操作，直
+到只剩下小于5 个元素，找出中位数。根据等比数列求和公式，求出整个过
+程的比较次数：7/5 + 7/25 + 7/125 +...... = 7/4，用7/4 * n 次比较可
+以找出中位数的中位数M。能够证明，整个数组中>=M 的数超过3*n / 10 - 6，
+<=M 的数超过3*n / 10 - 6。以M 为基准，执行上面的PARTITION，每次至
+少可以淘汰3*n / 10 - 6，约等于3/10 * n 个数，也就是说是用(7/4 + 1)
+* n 次比较之后，最坏情况下可以让数据量变为原来的7/10，同样根据等比
+58
+数列求和公式，可以算出最坏情况下找出第k 大的数需要的比较次数，1 +
+7/10 + 49/100 + .... = 10/3, 10/3 * 11/4 * n = 110/12 * n，也就是
+说整个过程是O(n)的，尽管隐含的常数比较大。
+总结：关于RANDOMIZED-SELECT(A, q + 1, r, i - k)，期望运行时间为O
+（n）已经没有疑问了，更严格的论证在上面的第二节也已经给出来了。
+ok，现在，咱们剩下的问题是，除了此RANDOMIZED-SELECT(A, q + 1, r, i
+- k)方法（实用价值并不大）和计数排序，都可以做到O（n）之外，还有类似
+快速排序的partition 过程，是否也能做到O（n）?
+第四节、类似partition 过程，最坏亦能做到O（n）?
+我想，经过上面的各路好汉的思路轰炸，您的头脑和思维肯定有所混乱了。
+ok，下面，我尽量以通俗易懂的方式来继续阐述咱们的问题。上面第三节的总结
+提出了一个问题，即类似快速排序的partition 过程，是否也能做到O（n）?
+我们说对n 个数进行排序，快速排序的平均时间复杂度为O（n*logn），这
+个n*logn 的时间复杂度是如何得来的列?
+经过之前我的有关快速排序的三篇文章，相信您已经明了了以下过程：快速
+排序每次选取一个主元X，依据这个主元X，每次把整个序列划分为A，B 俩个部
+分，且有Ax<X<Bx。
+假如我们每次划分总是产生9:1 的划分，那么，快速排序运行时间的递归式
+为：T（n）=T（9n/10）+T（n/10）+cn。形成的递归树，（注：最后同样能推出
+T（n）=n*logn，即如下图中，每一层的代价为cn，共有logn 层（深度），所
+以，最后的时间复杂度为O（n）*logn）如下：
+59
+而我们知道，如果我们每次划分都是平衡的，即每次都划分为均等的两部分
+元素（对应上图，第一层1/2,1/2，，第二层1/4，1/4.....），那么，此时快
+速排序的运行时间的递归式为：
+T (n) ≤ 2T (n/2) + Θ(n) ,同样，可推导出：T (n) = O(n lg n).
+这就是快速排序的平均时间复杂度的由来。
+那么，咱们要面对的问题是什么，要寻找n 个数的序列中前k 个元素。如何
+找列?假设咱们首先第一次对n 个数运用快速排序的partition 过程划分，主元
+为Xm，此刻找到的主元元素Xm 肯定为序列中第m 小的元素，此后，分为三种情
+况：
+1、如果m=k，即返回的主元即为我们要找的第k 小的元素，那么直接返回
+主元Xm 即可，然后直接输出Xm 前面的m-1 个元素，这m 个元素，即为所求的前
+k 个最小的元素。
+2、如果m>k，那么接下来要到低区间A[0....m-1]中寻找，丢掉高区间；
+3、如果m<k，那么接下来要到高区间A[m+1...n-1]中寻找，丢掉低区间。
+当m 一直>k 的时候，好说，区间总是被不断的均分为俩个区间（理想情况），
+那么最后的时间复杂度如luuillu 所说，T(n)=n + T(n/2) = n + n/2 + n/4 + n/8
++ ...+1 . 式中一共logn 项。可得出：T（n）为O（n）。
+60
+但当m<k 的时候，上述情况，就不好说了。正如luuillu 所述：当m<k，那
+么接下来要到高区间A[m+1...n-1]中寻找,新区间的长度为n-m-1, 需要寻找
+k-m 个数。此时可令：k=k-m, m=n-m-1, 递归调用原算法处理，本次执行次数为
+m,当m 减到1 算法停止（当m<k 时,k=m-k.这个判断过程实际上相当于对m 取
+模运算，即：k=k%m;）。
+最终在高区间找到的k-m 个数，加上在低区间的k 个数，即可找到最小的k
+个数，是否也能得出T（n）=O（n），则还有待验证（本文已经全面更新，所有
+的论证，都已经给出，确认无误的是：类似快速排序的partition 过程，明确的
+可以做到O（N））。
+Ok，如果在评论里回复，有诸多不便，欢迎到此帖子上回复：微软100 题维
+护地址，我会随时追踪这个帖子。谢谢。
+//求取无序数组中第K 个数，本程序枢纽元的选取有问题，不作推荐。
+//copyright@ 飞羽
+//July、yansha，updated，2011.05.18。
+#include <iostream>
+#include <time.h>
+using namespace std;
+int kth_elem(int a[], int low, int high, int k)
+{
+int pivot = a[low];
+//这个程序之所以做不到O（N）的最最重要的原因，就在于这个枢纽元的选
+取。
+//而这个程序直接选取数组中第一个元素作为枢纽元，是做不到平均时间复杂度
+为O（N）的。
+//要做到，就必须把上面选取枢纽元的代码改掉，要么是随机选择数组中某
+一元素作为枢纽元，能达到线性期望的时间
+//要么是选取数组中中位数的中位数作为枢纽元，保证最坏情况下，依然为线性O
+（N）的平均时间复杂度。
+int low_temp = low;
+int high_temp = high;
+while(low < high)
+{
+while(low < high && a[high] >= pivot)
+--high;
+a[low] = a[high];
+while(low < high && a[low] < pivot)
+++low;
+61
+a[high] = a[low];
+}
+a[low] = pivot;
+//以下就是主要思想中所述的内容
+if(low == k - 1)
+return a[low];
+else if(low > k - 1)
+return kth_elem(a, low_temp, low - 1, k);
+else
+return kth_elem(a, low + 1, high_temp, k);
+}
+int main() //以后尽量不再用随机产生的数组进行测试，没多大必要。
+{
+for (int num = 5000; num < 50000001; num *= 10)
+{
+int *array = new int[num];
+int j = num / 10;
+int acc = 0;
+for (int k = 1; k <= num; k += j)
+{
+// 随机生成数据
+srand(unsigned(time(0)));
+for(int i = 0; i < num; i++)
+array[i] = rand() * RAND_MAX + rand();
+//”如果数组本身就是利用随机化产生的话，那么选择其中任
+何一个元素作为枢轴都可以看作等价于随机选择枢轴，
+//（虽然这不叫随机选择枢纽）”，这句话，是完全不成立的，
+是错误的。
+//“因为你总是选择随机数组中第一个元素作为枢纽元，
+不是随机选择枢纽元”
+//相当于把上面这句话中前面的“随机” 两字去掉，就
+是：
+//因为你总是选择数组中第一个元素作为枢纽元，不是随
+机选择枢纽元。
+//所以，这个程序，始终做不到平均时间复杂度为O（N）。
+//随机数组和给定一个非有序而随机手动输入的数组，是一个
+道理。稍后，还将就程序的运行结果继续解释这个问题。
+//July、updated，2011.05.18。
+62
+// 计算一次查找所需的时钟周期数
+clock_t start = clock();
+int data = kth_elem(array, 0, num - 1, k);
+clock_t end = clock();
+acc += (end - start);
+}
+cout << "The average time of searching a date in the
+array size of " << num << " is " << acc / 10 << endl;
+}
+return 0;
+}
+关于上述程序的更多阐述，请参考此文第三章续、Top K 算法问题的实现中，
+第一节有关实现三的说明。
+updated：
+近日，再次在Mark Allen Weiss 的数据结构与算法分析一书上，第10 章，
+第10.2.3 节看到了关于此分治算法的应用，平均时间复杂度为O（N）的阐述与
+证明，可能本文之前的叙述将因此而改写（July、updated，2011.05.05）：
+The selection problem requires us to find the kth smallest
+element in a list S of n elements（要求我们找出含N 个元素的表S 中的第
+k 个最小的元素）. Of particular interest is the special case of finding
+the median. This occurs when k = |-n/2-|（向上取整）.（我们对找出中间
+元素的特殊情况有着特别的兴趣，这种情况发生在k=|-n/2-|的时候）
+In Chapters 1, 6, 7 we have seen several solutions to the selection
+problem. The solution in Chapter 7 uses a variation of quicksort and runs
+in O(n) average time（第7 章中的解法，即本文上面第1 节所述的思路4，用
+到快速排序的变体并以平均时间O（N）运行）. Indeed, it is described in
+Hoare's original paper on quicksort.
+Although this algorithm runs in linear average time, it has a worst
+case of O (n2)（但它有一个O（N^2）的最快情况）. Selection can easily be
+solved in O(n log n) worst-case time by sorting the elements, but for a
+long time it was unknown whether or not selection could be accomplished
+in O(n) worst-case time. The quickselect algorithm outlined in Section
+7.7.6 is quite efficient in practice, so this was mostly a question of
+theoretical interest.
+63
+Recall that the basic algorithm is a simple recursive strategy.
+Assuming that n is larger than the cutoff point where elements are simply
+sorted, an element v, known as the pivot, is chosen. The remaining elements
+are placed into two sets, S1 and S2. S1 contains elements that are
+guaranteed to be no larger than v, and S2 contains elements that are no
+smaller than v. Finally, if k <= |S1|, then the kth smallest element in
+S can be found by recursively computing the kth smallest element in S1.
+If k = |S1| + 1, then the pivot is the kth smallest element. Otherwise,
+the kth smallest element in S is the (k - |S1| -1 )st smallest element
+in S2. The main difference between this algorithm and quicksort is that
+there is only one subproblem to solve instead of two（这个快速选择算法
+与快速排序之间的主要区别在于，这里求解的只有一个子问题，而不是两个子
+问题）。
+定理10.9
+The running time of quickselect using median-of-median-of-five
+partitioning is O(n)。
+The basic idea is still useful. Indeed, we will see that we can use
+it to improve the expected number of comparisons that quickselect makes.
+To get a good worst case, however, the key idea is to use one more level
+of indirection. Instead of finding the median from a sample of random
+elements, we will find the median from a sample of medians.
+The basic pivot selection algorithm is as follows:
+1. Arrange the n elements into |_n/5_| groups of 5 elements, ignoring
+the (at most four) extra elements.
+2. Find the median of each group. This gives a list M of |_n/5_|
+medians.
+3. Find the median of M. Return this as the pivot, v.
+We will use the term median-of-median-of-five partitioning to
+describe the quickselect algorithm that uses the pivot selection rule
+given above. （我们将用术语“五分化中项的中项”来描述使用上面给出的枢
+64
+纽元选择法的快速选择算法）。We will now show that
+median-of-median-of-five partitioning guarantees that each recursive
+subproblem is at most roughly 70 percent as large as the original（现
+在我们要证明，“五分化中项的中项”，得保证每个递归子问题的大小最多为原
+问题的大约70%）. We will also show that the pivot can be computed quickly
+enough to guarantee an O (n) running time for the entire selection
+algorithm（我们还要证明，对于整个选择算法，枢纽元可以足够快的算出，以
+确保O（N）的运行时间。看到了没，这再次佐证了我们的类似快速排序的
+partition 过程的分治方法为O（N）的观点）。
+..........
+证明从略，更多，请参考Mark Allen Weiss 的数据结构与算法分析--c 语言
+描述一书上，第10 章，第10.2.3 节。
+updated again：
+为了给读者一个彻彻底底、明明白白的论证，我还是决定把书上面的整个论
+证过程全程贴上来，下面，接着上面的内容，然后直接从其中文译本上截两张图
+来说明好了（更清晰明了）：
+65
+66
+关于上图提到的定理10.8，如下图所示，至于证明，留给读者练习（可参考
+本文第二节关于RANDOMIZED-SELECT 为线性时间的证明）：
+ok，第四节，有关此问题的更多论述，请参见下面的本文文末updated again
+部分。
+67
+第五节、堆结构实现，处理海量数据
+文章，可不能这么完了，咱们还得实现一种靠谱的方案，从整个文章来看，
+处理这个寻找最小的k 个数，最好的方案是第一节中所提到的思路3：当然，更
+好的办法是维护k 个元素的最大堆，原理与上述第2 个方案一致，即用容量为k
+的最大堆存储最小的k 个数，此时，k1<k2<...<kmax（kmax 设为大顶堆中最大
+元素）。遍历一次数列，n，每次遍历一个元素x，与堆顶元素比较，x<kmax，
+更新堆（用时logk），否则不更新堆。这样下来，总费时O（n*logk）。
+为什么?道理很简单，如果要处理的序列n 比较小时，思路2（选择排序）的
+n*k 的复杂度还能说得过去，但当n 很大的时候列?同时，别忘了，如果选择思
+路1（快速排序），还得在数组中存储n 个数。当面对海量数据处理的时候列?n
+还能全部存放于电脑内存中么?（或许可以，或许很难）。
+ok，相信你已经明白了我的意思，下面，给出借助堆（思路3）这个数据结
+构，来寻找最小的k 个数的完整代码，如下：
+//借助堆，查找最小的k 个数
+//copyright@ yansha &&July
+//July、updated，2011.04.28。
+#include <iostream>
+#include <assert.h>
+using namespace std;
+void MaxHeap(int heap[], int i, int len);
+/*-------------------
+BUILD-MIN-HEAP(A)
+1 heap-size[A] ← length[A]
+2 for i ← |_length[A]/2_| downto 1
+3 do MAX-HEAPIFY(A, i)
+*/
+// 建立大根堆
+void BuildHeap(int heap[], int len)
+{
+if (heap == NULL)
+return;
+int index = len / 2;
+for (int i = index; i >= 1; i--)
+MaxHeap(heap, i, len);
+}
+/*----------------------------
+68
+PARENT(i)
+return |_i/2_|
+LEFT(i)
+return 2i
+RIGHT(i)
+return 2i + 1
+MIN-HEAPIFY(A, i)
+1 l ← LEFT(i)
+2 r ← RIGHT(i)
+3 if l ≤ heap-size[A] and A[l] < A[i]
+4 then smallest ← l
+5 else smallest ← i
+6 if r ≤ heap-size[A] and A[r] < A[smallest]
+7 then smallest ← r
+8 if smallest ≠ i
+9 then exchange A[i] <-> A[smallest]
+10 MIN-HEAPIFY(A, smallest)
+*/
+//调整大根堆
+void MaxHeap(int heap[], int i, int len)
+{
+int largeIndex = -1;
+int left = i * 2;
+int right = i * 2 + 1;
+if (left <= len && heap[left] > heap[i])
+largeIndex = left;
+else
+largeIndex = i;
+if (right <= len && heap[right] > heap[largeIndex])
+largeIndex = right;
+if (largeIndex != i)
+{
+swap(heap[i], heap[largeIndex]);
+MaxHeap(heap, largeIndex, len);
+}
+}
+int main()
+{
+// 定义数组存储堆元素
+int k;
+cin >> k;
+69
+int *heap = new int [k+1]; //注，只需申请存储k 个数的数组
+FILE *fp = fopen("data.txt", "r"); //从文件导入海量数据（便于
+测试，只截取了9M 的数据大小）
+assert(fp);
+for (int i = 1; i <= k; i++)
+fscanf(fp, "%d ", &heap[i]);
+BuildHeap(heap, k); //建堆
+int newData;
+while (fscanf(fp, "%d", &newData) != EOF)
+{
+if (newData < heap[1]) //如果遇到比堆顶元素kmax 更小的，
+则更新堆
+{
+heap[1] = newData;
+MaxHeap(heap, 1, k); //调整堆
+}
+}
+for (int j = 1; j <= k; j++)
+cout << heap[j] << " ";
+cout << endl;
+fclose(fp);
+return 0;
+}
+咱们用比较大量的数据文件测试一下，如这个数据文件：
+70
+输入k=4，即要从这大量的数据中寻找最小的k 个数，可得到运行结果，如
+下图所示：
+至于，这4 个数，到底是不是上面大量数据中最小的4 个数，这个，咱们就
+无从验证了，非人力之所能及也。毕。
+71
+第六节、stl 之_nth_element ，逐步实现
+以下代码摘自stl 中_nth_element 的实现，且逐步追踪了各项操作，其完整
+代码如下：
+//_nth_element(...)的实现
+template <class RandomAccessIterator, class T>
+void __nth_element(RandomAccessIterator first, RandomAccessIterator nth,
+RandomAccessIterator last, T*) {
+while (last - first > 3) {
+RandomAccessIterator cut = __unguarded_partition //下面追踪
+__unguarded_partition
+(first, last, T(__median(*first, *(first + (last - first)/2),
+*(last - 1))));
+if (cut <= nth)
+first = cut;
+else
+last = cut;
+}
+__insertion_sort(first, last); //下面追踪__insertion_sort(first, last)
+}
+//__unguarded_partition()的实现
+template <class RandomAccessIterator, class T>
+RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
+RandomAccessIterator last,
+T pivot) {
+while (true) {
+while (*first < pivot) ++first;
+--last;
+while (pivot < *last) --last;
+if (!(first < last)) return first;
+iter_swap(first, last);
+++first;
+}
+}
+//__insertion_sort(first, last)的实现
+template <class RandomAccessIterator>
+void __insertion_sort(RandomAccessIterator first, RandomAccessIterator last) {
+if (first == last) return;
+for (RandomAccessIterator i = first + 1; i != last; ++i)
+__linear_insert(first, i, value_type(first)); //下面追踪__linear_insert
+72
+}
+//_linear_insert()的实现
+template <class RandomAccessIterator, class T>
+inline void __linear_insert(RandomAccessIterator first,
+RandomAccessIterator last, T*) {
+T value = *last;
+if (value < *first) {
+copy_backward(first, last, last + 1); //这个追踪，待续
+*first = value;
+}
+else
+__unguarded_linear_insert(last, value); //最后，再追踪
+__unguarded_linear_insert
+}
+//_unguarded_linear_insert()的实现
+template <class RandomAccessIterator, class T>
+void __unguarded_linear_insert(RandomAccessIterator last, T value) {
+RandomAccessIterator next = last;
+--next;
+while (value < *next) {
+*last = *next;
+last = next;
+--next;
+}
+*last = value;
+}
+第七节、再探Selection_algorithm，类似partition 方法O（n）再次求证
+网友反馈：
+stupidcat：用类似快排的partition 的方法，只求2 边中的一边，在O(N)时间
+得到第k 大的元素v；
+弄完之后，vector<int> &data 的前k 个元素，就是最小的k 个元素了。
+时间复杂度是O(N)，应该是最优的算法了。并给出了代码示例：
+//copyright@ stupidcat
+//July、updated，2011.05.08
+int Partition(vector<int> &data, int headId, int tailId)
+//这里，采用的是算法导论上的partition 过程方法
+73
+{
+int posSlow = headId - 1, posFast = headId; //一前一后，俩个指针
+for (; posFast < tailId; ++posFast)
+{
+if (data[posFast] < data[tailId]) //以最后一个元素作为主元
+{
+++posSlow;
+swap(data[posSlow], data[posFast]);
+}
+}
+++posSlow;
+swap(data[posSlow], data[tailId]);
+return posSlow; //写的不错，命名清晰
+}
+void FindKLeast(vector<int> &data, int headId, int tailId, int k)
+//寻找第k 小的元素
+{
+if (headId < tailId)
+{
+int midId = Partition(data, headId, tailId);
+//可惜这里，没有随机或中位数的方法选取枢纽元（主元），使得本程序思路虽对，却不达O
+（N）的目标
+if (midId > k)
+{
+FindKLeast(data, headId, midId - 1, k); //k<midid，直接在低区间找
+}
+else
+{
+if (midId < k)
+{
+FindKLeast(data, midId + 1, tailId, k); //k>midid，递归到高区间找
+}
+}
+}
+}
+void FindKLeastNumbers(vector<int> &data, unsigned int k)
+{
+int len = data.size();
+if (k > len)
+{
+74
+throw new std::exception("Invalid argument!");
+}
+FindKLeast(data, 0, len - 1, k);
+}
+看来，这个问题，可能会因此纠缠不清了，近日，在维基百科的英文页面上，
+找到有关Selection_algorithm 的资料，上面给出的示例代码为：
+function partition(list, left, right, pivotIndex)
+pivotValue := list[pivotIndex]
+swap list[pivotIndex] and list[right] // Move pivot to end
+storeIndex := left
+for i from left to right
+if list[i] < pivotValue
+swap list[storeIndex] and list[i]
+increment storeIndex
+swap list[right] and list[storeIndex] // Move pivot to its final place
+return storeIndex
+function select(list, left, right, k)
+if left = right
+return list[left]
+select pivotIndex between left and right
+pivotNewIndex := partition(list, left, right, pivotIndex)
+pivotDist := pivotNewIndex - left + 1
+if pivotDist = k
+return list[pivotNewIndex]
+else if k < pivotDist
+return select(list, left, pivotNewIndex - 1, k)
+else
+return select(list, pivotNewIndex + 1, right, k - pivotDist)
+这个算法，其实就是在本人这篇文章：当今世界最受人们重视的十大经
+典算法里提到的：第三名：BFPRT 算法：
+A worst-case linear algorithm for the general case of selecting the
+kth largest element was published by Blum,
+Floyd, Pratt, Rivest and Tarjan in their 1973 paper "Time bounds for
+selection", sometimes called BFPRT after the last names of the
+authors.
+It is based on the quickselect algorithm and is also known as the
+median-of-medians algorithm.
+75
+同时据维基百科上指出，若能选取一个好的pivot，则此算法能达到O（n）
+的最佳时间复杂度。
+The median-calculating recursive call does not exceed worst-case
+linear behavior because the list of medians is 20% of the size of the
+list, while the other recursive call recurs on at most 70% of the list,
+making the running time
+T(n) ≤ T(n/5) + T(7n/10) + O(n)
+The O(n) is for the partitioning work (we visited each element a
+constant number of times，in order to form them into O(n) groups and take
+each median in O(1) time).
+From this, one can then show that T(n) ≤ c*n*(1 + (9/10) + (9/10)2
++ ...) = O(n).
+当然，上面也提到了用堆这个数据结构，扫描一遍数组序列，建k 个元素的
+堆O（k）的同时，调整堆（logk），然后再遍历剩下的n-k 个元素，根据其与
+堆顶元素的大小比较，决定是否更新堆，更新一次logk，所以，最终的时间复
+杂度为O（k*logk+(n-k)*logk）=O（n*logk）。
+Another simple method is to add each element of the list into an ordered
+set data structure,such as a heap or self-balancing binary search tree,
+with at most k elements. Whenever the data structure has more than k
+elements, we remove the largest element,which can be done in O(log k) time.
+Each insertion operation also takes O(log k) time,resulting in O(nlog k)
+time overall.
+而如果上述类似快速排序的partition 过程的BFPRT 算法成立的话，则将最
+大限度的优化了此寻找第k 个最小元素的算法复杂度（经过第1 节末+第二节+
+第4 节末的updated，以及本节的论证，现最终确定，运用类似快速排序的
+partition 算法寻找最小的k 个元素能做到O（N）的复杂度，并确认无疑。July、
+updated，2011.05.05.凌晨）。
+updated again：
+76
+为了再次佐证上述论证之不可怀疑的准确性，我再原文引用下第九章第9.3
+节全部内容（最坏情况线性时间的选择），如下（我酌情对之参考原中文版做了
+翻译，下文中括号内的中文解释，为我个人添加）：
+9.3 Selection in worst-case linear time（最坏情况下线性时间的选择算法）
+We now examine a selection algorithm whose running time isO(n) in the
+worst case（现在来看，一个最坏情况运行时间为O（N）的选择算法SELECT）.
+Like RANDOMIZED-SELECT, the algorithm SELECT finds the desired element
+by recursively partitioning the input array. The idea behind the algorithm,
+however, is toguarantee a good split when the array is partitioned.
+SELECT uses the deterministic partitioning algorithm PARTITION from
+quicksort (seeSection 7.1), modified to take the element to partition
+around as an input parameter（像RANDOMIZED-SELECT 一样，SELECTT 通过输
+入数组的递归划分来找出所求元素，但是，该算法的基本思想是要保证对数组的
+划分是个好的划分。SECLECT 采用了取自快速排序的确定性划分算法partition，
+并做了修改，把划分主元元素作为其参数）.
+The SELECT algorithm determines theith smallest of an input array
+ofn > 1 elements by executing the following steps. (Ifn = 1, then SELECT
+merely returns its only input value as theith smallest.)（算法SELECT
+通过执行下列步骤来确定一个有n>1 个元素的输入数组中的第i 小的元素。（如
+果n=1，则SELECT 返回它的唯一输入数值作为第i 个最小值。））
+1. Divide then elements of the input array into⌋ groups of 5 elements
+each and at most one group made up of the remainingn mod 5 elements.
+2. Find the median of each of the⌉ groups by first insertion sorting the
+elements of each group (of which there are at most 5) and then picking
+the median from the sorted list of group elements.
+77
+3. Use SELECT recursively to find the medianx of the⌉ medians found
+in step 2. (If there are an even number of medians, then by our
+convention,x is the lower median.)
+4. Partition the input array around the median-of-mediansx using the
+modified version of PARTITION. Letk be one more than the number of
+elements on the low side of the partition, so thatx is thekth smallest
+element and there aren-k elements on the high side of the partition.
+（利用修改过的partition 过程，按中位数的中位数x 对输入数组进行划分，
+让k 比划低去的元素数目多1，所以，x 是第k 小的元素，并且有n-k 个元素
+在划分的高区）
+5. Ifi =k, then returnx. Otherwise, use SELECT recursively to find
+theith smallest element on the low side ifi <k, or the (i -k)th
+smallest element on the high side ifi >k.（如果要找的第i 小的元素
+等于程序返回的k，即i=k，则返回x。否则，如果i<k，则在低区递归调用
+SELECT 以找出第i 小的元素，如果i>k，则在高区间找第（i-k）个最小元素）
+（以上五个步骤，即本文上面的第四节末中所提到的所谓“五分化中项的中项”
+的方法。）
+To analyze the running time of SELECT, we first determine a lower bound
+on the number of elements that are greater than the partitioning
+element x. （为了分析SELECT 的运行时间，先来确定大于划分主元元素x 的
+的元素数的一个下界）Figure 9.1 is helpful in visualizing this
+bookkeeping. At least half of the medians found in step 2 are greater
+than[1] the median-of-medians x. Thus, at least half of
+78
+the ⌉ groupscontribute 3 elements that are greater than x, except for
+the one group that has fewer than 5 elements if 5 does not dividen exactly,
+and the one group containingx itself. Discounting these two groups, it
+follows that the number of elements greater thanx is at least：
+（Figure 9.1: 对上图的解释或称对SELECT 算法的分析：n 个元素由小圆
+圈来表示，并且每一个组占一纵列。组的中位数用白色表示，而各中位数的中位
+数x 也被标出。（当寻找偶数数目元素的中位数时，使用下中位数）。箭头从比
+较大的元素指向较小的元素，从中可以看出，在x 的右边，每一个包含5 个元素
+的组中都有3 个元素大于x，在x 的左边，每一个包含5 个元素的组中有3 个元
+素小于x。大于x 的元素以阴影背景表示。）
+Similarly, the number of elements that are less thanx is at least
+3n/10 - 6. Thus, in the worst case, SELECT is called recursively on at
+most 7n/10 + 6 elements in step 5.
+We can now develop a recurrence for the worst-case running timeT(n)
+of the algorithm SELECT. Steps 1, 2, and 4 take O(n) time. (Step 2
+consists ofO(n) calls of insertion sort on sets of sizeO(1).) Step 3 takes
+timeT(⌉), and step 5 takes time at mostT(7n/10+ 6), assuming thatT is
+79
+monotonically increasing. We make the assumption, which seems unmotivated
+at first, that any input of 140 or fewer elements requiresO(1) time; the
+origin of the magic constant 140 will be clear shortly. We can therefore
+obtain the recurrence：
+We show that the running time is linear by substitution. More
+specifically, we will show thatT(n) ≤cn for some suitably large
+constant c and alln > 0. We begin by assuming thatT(n) ≤cn for some
+suitably large constantc and alln ≤ 140; this assumption holds
+ifc is large enough. We also pick a constanta such that the function
+described by theO(n) term above (which describes the non-recursive
+component of the running time of the algorithm) is bounded above byan for
+alln > 0. Substituting this inductive hypothesis into the right-hand
+side of the recurrence yields
+≤
+c⌉ +c(7n/10 + 6) +an
+≤ cn/5 +c + 7cn/10 + 6c +an
+= 9cn/10 + 7c +an
+= cn + (-cn/10 + 7c +an) ,
+which is at mostcn if
+Inequality (9.2) is equivalent to the inequalityc ≥ 10a(n/(n -
+70)) when n > 70. Because we assume thatn ≥ 140, we have n/(n - 70)
+≤ 2, and so choosing c ≥ 20a will satisfyinequality (9.2). (Note
+that there is nothing special about the constant 140; we could replace
+it by any integer strictly greater than 70 and then choosec accordingly.)
+The worst-case running time of SELECT is therefore linear（因此，此SELECT
+的最坏情况的运行时间是线性的）.
+As in a comparison sort (seeSection 8.1), SELECT and RANDOMIZED-SELECT
+determine information about the relative order of elements only by
+comparing elements. Recall fromChapter 8 that sorting requiresΩ(n lgn)
+time in the comparison model, even on average (see Problem 8-1). The
+80
+linear-time sorting algorithms in Chapter 8 make assumptions about the
+input. In contrast, the linear-time selection algorithms in this chapter
+do not require any assumptions about the input. They are not subject to
+the Ω(nlgn) lower bound because they manage to solve the selection
+problem without sorting.
+（与比较排序（算法导论8.1 节）中的一样，SELECT 和RANDOMIZED-SELECT 仅
+通过元素间的比较来确定它们之间的相对次序。在算法导论第8 章中，我们知道
+在比较模型中，即使在平均情况下，排序仍然要O（n*logn）的时间。第8 章得
+线性时间排序算法在输入上做了假设。相反地，本节提到的此类似partition
+过程的SELECT 算法不需要关于输入的任何假设，它们不受下界O（n*logn）的
+约束，因为它们没有使用排序就解决了选择问题（看到了没，道出了此算法的本
+质阿））
+Thus, the running time is linear because these algorithms do not sort;
+the linear-time behavior is not a result of assumptions about the input,
+as was the case for the sorting algorithms inChapter 8. Sorting
+requiresΩ(n lgn) time in the comparison model, even on average (see
+Problem 8-1), and thus the method of sorting and indexing presented in
+the introduction to this chapter is asymptotically inefficient.（所以，
+本节中的选择算法之所以具有线性运行时间，是因为这些算法没有进行排序；线
+性时间的结论并不需要在输入上所任何假设，即可得到。.....）
+ok，综述全文，根据选取不同的元素作为主元（或枢纽）的情况，可简单总
+结如下：
+1、RANDOMIZED-SELECT，以序列中随机选取一个元素作为主元，可达到线性期望
+时间O（N）的复杂度。
+这个在本文第一节有关编程之美第2.5 节关于寻找最大的k 个元素（但其
+n*logk 的复杂度是严重错误的，待勘误,应以算法导论上的为准，随机选取主元，
+可达线性期望时间的复杂度），及本文第二节中涉及到的算法导论上第九章第
+9.2 节中（以线性期望时间做选择），都是以随机选取数组中任一元素作为枢纽
+元的。
+2、SELECT，快速选择算法，以序列中“五分化中项的中项”，或“中位数的中
+位数”作为主元（枢纽元），则不容置疑的可保证在最坏情况下亦为O（N）的
+复杂度。
+81
+这个在本文第四节末，及本文第七节，本文文末中都有所阐述，具体涉及到
+了算法导论一书中第九章第9.3 节的最快情况线性时间的选择，及Mark Allen
+Weiss 所著的数据结构与算法分析--c 语言描述一书的第10 章第10.2.3 节（选
+择问题）中，都有所阐述。
+本文结论：至此，可以毫无保留的确定此问题之结论：运用类似快速排序的
+partition 的快速选择SELECT 算法寻找最小的k 个元素能做到O（N）的复杂度。
+RANDOMIZED-SELECT 可能会有O（N^2）的最坏的时间复杂度，但上面的SELECT
+算法，采用如上所述的“中位数的中位数”的取元方法，则可保证此快速选择算
+法在最坏情况下是线性时间O（N）的复杂度。
+最终验证：
+1、我想，我想，是的，仅仅是我猜想，你可能会有这样的疑问：经过上文
+大量严谨的论证之后，利用SELECT 算法，以序列中“五分化中项的中项”，或
+“中位数的中位数”作为主元（枢纽元），的的确确在最坏情况下O（N）的时
+间复杂度内找到第k 小的元素，但是，但是，咱们的要面对的问题是什么?咱们
+是要找最小的k 个数阿！不是找第k 小的元素，而是找最小的k 个数（即不是要
+你找1 个数，而是要你找k 个数）?哈哈，问题提的非常之好阿。
+2、事实上，在最坏情况下，能在O（N）的时间复杂度内找到第k 小的元素，
+那么，亦能保证最坏情况下在O（N）的时间复杂度内找到前最小的k 个数，咱
+们得找到一个理论依据，即一个证明（我想，等你看到找到前k 个数的时间复杂
+度与找第k 小的元素，最坏情况下，同样是O（N）的时间复杂度后，你便会100%
+的相信本文的结论了，然后可以通告全世界，你找到了这个世界上最靠谱的中文
+算法blog，ok，这是后话）。
+算法导论第9 章第9.3 节练习里，有2 个题目，与我们将要做的证明是一个
+道理，请看：
+Exercises 9.3-4: ⋆
+Suppose that an algorithm uses only comparisons to find the ith smallest
+element in a set of n elements. Show that it can also find the i - 1 smaller
+elements and the n - i larger elements without performing any additional
+comparisons.（假设对一个含有n 个元素的集合，某算法只需比较来确定第i
+小的元素。证明：无需另外的比较操作，它也能找到比i 小的i-1 个元素和比i
+大的n-i 个元素）。
+82
+Exercises 9.3-7
+Describe an O(n)-time algorithm that, given a set S of n distinct numbers
+and a positive integer k ≤ n, determines the k numbers in S that are
+closest to the median of S.（给出一个O（N）时间的算法，在给定一个有n
+个不同数字的集合S 以及一个正整数K<=n 后，它能确定出S 中最接近其中位数
+的k 个数。）
+怎么样，能证明么?既然通过本文，咱们已经证明了上述的SELECT 算法在最
+坏情况下O（N）的时间内找到第k 小的元素，那么距离咱们确切的问题：寻找
+最小的k 个数的证明，只差一步之遥了。
+给点提示：
+1、找到了第K 小的数Xk 为O(n)，再遍历一次数组，找出所有比k 小的元
+素O（N）（比较Xk 与数组中各数的大小，凡是比Xk 小的元素，都是我们要找
+的元素），最终时间复杂度即为： O（N）（找到第k 小的元素） + 遍历整个数
+组O（N）=O（N）。这个结论非常之简单，也无需证明（但是，正如上面的算法
+导论练习题9.3-7 所述，能否在找到第k 小的元素后，能否不需要再比较元素
+列?）。
+2、我们的问题是，找到第k 小的元素后Xk，是否Xk 之前的元素就是我们要
+找的最小的k 个数，即，Xk 前面的数，是否都<=Xk?因为那样的话，复杂度则
+变为：O（N）+O（K）（遍历找到的第k 小元素前面的k 个元素）=O（N+K）=O
+（N），最坏情况下，亦是线性时间。
+终极结论：证明只有一句话：因为本文我们所有的讨论都是基于快速排序的
+partition 方法，而这个方法，每次划分之后，都保证了枢纽元Xk 的前边元素
+统统小于Xk，后边元素统统大于Xk（当然，如果你是属于那种打破沙锅问到底
+的人，你可能还想要我证明partition 过程中枢纽元素为何能把整个序列分成左
+小右大两个部分。但这个不属于本文讨论范畴。读者可参考算法导论第7 章第7.1
+节关于partition 过程中循环不变式的证明）。所以，正如本文第一节思路5
+所述在0（n）的时间内找到第k 小的元素，然后遍历输出前面的k 个小的元素。
+如此，再次验证了咱们之前得到的结论：运用类似快速排序的partition 的快速
+选择SELECT 算法寻找最小的k 个元素，在最坏情况下亦能做到O（N）的复杂度。
+83
+5、RANDOMIZED-SELECT，每次都是随机选取数列中的一个元素作为主元，在
+0（n）的时间内找到第k 小的元素，然后遍历输出前面的k 个小的元素。如果
+能的话，那么总的时间复杂度为线性期望时间：O（n+k）=O（n）（当k 比较小
+时）。
+所以列，所以，恭喜你，你找到了这个世界上最靠谱的中文算法blog。
+updated：
+我假设，你并不认为并赞同上述那句话：你找到了这个世界上最靠谱的中文
+算法blog。ok，我再给你一个证据：我再次在编程珠玑II 上找到了SELECT 算
+法能在平均时间O（N）内找出第k 小元素的第三个证据。同时，依据书上所说，
+由于SELECT 算法采取partition 过程划分整个数组元素，所以在找到第k 小的
+元素Xk 之后，Xk+Xk 前面的k 个元素即为所要查找的k 个元素（下图为编程珠
+玑II 第15 章第15.2 节的截图，同时各位还可看到，快速排序是递归的对俩个
+子序列进行操作，而选择算法只对含有K 的那一部分重复操作）。
+再多余的话，我不想说了。我知道我的确是一个庸人自扰的P 民，即没有问
+题的事情却硬要弄出一堆问题出来，然后再矢志不渝的论证自己的观点不容置疑
+之正确性。ok，毕。
+备注：
+84
+ 快速选择SELECT 算法，虽然复杂度平均是o(n)，但这个系数比较大，与
+用一个最大堆0(n*logk)不见得就有优势）
+ 当K 很小时，O（N*logK）与O（N）等价，当K 很大时，当然也就不能忽
+略掉了。也就是说，在我们这个具体寻找k 个最小的数的问题中，当我们
+无法确定K 的具体值时（是小是大），咱们便不能简单的从表面上忽略。
+也就是说：O（N*logK）就是O（N*logK），非O（N）。
+1. 如果n=1024,k=n-1,最差情况下需比较2n 次，而nlog(k-1)=10n，所以不
+相同。实际上，这个算法时间复杂度与k 没有直接关系。且只在第一次划
+分的时候用到了K,后面几次划分，是根据实际情况确定的，与K 无关了。
+2. 但k=n/2 时也不是nlogk,因为只在第一次划分的时候用到了K,后面几次
+划分,是根据实际情况确定的,与K 无关了。比如a[1001].k=500,第一次
+把把a 划分成两部分,b 和c ,不妨设b 元素个数为400 个,c 中元素为600
+个,则下一步应该舍掉a,然后在c 中寻找top100,此时k 已经变成了100，
+因此与k 无关。
+ 所以，咱们在表述快速选择算法的平均时间复杂度时，还是要写成O（N）
+的，断不可写成O（N*logK）的。
+参考文献：
+1、Mark Allen Weiss 的数据结构与算法分析--c 语言描述，第7 章第7.7.6 节，
+线性期望时间的选择算法，第10 章第10.2.3 节，选择问题
+2、算法导论，第九章第9.2 节，以线性期望时间做选择，第九章第9.3 节，最
+快情况线性时间的选择
+3、编程之美第一版，第141 页，第2.5 节寻找最大的k 个数（找最大或最小，
+一个道理）
+4、维基百科，http://en.wikipedia.org/wiki/Selection_algorithm。
+5、M. Blum, R.W. Floyd, V. Pratt, R. Rivest and R. Tarjan, "Time bounds
+for selection,"
+J. Comput. System Sci. 7 (1973) 448-461.
+6、当今世界最受人们重视的十大经典算法里提到的，BFPRT 算法。
+7、编程珠玑II 第15 章第15.2 节程序。顺便大赞此书。July、updated，
+2011.05.07。
+预告： 程序员面试题狂想曲、第四章（更多有关海量数据处理，及Top K 算
+法问题（此问题已作为第三章续），第四章，择日发布。），五月份发布（近期
+85
+内事情较多，且昨夜因修正此文足足熬到了凌晨4 点（但室内并无海棠花），写
+一篇文章太耗精力和时间，见谅。有关本人动态，可关注本人微博：
+http://weibo.com/julyweibo。谢谢。July、updated，2011.05.05）。
+ok，有任何问题，欢迎随时指出。谢谢。完。
+86
+第三章续、Top K 算法问题的实现
+作者：July，zhouzhenren，yansha。
+致谢：微软100 题实现组，狂想曲创作组。
+时间：2011 年05 月08 日
+微博：http://weibo.com/julyweibo 。
+出处：http://blog.csdn.net/v_JULY_v 。
+wiki：http://tctop.wikispaces.com/。
+-----------------------------------------------
+前奏
+在上一篇文章，程序员面试题狂想曲：第三章、寻找最小的k 个数中，后来为了论证
+类似快速排序中partition 的方法在最坏情况下，能在O（N）的时间复杂度内找到最小的k
+个数，而前前后后updated 了10 余次。所谓功夫不负苦心人，终于得到了一个想要的结果。
+简单总结如下（详情，请参考原文第三章）：
+1、RANDOMIZED-SELECT，以序列中随机选取一个元素作为主元，可达到线性期望时
+间O（N）的复杂度。
+2、SELECT，快速选择算法，以序列中“五分化中项的中项”，或“中位数的中位数”作为
+主元（枢纽元），则不容置疑的可保证在最坏情况下亦为O（N）的复杂度。
+本章，咱们来阐述寻找最小的k 个数的反面，即寻找最大的k 个数，但此刻可能就有读
+者质疑了，寻找最大的k 个数和寻找最小的k 个数，原理不是一样的么?
+是的，的确是一样，但这个寻找最大的k 个数的问题的实用范围更广，因为它牵扯到了
+一个Top K 算法问题，以及有关搜索引擎，海量数据处理等广泛的问题，所以本文特意对
+这个Top K 算法问题，进行阐述以及实现（侧重实现，因为那样看起来，会更令人激动人
+心），算是第三章的续。ok，有任何问题，欢迎随时不吝指正。谢谢。
+87
+说明
+关于寻找最小K 个数能做到最坏情况下为O（N）的算法及证明，请参考原第三章，寻
+找最小的k 个数，本文的代码不保证O（N）的平均时间复杂度，只是根据第三章有办法可
+以做到而已（如上面总结的，2、SELECT，快速选择算法，以序列中“五分化中项的中项”，
+或“中位数的中位数”作为主元或枢纽元的方法，原第三章已经严格论证并得到结果）。
+第一节、寻找最小的第k 个数
+在进入寻找最大的k 个数的主题之前，先补充下关于寻找最k 小的数的三种简单实现。
+由于堆的完整实现，第三章：第五节，堆结构实现，处理海量数据中已经给出，下面主要给
+出类似快速排序中partition 过程的代码实现：
+寻找最小的k 个数，实现一（下段代码经本文评论下多位读者指出有问题：当a [ i ]=a [ j ]=pivot
+时，则会产生一个无限循环，在Mark Allen Weiss 的数据结构与算法分析C++描述中文版的P209-P210
+有描述，读者可参看之。特此说明，因本文代码存在问题的地方还有几处，故请待后续统一修
+正.2012.08.21）：
+//copyright@ mark allen weiss && July && yansha
+//July，yansha、updated，2011.05.08.
+//本程序，后经飞羽找出错误，已经修正。
+//随机选取枢纽元，寻找最小的第k 个数
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+int my_rand(int low, int high)
+{
+int size = high - low + 1;
+return low + rand() % size;
+}
+//q_select places the kth smallest element in a[k]
+int q_select(int a[], int k, int left, int right)
+{
+if(k > right || k < left)
+{
+// cout<<"---------"<<endl; //为了处理当k 大于数组中元素个数的异常情况
+88
+return false;
+}
+//真正的三数中值作为枢纽元方法，关键代码就是下述六行
+int midIndex = (left + right) / 2;
+if(a[left] < a[midIndex])
+swap(a[left], a[midIndex]);
+if(a[right] < a[midIndex])
+swap(a[right], a[midIndex]);
+if(a[right] < a[left])
+swap(a[right], a[left]);
+swap(a[left], a[right]);
+int pivot = a[right]; //之前是int pivot = right，特此，修正。
+// 申请两个移动指针并初始化
+int i = left;
+int j = right-1;
+// 根据枢纽元素的值对数组进行一次划分
+for (;;)
+{
+while(a[i] < pivot)
+i++;
+while(a[j] > pivot)
+j--;
+//a[i] >= pivot, a[j] <= pivot
+if (i < j)
+swap(a[i], a[j]); //a[i] <= a[j]
+else
+break;
+}
+swap(a[i], a[right]);
+/* 对三种情况进行处理
+1、如果i=k，即返回的主元即为我们要找的第k 小的元素，那么直接返回主元a[i]即可;
+2、如果i>k，那么接下来要到低区间A[0....m-1]中寻找，丢掉高区间;
+3、如果i<k，那么接下来要到高区间A[m+1...n-1]中寻找，丢掉低区间。
+*/
+if (i == k)
+return true;
+else if (i > k)
+return q_select(a, k, left, i-1);
+89
+else return q_select(a, k, i+1, right);
+}
+int main()
+{
+int i;
+int a[] = {7, 8, 9, 54, 6, 4, 11, 1, 2, 33};
+q_select(a, 4, 0, sizeof(a) / sizeof(int) - 1);
+return 0;
+}
+寻找最小的第k 个数，实现二：
+//copyright@ July
+//yansha、updated，2011.05.08。
+// 数组中寻找第k 小元素，实现二
+#include <iostream>
+using namespace std;
+const int numOfArray = 10;
+// 这里并非真正随机
+int my_rand(int low, int high)
+{
+int size = high - low + 1;
+return low + rand() % size;
+}
+// 以最末元素作为主元对数组进行一次划分
+int partition(int array[], int left, int right)
+{
+int pos = right;
+for(int index = right - 1; index >= left; index--)
+{
+if(array[index] > array[right])
+swap(array[--pos], array[index]);
+}
+swap(array[pos], array[right]);
+return pos;
+}
+// 随机快排的partition 过程
+int random_partition(int array[], int left, int right)
+{
+90
+// 随机从范围left 到right 中取一个值作为主元
+int index = my_rand(left, right);
+swap(array[right], array[index]);
+// 对数组进行划分，并返回主元在数组中的位置
+return partition(array, left, right);
+}
+// 以线性时间返回数组array[left...right]中第k 小的元素
+int random_select(int array[], int left, int right, int k)
+{
+// 处理异常情况
+if (k < 1 || k > (right - left + 1))
+return -1;
+// 主元在数组中的位置
+int pos = random_partition(array, left, right);
+/* 对三种情况进行处理：(m = i - left + 1)
+1、如果m=k，即返回的主元即为我们要找的第k 小的元素，那么直接返回主元array[i]即可;
+2、如果m>k，那么接下来要到低区间array[left....pos-1]中寻找，丢掉高区间;
+3、如果m<k，那么接下来要到高区间array[pos+1...right]中寻找，丢掉低区间。
+*/
+int m = pos - left + 1;
+if(m == k)
+return array[pos];
+else if (m > k)
+return random_select(array, left, pos - 1, k);
+else
+return random_select(array, pos + 1, right, k - m);
+}
+int main()
+{
+int array[numOfArray] = {7, 8, 9, 54, 6, 4, 2, 1, 12, 33};
+cout << random_select(array, 0, numOfArray - 1, 4) << endl;
+return 0;
+}
+寻找最小的第k 个数，实现三：
+//求取无序数组中第K 个数，本程序枢纽元的选取有问题，不作推荐。
+//copyright@ 飞羽
+//July、yansha，updated，2011.05.18。
+91
+#include <iostream>
+#include <time.h>
+using namespace std;
+int kth_elem(int a[], int low, int high, int k)
+{
+int pivot = a[low];
+//这个程序之所以做不到O（N）的最最重要的原因，就在于这个枢纽元的选取。
+//而这个程序直接选取数组中第一个元素作为枢纽元，是做不到平均时间复杂度为O（N）的。
+//要做到，就必须把上面选取枢纽元的代码改掉，要么是随机选择数组中某一元素作为枢纽元，
+能达到线性期望的时间
+//要么是选取数组中中位数的中位数作为枢纽元，保证最坏情况下，依然为线性O（N）的平均时间
+复杂度。
+int low_temp = low;
+int high_temp = high;
+while(low < high)
+{
+while(low < high && a[high] >= pivot)
+--high;
+a[low] = a[high];
+while(low < high && a[low] < pivot)
+++low;
+a[high] = a[low];
+}
+a[low] = pivot;
+//以下就是主要思想中所述的内容
+if(low == k - 1)
+return a[low];
+else if(low > k - 1)
+return kth_elem(a, low_temp, low - 1, k);
+else
+return kth_elem(a, low + 1, high_temp, k);
+}
+int main() //以后尽量不再用随机产生的数组进行测试，没多大必要。
+{
+for (int num = 5000; num < 50000001; num *= 10)
+{
+int *array = new int[num];
+int j = num / 10;
+int acc = 0;
+92
+for (int k = 1; k <= num; k += j)
+{
+// 随机生成数据
+srand(unsigned(time(0)));
+for(int i = 0; i < num; i++)
+array[i] = rand() * RAND_MAX + rand();
+//”如果数组本身就是利用随机化产生的话，那么选择其中任何一个元素作为枢轴都可以看
+作等价于随机选择枢轴，
+//（虽然这不叫随机选择枢纽）”，这句话，是完全不成立的，是错误的。
+//“因为你总是选择随机数组中第一个元素作为枢纽元，不是随机选择枢纽元”
+//相当于把上面这句话中前面的“随机” 两字去掉，就是：
+//因为你总是选择数组中第一个元素作为枢纽元，不是随机选择枢纽元。
+//所以，这个程序，始终做不到平均时间复杂度为O（N）。
+//随机数组和给定一个非有序而随机手动输入的数组，是一个道理。稍后，还将就程序的运行
+结果继续解释这个问题。
+//July、updated，2011.05.18。
+// 计算一次查找所需的时钟周期数
+clock_t start = clock();
+int data = kth_elem(array, 0, num - 1, k);
+clock_t end = clock();
+acc += (end - start);
+}
+cout << "The average time of searching a date in the array size of " << num
+<< " is " << acc / 10 << endl;
+}
+return 0;
+}
+测试：
+The average time of searching a date in the array size of 5000 is 0
+The average time of searching a date in the array size of 50000 is 1
+The average time of searching a date in the array size of 500000 is 12
+The average time of searching a date in the array size of 5000000 is 114
+The average time of searching a date in the array size of 50000000 is 1159
+Press any key to continue
+通过测试这个程序，我们竟发现这个程序的运行时间是线性的?
+或许，你还没有意识到这个问题，ok，听我慢慢道来。
+我们之前说，要保证这个算法是线性的，就一定要在枢纽元的选取上下足功夫：
+1、要么是随机选取枢纽元作为划分元素
+2、要么是取中位数的中位数作为枢纽元划分元素
+93
+现在，这程序直接选取了数组中第一个元素作为枢纽元
+竟然，也能做到线性O（N）的复杂度，这不是自相矛盾么?
+你觉得这个程序的运行时间是线性O（N），是巧合还是确定会是如此?
+哈哈，且看1、@well：根据上面的运行结果不能判断线性，如果人家是O(n^1.1) 也有可能啊，而且
+部分数据始终是拟合，还是要数学证明才可靠。2、@July：同时，随机数组中选取一个元素作为枢纽元！
+=> 随机数组中随机选取一个元素作为枢纽元（如果是随机选取随机数组中的一个元素作为主元，那就不
+同了，跟随机选取数组中一个元素作为枢纽元一样了）。3、@飞羽：正是因为数组本身是随机的，所以选
+择第一个元素和随机选择其它的数是等价的（由等概率产生保证），这第3 点，我与飞羽有分歧，至于谁
+对谁错，待时间让我考证。
+关于上面第3 点我和飞羽的分歧，在我们进一步讨论之后，一致认定（不过，相信，你看到了上面程
+序更新的注释之后，你应该有几分领会了）：
+1. 我们说输入一个数组的元素，不按其顺序输入：如，1,2,3,4,5,6,7，而是这样输入：5,7,6,4,3，1,2，
+这就叫随机输入，而这种情况就相当于上述程序主函数中所产生的随机数组。然而选取随机输入
+的数组或随机数组中第一个元素作为主元，我们不能称之为说是随机选取枢纽元。
+2. 因为，随机数产生器产生的数据是随机的，没错，但你要知道，你总是选取随机数组的第一个元
+素作为枢纽元，这不叫随机选取枢纽元。
+3. 所以，上述程序的主函数中随机产生的数组对这个程序的算法而言，没有任何意义，就是帮忙产
+生了一个随机数组，帮助我们完成了测试，且方便我们测试大数据量而已，就这么简单。
+4. 且一般来说，我们看一个程序的时间复杂度，是不考虑其输入情况的，即不考虑主函数，正如
+这个kth number 的程序所见，你每次都是随机选取数组中第一个元素作为枢纽元，而并不是随
+机选择枢纽元，所以，做不到平均时间复杂度为O（N）。
+所以：想要保证此快速选择算法为O（N）的复杂度，只有两种途径，那就是保证划分的枢纽元元素
+的选取是：
+1、随机的（注，此枢纽元随机不等同于数组随机）
+2、五分化中项的中项，或中位数的中位数。
+所以，虽然咱们对于一切心知肚明，但上面程序的运行结果说明不了任何问题，这也从侧面再次佐证
+了咱们第三章中观点的正确无误性。
+updated：
+非常感谢飞羽等人的工作，将上述三个版本综合到了一起（待进一步测试）：
+94
+///下面的代码对July 博客中的三个版本代码进行重新改写。欢迎指出错误。
+///先把它们贴在这里，还要进行随机化数据测试。待发...
+//modified by 飞羽at 2011.5.11
+/////Top_K_test
+//修改了下命名规范，July、updated，2011.05.12。
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+inline int my_rand(int low, int high)
+{
+int size = high - low + 1;
+return low + rand() % size;
+}
+int partition(int array[], int left, int right)
+{
+int pivot = array[right];
+int pos = left-1;
+for(int index = left; index < right; index++)
+{
+if(array[index] <= pivot)
+swap(array[++pos], array[index]);
+}
+swap(array[++pos], array[right]);
+return pos;//返回pivot 所在位置
+}
+bool median_select(int array[], int left, int right, int k)
+{
+//第k 小元素，实际上应该在数组中下标为k-1
+if (k-1 > right || k-1 < left)
+return false;
+//真正的三数中值作为枢纽元方法，关键代码就是下述六行
+int midIndex=(left+right)/2;
+if(array[left]<array[midIndex])
+swap(array[left],array[midIndex]);
+if(array[right]<array[midIndex])
+swap(array[right],array[midIndex]);
+if(array[right]<array[left])
+swap(array[right],array[left]);
+95
+swap(array[left], array[right]);
+int pos = partition(array, left, right);
+if (pos == k-1)
+return true;
+else if (pos > k-1)
+return median_select(array, left, pos-1, k);
+else return median_select(array, pos+1, right, k);
+}
+bool rand_select(int array[], int left, int right, int k)
+{
+//第k 小元素，实际上应该在数组中下标为k-1
+if (k-1 > right || k-1 < left)
+return false;
+//随机从数组中选取枢纽元元素
+int Index = my_rand(left, right);
+swap(array[Index], array[right]);
+int pos = partition(array, left, right);
+if (pos == k-1)
+return true;
+else if (pos > k-1)
+return rand_select(array, left, pos-1, k);
+else return rand_select(array, pos+1, right, k);
+}
+bool kth_select(int array[], int left, int right, int k)
+{
+//直接取最原始的划分操作
+if (k-1 > right || k-1 < left)
+return false;
+int pos = partition(array, left, right);
+if(pos == k-1)
+return true;
+else if(pos > k-1)
+return kth_select(array, left, pos-1, k);
+else return kth_select(array, pos+1, right, k);
+}
+96
+int main()
+{
+int array1[] = {7, 8, 9, 54, 6, 4, 11, 1, 2, 33};
+int array2[] = {7, 8, 9, 54, 6, 4, 11, 1, 2, 33};
+int array3[] = {7, 8, 9, 54, 6, 4, 11, 1, 2, 33};
+int numOfArray = sizeof(array1) / sizeof(int);
+for(int i=0; i<numOfArray; i++)
+printf("%d/t",array1[i]);
+int K = 9;
+bool flag1 = median_select(array1, 0, numOfArray-1, K);
+bool flag2 = rand_select(array2, 0, numOfArray-1, K);
+bool flag3 = kth_select(array3, 0, numOfArray-1, K);
+if(!flag1)
+return 1;
+for(i=0; i<K; i++)
+printf("%d/t",array1[i]);
+printf("/n");
+if(!flag2)
+return 1;
+for(i=0; i<K; i++)
+printf("%d/t",array2[i]);
+printf("/n");
+if(!flag3)
+return 1;
+for(i=0; i<K; i++)
+printf("%d/t",array3[i]);
+printf("/n");
+return 0;
+}
+说明：@飞羽：因为预先设定了K，经过分割算法后，数组肯定被划分为array[0...k-1]
+和array[k...length-1]，注意到经过Select_K_Version 操作后，数组是被不断地分割的，使
+得比array[k-1]的元素小的全在左边，题目要求的是最小的K 个元素，当然也就是
+array[0...k-1]，所以输出的结果就是前k 个最小的数：
+7 8 9 54 6 4 11 1 2 33
+4 1 2 6 7 8 9 11 33
+7 6 4 1 2 8 9 11 33
+97
+7 8 9 6 4 11 1 2 33
+Press any key to continue
+（更多，请参见：此狂想曲系列tctop 修订wiki 页面：http://tctop.wikispaces.com/）
+第二节、寻找最大的k 个数
+把之前第三章的问题，改几个字，即成为寻找最大的k 个数的问题了，如下所述：
+查找最大的k 个元素
+题目描述：输入n 个整数，输出其中最大的k 个。
+例如输入1，2，3，4，5，6，7 和8 这8 个数字，则最大的4 个数字为8，7，6 和5。
+分析：由于寻找最大的k 个数的问题与之前的寻找最小的k 个数的问题，本质是一样的，
+所以，这里就简单阐述下思路，ok，考验你举一反三能力的时间到了：
+1、排序，快速排序。我们知道，快速排序平均所费时间为n*logn，从小到大排序这n 个数，然后再遍
+历序列中后k 个元素输出，即可，总的时间复杂度为O（n*logn+k）=O（n*logn）。
+2、排序，选择排序。用选择或交换排序，即遍历n 个数，先把最先遍历到得k 个数存入大小为k 的数
+组之中，对这k 个数，利用选择或交换排序，找到k 个数中的最小数kmin（kmin 设为k 个元素的数组中
+最小元素），用时O（k）（你应该知道，插入或选择排序查找操作需要O（k）的时间），后再继续遍历
+后n-k 个数，x 与kmin 比较：如果x>kmin，则x 代替kmin，并再次重新找出k 个元素的数组中最大元素
+kmin‘（多谢jiyeyuran 提醒修正）；如果x<kmin，则不更新数组。这样，每次更新或不更新数组的所用的
+时间为O（k）或O（0），整趟下来，总的时间复杂度平均下来为：n*O（k）=O（n*k）。
+3、维护k 个元素的最小堆，原理与上述第2 个方案一致，即用容量为k 的最小堆存储最先遍历到的k
+个数，并假设它们即是最大的k 个数，建堆费时O（k），并调整堆（费时O（logk））后，有k1>k2>...kmin
+（kmin 设为小顶堆中最大元素）。继续遍历数列，每次遍历一个元素x，与堆顶元素比较，若x>kmin，则
+更新堆（用时logk），否则不更新堆。这样下来，总费时O（k*logk+（n-k）*logk）=O（n*logk）。此方
+法得益于在堆中，查找等各项操作时间复杂度均为logk（不然，就如上述思路2 所述：直接用数组也可以
+找出最大的k 个元素，用时O（n*k））。
+4、按编程之美第141 页上解法二的所述，类似快速排序的划分方法，N 个数存储在数组S 中，再从数
+组中随机选取一个数X，把数组划分为Sa 和Sb 俩部分，Sa>=X>=Sb，如果要查找的k 个元素小于Sa 的
+元素个数，则返回Sa 中较大的k 个元素，否则返回Sa 中所有的元素+Sb 中最大的k-|Sa|个元素。不断递
+归下去，把问题分解成更小的问题，平均时间复杂度为O（N）（编程之美所述的n*logk 的复杂度有误，
+应为O（N），特此订正。其严格证明，请参考第三章：程序员面试题狂想曲：第三章、寻找最小的k 个
+98
+数、updated 10 次）。
+.........
+其它的方法，在此不再重复了，同时，寻找最小的k 个数借助堆的实现，代码在上一篇
+文章第三章已有给出，更多，可参考第三章，只要把最大堆改成最小堆，即可。
+第三节、Top K 算法问题
+3.1、搜索引擎热门查询统计
+题目描述：
+搜索引擎会通过日志文件把用户每次检索使用的所有检索串都记录下来，每个查询串的
+长度为1-255 字节。
+假设目前有一千万个记录（这些查询串的重复度比较高，虽然总数是1 千万，但如果除
+去重复后，不超过3 百万个。一个查询串的重复度越高，说明查询它的用户越多，也就是
+越热门。），请你统计最热门的10 个查询串，要求使用的内存不能超过1G。
+分析：这个问题在之前的这篇文章十一、从头到尾彻底解析Hash 表算法里，已经有所
+解答。方法是:
+第一步、先对这批海量数据预处理，在O（N）的时间内用Hash 表完成统计（之前写成
+了排序，特此订正。July、2011.04.27）；
+第二步、借助堆这个数据结构，找出Top K，时间复杂度为N‘logK。
+即，借助堆结构，我们可以在log 量级的时间内查找和调整/移动。因此，维护一个K(该
+题目中是10)大小的小根堆（K1>K2>....Kmin，Kmin 设为堆顶元素），然后遍历300 万的
+Query，分别和根元素Kmin 进行对比比较（如上第2 节思路3 所述，若X>Kmin，则更新
+并调整堆，否则，不更新），我们最终的时间复杂度是：O（N） + N'*O（logK），（N 为
+1000 万，N’为300 万）。ok，更多，详情，请参考原文。
+或者：采用trie 树，关键字域存该查询串出现的次数，没有出现为0。最后用10 个元素
+的最小推来对出现频率进行排序。
+ok，本章里，咱们来实现这个问题，为了降低实现上的难度，假设这些记录全部是一些
+英文单词，即用户在搜索框里敲入一个英文单词，然后查询搜索结果，最后，要你统计输入
+单词中频率最大的前K 个单词。ok，复杂问题简单化了之后，编写代码实现也相对轻松多
+99
+了，画的简单示意图（绘制者， yansha），如下：
+完整源码：
+//copyright@yansha &&July
+//July、updated，2011.05.08
+//题目描述：
+//搜索引擎会通过日志文件把用户每次检索使用的所有检索串都记录下来，每个查询串的
+//长度为1-255 字节。假设目前有一千万个记录（这些查询串的重复度比较高，虽然总数是1 千万，但
+如果
+//除去重复后，不超过3 百万个。一个查询串的重复度越高，说明查询它的用户越多，也就是越热门），
+//请你统计最热门的10 个查询串，要求使用的内存不能超过1G。
+#include <iostream>
+#include <string>
+100
+#include <assert.h>
+using namespace std;
+#define HASHLEN 2807303
+#define WORDLEN 30
+// 结点指针
+typedef struct node_no_space *ptr_no_space;
+typedef struct node_has_space *ptr_has_space;
+ptr_no_space head[HASHLEN];
+struct node_no_space
+{
+char *word;
+int count;
+ptr_no_space next;
+};
+struct node_has_space
+{
+char word[WORDLEN];
+int count;
+ptr_has_space next;
+};
+// 最简单hash 函数
+int hash_function(char const *p)
+{
+int value = 0;
+while (*p != '/0')
+{
+value = value * 31 + *p++;
+if (value > HASHLEN)
+value = value % HASHLEN;
+}
+return value;
+}
+// 添加单词到hash 表
+void append_word(char const *str)
+{
+int index = hash_function(str);
+ptr_no_space p = head[index];
+while (p != NULL)
+101
+{
+if (strcmp(str, p->word) == 0)
+{
+(p->count)++;
+return;
+}
+p = p->next;
+}
+// 新建一个结点
+ptr_no_space q = new node_no_space;
+q->count = 1;
+q->word = new char [strlen(str)+1];
+strcpy(q->word, str);
+q->next = head[index];
+head[index] = q;
+}
+// 将单词处理结果写入文件
+void write_to_file()
+{
+FILE *fp = fopen("result.txt", "w");
+assert(fp);
+int i = 0;
+while (i < HASHLEN)
+{
+for (ptr_no_space p = head[i]; p != NULL; p = p->next)
+fprintf(fp, "%s %d/n", p->word, p->count);
+i++;
+}
+fclose(fp);
+}
+// 从上往下筛选，保持小根堆
+void sift_down(node_has_space heap[], int i, int len)
+{
+int min_index = -1;
+int left = 2 * i;
+int right = 2 * i + 1;
+if (left <= len && heap[left].count < heap[i].count)
+min_index = left;
+102
+else
+min_index = i;
+if (right <= len && heap[right].count < heap[min_index].count)
+min_index = right;
+if (min_index != i)
+{
+// 交换结点元素
+swap(heap[i].count, heap[min_index].count);
+char buffer[WORDLEN];
+strcpy(buffer, heap[i].word);
+strcpy(heap[i].word, heap[min_index].word);
+strcpy(heap[min_index].word, buffer);
+sift_down(heap, min_index, len);
+}
+}
+// 建立小根堆
+void build_min_heap(node_has_space heap[], int len)
+{
+if (heap == NULL)
+return;
+int index = len / 2;
+for (int i = index; i >= 1; i--)
+sift_down(heap, i, len);
+}
+// 去除字符串前后符号
+void handle_symbol(char *str, int n)
+{
+while (str[n] < '0' || (str[n] > '9' && str[n] < 'A') || (str[n] > 'Z' && str[n]
+< 'a') || str[n] > 'z')
+{
+str[n] = '/0';
+n--;
+}
+while (str[0] < '0' || (str[0] > '9' && str[0] < 'A') || (str[0] > 'Z' && str[0]
+< 'a') || str[0] > 'z')
+{
+103
+int i = 0;
+while (i < n)
+{
+str[i] = str[i+1];
+i++;
+}
+str[i] = '/0';
+n--;
+}
+}
+int main()
+{
+char str[WORDLEN];
+for (int i = 0; i < HASHLEN; i++)
+head[i] = NULL;
+// 将字符串用hash 函数转换成一个整数并统计出现频率
+FILE *fp_passage = fopen("string.txt", "r");
+assert(fp_passage);
+while (fscanf(fp_passage, "%s", str) != EOF)
+{
+int n = strlen(str) - 1;
+if (n > 0)
+handle_symbol(str, n);
+append_word(str);
+}
+fclose(fp_passage);
+// 将统计结果输入文件
+write_to_file();
+int n = 10;
+ptr_has_space heap = new node_has_space [n+1];
+int c;
+FILE *fp_word = fopen("result.txt", "r");
+assert(fp_word);
+for (int j = 1; j <= n; j++)
+{
+fscanf(fp_word, "%s %d", &str, &c);
+heap[j].count = c;
+strcpy(heap[j].word, str);
+104
+}
+// 建立小根堆
+build_min_heap(heap, n);
+// 查找出现频率最大的10 个单词
+while (fscanf(fp_word, "%s %d", &str, &c) != EOF)
+{
+if (c > heap[1].count)
+{
+heap[1].count = c;
+strcpy(heap[1].word, str);
+sift_down(heap, 1, n);
+}
+}
+fclose(fp_word);
+// 输出出现频率最大的单词
+for (int k = 1; k <= n; k++)
+cout << heap[k].count << " " << heap[k].word << endl;
+return 0;
+}
+程序测试：咱们接下来，来对下面的通过用户输入单词后，搜索引擎记录下来，“大量”单词
+记录进行统计（同时，令K=10，即要你找出10 个最热门查询的单词）：
+105
+运行结果：根据程序的运行结果，可以看到，搜索引擎记录下来的查询次数最多的10 个单
+词为（注，并未要求这10 个数要有序输出）：in（312 次），it（384 次），a（432），that
+（456），MPQ（408），of（504），and（624），is（456），the（1008），to（936）。
+读者反馈from 杨忠胜：3.1 节的代码第38 行hash_function(char const *p)有误吧，
+这样的话，不能修改p 的值（但是函数需要修改指针的值），要想不修改*p 指向的内容，
+应该是const char *p; 此外，您程序中的/t, /n 有误，C 语言是\t,\n。
+感谢这位读者的来信，日后统一订正。谢谢。
+3.2、统计出现次数最多的数据
+题目描述：
+给你上千万或上亿数据（有重复），统计其中出现次数最多的前N 个数据。
+分析：上千万或上亿的数据，现在的机器的内存应该能存下（也许可以，也许不可以）。所
+以考虑采用hash_map/搜索二叉树/红黑树等来进行统计次数。然后就是取出前N 个出现次
+数最多的数据了。当然，也可以堆实现。
+ok，此题与上题类似，最好的方法是用hash_map 统计出现的次数，然后再借用堆找
+出出现次数最多的N 个数据。不过，上一题统计搜索引擎最热门的查询已经采用过hash 表
+统计单词出现的次数，特此，本题咱们改用红黑树取代之前的用hash 表，来完成最初的统
+计，然后用堆更新，找出出现次数最多的前N 个数据。
+106
+同时，正好个人此前用c && c++ 语言实现过红黑树，那么，代码能借用就借用吧。
+完整代码：
+//copyright@ zhouzhenren &&July
+//July、updated，2011.05.08.
+//题目描述：
+//上千万或上亿数据（有重复），统计其中出现次数最多的前N 个数据
+//解决方案：
+//1、采用红黑树（本程序中有关红黑树的实现代码来源于@July）来进行统计次数。
+//2、然后遍历整棵树，同时采用最小堆更新前N 个出现次数最多的数据。
+//声明：版权所有，引用必须注明出处。
+#define PARENT(i) (i)/2
+#define LEFT(i) 2*(i)
+#define RIGHT(i) 2*(i)+1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef enum rb_color{ RED, BLACK }RB_COLOR;
+typedef struct rb_node
+{
+int key;
+int data;
+RB_COLOR color;
+struct rb_node* left;
+struct rb_node* right;
+struct rb_node* parent;
+}RB_NODE;
+RB_NODE* RB_CreatNode(int key, int data)
+{
+RB_NODE* node = (RB_NODE*)malloc(sizeof(RB_NODE));
+if (NULL == node)
+{
+printf("malloc error!");
+exit(-1);
+}
+node->key = key;
+node->data = data;
+107
+node->color = RED;
+node->left = NULL;
+node->right = NULL;
+node->parent = NULL;
+return node;
+}
+/**
+* 左旋
+*
+* node right
+* / / ==> / /
+* a right node y
+* / / / /
+* b y a b
+*/
+RB_NODE* RB_RotateLeft(RB_NODE* node, RB_NODE* root)
+{
+RB_NODE* right = node->right; // 指定指针指向right<--node->right
+if ((node->right = right->left))
+right->left->parent = node; // 好比上面的注释图，node 成为b 的父母
+right->left = node; // node 成为right 的左孩子
+if ((right->parent = node->parent))
+{
+if (node == node->parent->right)
+node->parent->right = right;
+else
+node->parent->left = right;
+}
+else
+root = right;
+node->parent = right; //right 成为node 的父母
+return root;
+}
+/**
+* 右旋
+*
+108
+* node left
+* / / / /
+* left y ==> a node
+* / / / /
+* a b b y
+*/
+RB_NODE* RB_RotateRight(RB_NODE* node, RB_NODE* root)
+{
+RB_NODE* left = node->left;
+if ((node->left = left->right))
+left->right->parent = node;
+left->right = node;
+if ((left->parent = node->parent))
+{
+if (node == node->parent->right)
+node->parent->right = left;
+else
+node->parent->left = left;
+}
+else
+root = left;
+node->parent = left;
+return root;
+}
+/**
+* 红黑树的3 种插入情况
+* 用z 表示当前结点, p[z]表示父母、p[p[z]]表示祖父, y 表示叔叔.
+*/
+RB_NODE* RB_Insert_Rebalance(RB_NODE* node, RB_NODE* root)
+{
+RB_NODE *parent, *gparent, *uncle, *tmp; //父母p[z]、祖父p[p[z]]、叔叔y、临时结
+点*tmp
+while ((parent = node->parent) && parent->color == RED)
+{ // parent 为node 的父母，且当父母的颜色为红时
+gparent = parent->parent; // gparent 为祖父
+109
+if (parent == gparent->left) // 当祖父的左孩子即为父母时,其实上述几行语句，无非
+就是理顺孩子、父母、祖父的关系。
+{
+uncle = gparent->right; // 定义叔叔的概念，叔叔y 就是父母的右孩子。
+if (uncle && uncle->color == RED) // 情况1：z 的叔叔y 是红色的
+{
+uncle->color = BLACK; // 将叔叔结点y 着为黑色
+parent->color = BLACK; // z 的父母p[z]也着为黑色。解决z，p[z]都是红色
+的问题。
+gparent->color = RED;
+node = gparent; // 将祖父当做新增结点z，指针z 上移俩层，且着为红
+色。
+// 上述情况1 中，只考虑了z 作为父母的右孩子的情况。
+}
+else // 情况2：z 的叔叔y 是黑色的，
+{
+if (parent->right == node) // 且z 为右孩子
+{
+root = RB_RotateLeft(parent, root); // 左旋[结点z，与父母结
+点]
+tmp = parent;
+parent = node;
+node = tmp; // parent 与node 互换角色
+}
+// 情况3：z 的叔叔y 是黑色的，此时z 成为了左孩子。
+// 注意，1：情况3 是由上述情况2 变化而来的。
+// ......2：z 的叔叔总是黑色的，否则就是情况1 了。
+parent->color = BLACK; // z 的父母p[z]着为黑色
+gparent->color = RED; // 原祖父结点着为红色
+root = RB_RotateRight(gparent, root); // 右旋[结点z，与祖父结点]
+}
+}
+else
+{
+// 这部分是特别为情况1 中，z 作为左孩子情况，而写的。
+uncle = gparent->left; // 祖父的左孩子作为叔叔结点。[原理还是与上部分一样
+的]
+if (uncle && uncle->color == RED) // 情况1：z 的叔叔y 是红色的
+{
+uncle->color = BLACK;
+parent->color = BLACK;
+gparent->color = RED;
+node = gparent; // 同上
+110
+}
+else // 情况2：z 的叔叔y 是黑色的，
+{
+if (parent->left == node) // 且z 为左孩子
+{
+root = RB_RotateRight(parent, root); // 以结点parent、root 右
+旋
+tmp = parent;
+parent = node;
+node = tmp; // parent 与node 互换角色
+}
+// 经过情况2 的变化，成为了情况3.
+parent->color = BLACK;
+gparent->color = RED;
+root = RB_RotateLeft(gparent, root); // 以结点gparent 和root 左
+旋
+}
+}
+}
+root->color = BLACK; // 根结点，不论怎样，都得置为黑色。
+return root; // 返回根结点。
+}
+/**
+* 红黑树查找结点
+* rb_search_auxiliary：查找
+* rb_node_t* rb_search：返回找到的结点
+*/
+RB_NODE* RB_SearchAuxiliary(int key, RB_NODE* root, RB_NODE** save)
+{
+RB_NODE* node = root;
+RB_NODE* parent = NULL;
+int ret;
+while (node)
+{
+parent = node;
+ret = node->key - key;
+if (0 < ret)
+node = node->left;
+else if (0 > ret)
+node = node->right;
+else
+111
+return node;
+}
+if (save)
+*save = parent;
+return NULL;
+}
+/**
+* 返回上述rb_search_auxiliary 查找结果
+*/
+RB_NODE* RB_Search(int key, RB_NODE* root)
+{
+return RB_SearchAuxiliary(key, root, NULL);
+}
+/**
+* 红黑树的插入
+*/
+RB_NODE* RB_Insert(int key, int data, RB_NODE* root)
+{
+RB_NODE* parent = NULL;
+RB_NODE* node = NULL;
+parent = NULL;
+if ((node = RB_SearchAuxiliary(key, root, &parent))) // 调用RB_SearchAuxiliary
+找到插入结点的地方
+{
+node->data++; // 节点已经存在data 值加1
+return root;
+}
+node = RB_CreatNode(key, data); // 分配结点
+node->parent = parent;
+if (parent)
+{
+if (parent->key > key)
+parent->left = node;
+else
+parent->right = node;
+}
+else
+112
+{
+root = node;
+}
+return RB_Insert_Rebalance(node, root); // 插入结点后，调用RB_Insert_Rebalance
+修复红黑树的性质
+}
+typedef struct rb_heap
+{
+int key;
+int data;
+}RB_HEAP;
+const int heapSize = 10;
+RB_HEAP heap[heapSize+1];
+/**
+* MAX_HEAPIFY 函数对堆进行更新，使以i 为根的子树成最大堆
+*/
+void MIN_HEAPIFY(RB_HEAP* A, const int& size, int i)
+{
+int l = LEFT(i);
+int r = RIGHT(i);
+int smallest = i;
+if (l <= size && A[l].data < A[i].data)
+smallest = l;
+if (r <= size && A[r].data < A[smallest].data)
+smallest = r;
+if (smallest != i)
+{
+RB_HEAP tmp = A[i];
+A[i] = A[smallest];
+A[smallest] = tmp;
+MIN_HEAPIFY(A, size, smallest);
+}
+}
+/**
+* BUILD_MINHEAP 函数对数组A 中的数据建立最小堆
+*/
+void BUILD_MINHEAP(RB_HEAP* A, const int& size)
+{
+113
+for (int i = size/2; i >= 1; --i)
+MIN_HEAPIFY(A, size, i);
+}
+/*
+3、维护k 个元素的最小堆，原理与上述第2 个方案一致，
+即用容量为k 的最小堆存储最先在红黑树中遍历到的k 个数，并假设它们即是最大的k 个数，建堆费时O
+（k），
+然后调整堆（费时O（logk））后，有k1>k2>...kmin（kmin 设为小顶堆中最小元素）。
+继续中序遍历红黑树，每次遍历一个元素x，与堆顶元素比较，若x>kmin，则更新堆（用时logk），否
+则不更新堆。
+这样下来，总费时O（k*logk+（n-k）*logk）=O（n*logk）。
+此方法得益于在堆中，查找等各项操作时间复杂度均为logk）。
+*/
+//中序遍历RBTree
+void InOrderTraverse(RB_NODE* node)
+{
+if (node == NULL)
+{
+return;
+}
+else
+{
+InOrderTraverse(node->left);
+if (node->data > heap[1].data) // 当前节点data 大于最小堆的最小元素时，更新堆数
+据
+{
+heap[1].data = node->data;
+heap[1].key = node->key;
+MIN_HEAPIFY(heap, heapSize, 1);
+}
+InOrderTraverse(node->right);
+}
+}
+void RB_Destroy(RB_NODE* node)
+{
+if (NULL == node)
+{
+return;
+}
+else
+114
+{
+RB_Destroy(node->left);
+RB_Destroy(node->right);
+free(node);
+node = NULL;
+}
+}
+int main()
+{
+RB_NODE* root = NULL;
+RB_NODE* node = NULL;
+// 初始化最小堆
+for (int i = 1; i <= 10; ++i)
+{
+heap[i].key = i;
+heap[i].data = -i;
+}
+BUILD_MINHEAP(heap, heapSize);
+FILE* fp = fopen("data.txt", "r");
+int num;
+while (!feof(fp))
+{
+fscanf(fp, "%d", &num);
+root = RB_Insert(num, 1, root);
+}
+fclose(fp);
+InOrderTraverse(root); //递归遍历红黑树
+RB_Destroy(root);
+for (i = 1; i <= 10; ++i)
+{
+printf("%d/t%d/n", heap[i].key, heap[i].data);
+}
+return 0;
+}
+程序测试：咱们来对下面这个小文件进行测试：
+115
+运行结果：如下图所示，
+问题补遗：
+ok，由于在遍历红黑树采用的是递归方式比较耗内存，下面给出一个非递归遍历的程
+序（下述代码若要运行，需贴到上述程序之后，因为其它的代码未变，只是在遍历红黑树的
+时候，采取非递归遍历而已，同时，主函数的编写也要稍微修改下）：
+//copyright@ zhouzhenren
+116
+//July、updated，2011.05.08.
+#define STACK_SIZE 1000
+typedef struct
+{ // 栈的结点定义
+RB_NODE** top;
+RB_NODE** base;
+}*PStack, Stack;
+bool InitStack(PStack& st) // 初始化栈
+{
+st->base = (RB_NODE**)malloc(sizeof(RB_NODE*) * STACK_SIZE);
+if (!st->base)
+{
+printf("InitStack error!");
+exit(1);
+}
+st->top = st->base;
+return true;
+}
+bool Push(PStack& st, RB_NODE*& e) // 入栈
+{
+if (st->top - st->base >= STACK_SIZE)
+return false;
+*st->top = e;
+st->top++;
+return true;
+}
+bool Pop(PStack& st, RB_NODE*& e) // 出栈
+{
+if (st->top == st->base)
+{
+e = NULL;
+return false;
+}
+e = *--st->top;
+return true;
+}
+bool StackEmpty(PStack& st) // 栈是否为空
+{
+if (st->base == st->top)
+return true;
+117
+else
+return false;
+}
+bool InOrderTraverse_Stack(RB_NODE*& T) // 中序遍历
+{
+PStack S = (PStack)malloc(sizeof(Stack));
+RB_NODE* P = T;
+InitStack(S);
+while (P != NULL || !StackEmpty(S))
+{
+if (P != NULL)
+{
+Push(S, P);
+P = P->left;
+}
+else
+{
+Pop(S, P);
+if (P->data > heap[1].data) // 当前节点data 大于最小堆的最小元素时，更新堆
+数据
+{
+heap[1].data = P->data;
+heap[1].key = P->key;
+MIN_HEAPIFY(heap, heapSize, 1);
+}
+P = P->right;
+}
+}
+free(S->base);
+S->base = NULL;
+free(S);
+S = NULL;
+return true;
+}
+bool PostOrderTraverse_Stack(RB_NODE*& T) //后序遍历
+{
+PStack S = (PStack)malloc(sizeof(Stack));
+RB_NODE* P = T;
+RB_NODE* Pre = NULL;
+InitStack(S);
+while (P != NULL || !StackEmpty(S))
+118
+{
+if (P != NULL) // 非空直接入栈
+{
+Push(S, P);
+P = P->left;
+}
+else
+{
+Pop(S, P); // 弹出栈顶元素赋值给P
+if (P->right == NULL || P->right == Pre) // P 的右子树空或是右子树是刚访问
+过的
+{ // 节点，则释放当前节点内存
+free(P);
+Pre = P;
+P = NULL;
+}
+else // 反之，当前节点重新入栈，接着判断右子树
+{
+Push(S, P);
+P = P->right;
+}
+}
+}
+free(S->base);
+S->base = NULL;
+free(S);
+S = NULL;
+return true;
+}
+//主函数稍微修改如下：
+int main()
+{
+RB_NODE* root = NULL;
+RB_NODE* node = NULL;
+// 初始化最小堆
+for (int i = 1; i <= 10; ++i)
+{
+heap[i].key = i;
+heap[i].data = -i;
+}
+BUILD_MINHEAP(heap, heapSize);
+119
+FILE* fp = fopen("data.txt", "r");
+int num;
+while (!feof(fp))
+{
+fscanf(fp, "%d", &num);
+root = RB_Insert(num, 1, root);
+}
+fclose(fp);
