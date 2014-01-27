@@ -32,7 +32,7 @@ one special contruct:
 
 ### Simple javascript type
 
-```
+```js
 var encoder = new Encoder();
 
 encoder.write(1); // int
@@ -53,7 +53,7 @@ encoder.write(object); // object
 
 ### Complex java type
 
-```
+```js
 var encoder = new Encoder();
 var long = {
   $class: 'java.lang.Long',
@@ -74,7 +74,7 @@ encoder.write(testObject);
 
 ## Decoder
 
-```
+```js
 var decoder = new Decoder(buf);
 
 decoder.read(); //return what it is
@@ -89,6 +89,40 @@ decoder.readMap();
 decoder.readArray();
 decoder.readList();
 decoder.readRef();
+```
+
+## Simple Usage
+
+```js
+var hessian = require('hessian-protocol');
+var Encoder = hessian.Encoder;
+var Decoder = hessian.Decoder;
+
+var testObject = {
+  a: 1,
+  b: 'string',
+  c: true,
+  d: 1.1,
+  e: Math.pow(2, 40),
+  f: [1, 2, 3, '4', true, 5],
+  g: {a: 1, b: true, c: 'string'}
+};
+
+var buf;
+try {
+  buf = Encoder.encode(testObject);
+} catch (err) {
+  console.log('encode error: ', err.message);
+  process.exit(1);
+}
+
+try {
+  var res = Decoder.decode(buf);
+  // res.should.eql(testObject);
+} catch (err) {
+  console.log('decode error: ', err.message);
+}
+
 ```
 
 ## Todo
