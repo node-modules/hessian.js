@@ -94,7 +94,7 @@ decoder.readRef();
 ## Simple Usage
 
 ```js
-var hessian = require('hessian-protocol');
+var hessian = require('hessian-protocal');
 var Encoder = hessian.Encoder;
 var Decoder = hessian.Decoder;
 
