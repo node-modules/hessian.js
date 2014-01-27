@@ -33,8 +33,7 @@
   "homepage": "https://github.com/dead-horse/hessian.js",
   "dependencies": {
     "byte": "0.2.0",
-    "debug": "0.7.4",
-    "utility": "0.1.10"
+    "debug": "0.7.4"
   },
   "devDependencies": {
     "autod": "~0.0.13",
