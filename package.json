@@ -39,6 +39,7 @@
   "devDependencies": {
     "autod": "~0.0.13",
     "blanket": ">=1.1.6",
+    "contributors": "*",
     "coveralls": "*",
     "mocha": "*",
     "mocha-lcov-reporter": "*",
