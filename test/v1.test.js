@@ -262,5 +262,147 @@ describe('hessian v1', function () {
         Math.ceil(inputStrLength / utils.MAX_CHAR_TRUNK_SIZE) * 3);
       decoder.init(buf).readString().should.equal(inputStr);
     });
+
+    it('should read string error', function () {
+      var tests = [
+        [new Buffer([0x72, 0x00, 0x02, 0x00]), 'hessian readString only accept label `s,S` but get unexpect label `r`'],
+        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'hessian readString only accept label `s,S` but get unexpect label `\u0001`'],
+        [new Buffer([0x73, 0x00, 0x01, 0xf0, 0x20]), 'string is not valid UTF-8 encode'],
+      ];
+
+      tests.forEach(function (t) {
+        (function () {
+          var buf = decoder.init(t[0]).readString();
+        }).should.throw(t[1]);
+      });
+    });
+  });
+
+  describe('object', function () {
+    it('should write and get simple object ok', function () {
+      var testObject = {
+        a: 1,
+        b: 'string',
+        c: true,
+        d: 1.1,
+        e: Math.pow(2, 40),
+        f: [1, 2, 3, '4', true, 5],
+        g: {a: 1, b: true, c: 'string'}
+      };
+      var buf = encoder.writeObject(testObject).get();
+      decoder.init(buf).readObject().should.eql(testObject);
+    });
+
+    it('should write null obejct ok', function () {
+      var nullObject = null;
+      var nullBuf = encoder.writeObject(nullObject).get();
+      (decoder.init(nullBuf).read() === null).should.be.ok;
+    });
+
+    it('should write and read object with circular ok', function () {
+      var testObject = {
+        a: 1,
+        b: 'string',
+        c: {},
+        d: [1, 2]
+      };
+      testObject.c.a = testObject;
+      testObject.d.push(testObject.c);
+
+      var buf = encoder.writeObject(testObject).get();
+      var res = decoder.init(buf).readObject();
+      res.a.should.equal(testObject.a);
+      res.b.should.equal(testObject.b);
+      res.c.a.a.should.equal(testObject.a);
+      res.c.a.b.should.equal(testObject.b);
+      res.d[2].a.a.should.equal(testObject.a);
+      res.d[2].a.b.should.equal(testObject.b);
+    });
+
+    it('should write and read complex object ok', function () {
+      var testObject = {
+        $class: 'com.hessian.TestObject',
+        $: {
+          a: 1,
+          b: {$class: 'java.util.List', $: [1, 2, 3]}
+        }
+      };
+
+      var buf = encoder.writeObject(testObject).get();
+      var res = decoder.init(buf).readObject();
+      res.should.eql({a:1, b:[1, 2, 3]});
+      var resWithType = decoder.init(buf).readObject(true);
+      resWithType.should.eql(testObject);
+    });
+  });
+
+  describe('array', function () {
+    it('should write and read simple array ok', function () {
+      var testArray = [1, true, 'string', 1.1, new Date()];
+      var buf = encoder.writeArray(testArray).get();
+      decoder.init(buf).readArray().should.eql(testArray);
+    });
+
+    it('should write circular array ok', function () {
+      var testArray = [1];
+      testArray.push(testArray);
+      var buf = encoder.writeArray(testArray).get();
+      var res = decoder.init(buf).readArray();
+      res[0].should.equal(testArray[0]);
+      res[1][1][1][0].should.equal(testArray[0]);
+    });
+
+    it('should write and read complex array ok', function () {
+      var testArray = {
+        $class: 'java.util.Set',
+        $: [{
+          $class: 'java.util.List',
+          $: [1, 2, 3]
+        }]
+      };
+      var buf = encoder.writeArray(testArray).get();
+      decoder.init(buf).readArray().should.eql([[1, 2, 3]]);
+      decoder.init(buf).readArray(true).should.eql(testArray);
+    });
+  });
+
+  describe('encode and decode', function () {
+    it('should encode and decode work ok', function () {
+      var tests = [
+        [1],
+        [1.1],
+        [-10],
+        [Math.pow(2, 50)],
+        [{$class: 'long', $: '288230376151711740'}, '288230376151711740'],
+        [{$class: 'boolean', $: 1}, true],
+        [new Date()],
+        [true],
+        [false],
+        [null],
+        [undefined],
+        [{a: 1, b: [true, false], c: new Date(), d: {}, e: null}],
+        [{$class: 'com.hessian.Object', $: {a: {$class: 'java.util.Set', $: [1, 2, 3]}}}],
+        [new Buffer([1, 2, 3, 4, 5])],
+        [new Buffer('test你好啊！（∆˚¬∑∑')],
+        [{$class: '[int', $: [1, 2, 3]}]
+      ];
+
+      tests.forEach(function (t) {
+        var buf = Encoder.encode(t[0]);
+        var res = Decoder.decode(buf, true);
+        if (res) {
+          res.should.eql(t[1] || t[0]);
+        } else {
+          (res == t[0]).should.be.ok;
+        }
+      });
+    });
+
+    it('should decode error', function () {
+      var buf = new Buffer([0x72, 0x11]);
+      (function() {
+        Decoder.decode(buf);
+      }).should.throw('hessian read get an unexpect label: r');
+    });
   });
 });
