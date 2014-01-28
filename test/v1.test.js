@@ -469,6 +469,14 @@ describe('hessian v1', function () {
       decoder.init(buf).read(true).should.eql([1, 2, 3]);
     });
 
+    it('should read unexpect end label', function () {
+      var buf = encoder.writeArray([1, 2, 3]).get();
+      buf[buf.length - 1] = 40;
+      (function () {
+        decoder.init(buf).read('hessian readArray error, unexpect end label: (');
+      }).should.throw();
+    });
+
     it('should write type error', function () {
       (function () {
         encoder.writeArray();
