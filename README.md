@@ -3,7 +3,7 @@ hessian.js [![Build Status](https://secure.travis-ci.org/dead-horse/hessian.js.p
 
 Hessian protocal written by pure javascipt. Support all kind of types in java.
 
-[![NPM](https://nodei.co/npm/hessian-protocal.png?downloads=true)](https://nodei.co/npm/hessian-protocal/)
+[![NPM](https://nodei.co/npm/hessian.js.png?downloads=true)](https://nodei.co/npm/hessian.js/)
 
 ## Support Types
 
@@ -94,7 +94,7 @@ decoder.readRef();
 ## Simple Usage
 
 ```js
-var hessian = require('hessian-protocal');
+var hessian = require('hessian.js');
 var Encoder = hessian.Encoder;
 var Decoder = hessian.Decoder;
 
