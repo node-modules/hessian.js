@@ -5,6 +5,7 @@
  *
  * Authors:
  *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
+ *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
  */
 
 var fs = require('fs');
@@ -88,7 +89,7 @@ describe('hessian v1', function () {
 
     it('should read int error', function () {
       var tests = [
-        [new Buffer([0x48, 0x00, 0x00, 0x00, 0x00]), 'hessian readInt only accept label `I` but get unexpect label `H`'],
+        [new Buffer([0x48, 0x00, 0x00, 0x00, 0x00]), 'hessian readInt only accept label `I` but got unexpect label `H`'],
         [new Buffer([0x49, 0x00, 0x00, 0x00]), 'Trying to access beyond buffer length']
       ];
       tests.forEach(function (t) {
@@ -136,7 +137,7 @@ describe('hessian v1', function () {
     it('should read long error', function () {
       var tests = [
         [new Buffer([0x4b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readLong only accept label `L` but get unexpect label `K`'],
+        'hessian readLong only accept label `L` but got unexpect label `K`'],
         [new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         'Trying to access beyond buffer length']
       ];
@@ -172,7 +173,7 @@ describe('hessian v1', function () {
     it('should read double error', function () {
       var tests = [
         [new Buffer([0x45, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDouble only accept label `D` but get unexpect label `E`'],
+        'hessian readDouble only accept label `D` but got unexpect label `E`'],
         [new Buffer([0x44, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         'Trying to access beyond buffer length']
       ];
@@ -203,7 +204,7 @@ describe('hessian v1', function () {
     it('should read date error', function () {
       var tests = [
         [new Buffer([0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDate only accept label `d` but get unexpect label `e`'],
+        'hessian readDate only accept label `d` but got unexpect label `e`'],
         [new Buffer([0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         'Trying to access beyond buffer length']
       ];
@@ -234,8 +235,8 @@ describe('hessian v1', function () {
 
     it('should read bytes error', function () {
       var tests = [
-        [new Buffer([0x41, 0x00, 0x02, 0x00]), 'hessian readBytes only accept label `b,B` but get unexpect label `A`'],
-        [new Buffer([0x62, 0x00, 0x01, 0x00, 0x01]), 'hessian readBytes only accept label `b,B` but get unexpect label `\u0001`'],
+        [new Buffer([0x41, 0x00, 0x02, 0x00]), 'hessian readBytes only accept label `b,B` but got unexpect label `A`'],
+        [new Buffer([0x62, 0x00, 0x01, 0x00, 0x01]), 'hessian readBytes only accept label `b,B` but got unexpect label `\u0001`'],
       ];
 
       tests.forEach(function (t) {
@@ -243,6 +244,37 @@ describe('hessian v1', function () {
           var buf = decoder.init(t[0]).readBytes();
         }).should.throw(t[1]);
       });
+    });
+
+    it('should bytes length equal MAX_BYTE_TRUNK_SIZE work', function () {
+      var oneTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE);
+      var buf = encoder.writeBytes(oneTrunkBuf).get();
+      decoder.init(buf).readBytes().should.eql(oneTrunkBuf);
+
+      encoder.clean();
+      var twoTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE * 2);
+      buf = encoder.writeBytes(twoTrunkBuf).get();
+      decoder.init(buf).readBytes().should.eql(twoTrunkBuf);
+    });
+
+    it('should write type error', function () {
+      (function () {
+        encoder.writeBytes();
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `undefined`');
+      (function () {
+        encoder.writeBytes('');
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `string`');
+      (function () {
+        encoder.writeBytes(null);
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `object`');
+      (function () {
+        encoder.writeBytes(100);
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `number`');
+    });
+
+    it('should write and read empty bytes', function () {
+      var buf = encoder.writeBytes(new Buffer('')).get();
+      decoder.init(buf).readBytes().should.eql(new Buffer(''));
     });
   });
 
@@ -265,8 +297,8 @@ describe('hessian v1', function () {
 
     it('should read string error', function () {
       var tests = [
-        [new Buffer([0x72, 0x00, 0x02, 0x00]), 'hessian readString only accept label `s,S` but get unexpect label `r`'],
-        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'hessian readString only accept label `s,S` but get unexpect label `\u0001`'],
+        [new Buffer([0x72, 0x00, 0x02, 0x00]), 'hessian readString only accept label `s,S` but got unexpect label `r`'],
+        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'hessian readString only accept label `s,S` but got unexpect label `\u0001`'],
         [new Buffer([0x73, 0x00, 0x01, 0xf0, 0x20]), 'string is not valid UTF-8 encode'],
       ];
 
@@ -275,6 +307,37 @@ describe('hessian v1', function () {
           var buf = decoder.init(t[0]).readString();
         }).should.throw(t[1]);
       });
+    });
+
+    it('should write type error', function () {
+      (function () {
+        encoder.writeString();
+      }).should.throw('hessian writeString expect input type is `string`, but got `undefined`');
+      (function () {
+        encoder.writeString(new Buffer(10));
+      }).should.throw('hessian writeString expect input type is `string`, but got `object`');
+      (function () {
+        encoder.writeString(null);
+      }).should.throw('hessian writeString expect input type is `string`, but got `object`');
+      (function () {
+        encoder.writeString(100);
+      }).should.throw('hessian writeString expect input type is `string`, but got `number`');
+    });
+
+    it('should string length equal MAX_CHAR_TRUNK_SIZE work', function () {
+      var oneTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE).toString();
+      var buf = encoder.writeString(oneTrunkString).get();
+      decoder.init(buf).readString().should.eql(oneTrunkString);
+
+      encoder.clean();
+      var twoTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE * 2).toString();
+      buf = encoder.writeString(twoTrunkString).get();
+      decoder.init(buf).read().should.eql(twoTrunkString);
+    });
+
+    it('should write and read empty string', function () {
+      var buf = encoder.writeString('').get();
+      decoder.init(buf).read().should.eql('');
     });
   });
 
@@ -334,6 +397,34 @@ describe('hessian v1', function () {
       var resWithType = decoder.init(buf).readObject(true);
       resWithType.should.eql(testObject);
     });
+
+    it('should write "java.util.HashMap" treat as {}', function () {
+      var testObject = {
+        $class: 'java.util.HashMap',
+        $: {foo: 'bar'}
+      };
+      var buf = encoder.writeObject(testObject).get();
+      encoder.clean();
+
+      buf.should.eql(encoder.writeObject({foo: 'bar'}).get());
+      decoder.init(buf).read().should.eql({foo: 'bar'});
+      decoder.init(buf).read(true).should.eql({foo: 'bar'});
+    });
+
+    it('should write type error', function () {
+      (function () {
+        encoder.writeObject();
+      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `undefined`');
+      (function () {
+        encoder.writeObject('123');
+      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `string`');
+      (function () {
+        encoder.writeObject(1.111);
+      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number`');
+      (function () {
+        encoder.writeObject(100);
+      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number`');
+    });
   });
 
   describe('array', function () {
@@ -363,6 +454,34 @@ describe('hessian v1', function () {
       var buf = encoder.writeArray(testArray).get();
       decoder.init(buf).readArray().should.eql([[1, 2, 3]]);
       decoder.init(buf).readArray(true).should.eql(testArray);
+    });
+
+    it('should write "java.util.ArrayList" treat as []', function () {
+      var testArray = {
+        $class: 'java.util.ArrayList',
+        $: [1, 2, 3]
+      };
+      var buf = encoder.writeArray(testArray).get();
+      encoder.clean();
+
+      buf.should.eql(encoder.writeArray([1, 2, 3]).get());
+      decoder.init(buf).read().should.eql([1, 2, 3]);
+      decoder.init(buf).read(true).should.eql([1, 2, 3]);
+    });
+
+    it('should write type error', function () {
+      (function () {
+        encoder.writeArray();
+      }).should.throw('hessian writeArray input type invalid');
+      (function () {
+        encoder.writeArray('123');
+      }).should.throw('hessian writeArray input type invalid');
+      (function () {
+        encoder.writeArray(1.111);
+      }).should.throw('hessian writeArray input type invalid');
+      (function () {
+        encoder.writeArray(100);
+      }).should.throw('hessian writeArray input type invalid');
     });
   });
 
@@ -402,7 +521,7 @@ describe('hessian v1', function () {
       var buf = new Buffer([0x72, 0x11]);
       (function() {
         Decoder.decode(buf);
-      }).should.throw('hessian read get an unexpect label: r');
+      }).should.throw('hessian read got an unexpect label: r');
     });
   });
 });
