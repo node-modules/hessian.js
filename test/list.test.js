@@ -49,20 +49,35 @@ describe('list.test.js', function () {
       $class: '[int',
       $: [0, 1]
     }).should.eql(intListBuffer);
+
+    // empty list
+    var empty = Buffer.concat([
+      new Buffer([
+        'V'.charCodeAt(0),
+        't'.charCodeAt(0), 0x00, 0x04
+      ]),
+      new Buffer('[int'),
+      new Buffer([
+        'l'.charCodeAt(0), 0, 0, 0, 0x00,
+        'z'.charCodeAt(0)
+      ])
+    ]);
+    hessian.decode(empty).should.eql([]);
   });
 
-  it('should read write anonymous variable-length list = {0, "foobar"}', function () {
+  it('should read write anonymous variable-length list = {0, null, "foobar"}', function () {
     var anonymousList = Buffer.concat([
       new Buffer('V'),
       new Buffer([
         'I'.charCodeAt(0), 0, 0, 0, 0x00,
+        'N'.charCodeAt(0),
         'S'.charCodeAt(0), 0, 0x06,
       ]),
       new Buffer('foobar'),
       new Buffer('z'),
     ]);
 
-    hessian.decode(anonymousList).should.eql([0, 'foobar']);
+    hessian.decode(anonymousList).should.eql([0, null, 'foobar']);
 
     // empty
     var emptyList = Buffer.concat([
