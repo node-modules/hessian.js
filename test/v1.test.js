@@ -529,7 +529,7 @@ describe('hessian v1', function () {
       var buf = new Buffer([0x72, 0x11]);
       (function() {
         Decoder.decode(buf);
-      }).should.throw('hessian read got an unexpect label: r');
+      }).should.throw('hessian read got an unexpect label: 0x72');
     });
   });
 });

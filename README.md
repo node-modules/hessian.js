@@ -1,7 +1,8 @@
 hessian.js [![Build Status](https://secure.travis-ci.org/dead-horse/hessian.js.png)](http://travis-ci.org/dead-horse/hessian.js) [![Coverage Status](https://coveralls.io/repos/dead-horse/hessian.js/badge.png)](https://coveralls.io/r/dead-horse/hessian.js) [![Dependency Status](https://gemnasium.com/dead-horse/hessian.js.png)](https://gemnasium.com/dead-horse/hessian.js)
 =========
 
-Hessian protocal written by pure javascipt. Support all kind of types in java.
+[Hessian Serialization 1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) written by pure javascipt.
+Support all kind of types in java.
 
 ## Install
 
@@ -37,7 +38,8 @@ one special contruct:
 ### Simple javascript type
 
 ```js
-var encoder = new Encoder();
+var hessian = require('hession.js');
+var encoder = new hessian.Encoder();
 
 encoder.write(1); // int
 encoder.write(1.1); // double
@@ -46,6 +48,9 @@ encoder.write(Math.pow(2, 18)); // long
 encoder.write(true); // boolean
 encoder.write(null); // null
 encoder.write('test'); // string
+
+// java base types
+encoder.write(hession.java.long(3001010320));
 
 var object = {};
 object.prop1 = [1, 2, 3];
@@ -58,7 +63,9 @@ encoder.write(object); // object
 ### Complex java type
 
 ```js
-var encoder = new Encoder();
+var hessian = require('hession.js');
+var encoder = new hessian.Encoder();
+
 var long = {
   $class: 'java.lang.Long',
   $: 1
@@ -79,7 +86,8 @@ encoder.write(testObject);
 ## Decoder
 
 ```js
-var decoder = new Decoder(buf);
+var hessian = require('hession.js');
+var decoder = new hessian.Decoder(buf);
 
 decoder.read(); //return what it is
 decoder.readNull();
@@ -99,8 +107,6 @@ decoder.readRef();
 
 ```js
 var hessian = require('hessian.js');
-var Encoder = hessian.Encoder;
-var Decoder = hessian.Decoder;
 
 var testObject = {
   a: 1,
@@ -114,26 +120,31 @@ var testObject = {
 
 var buf;
 try {
-  buf = Encoder.encode(testObject);
+  buf = hessian.encode(testObject);
 } catch (err) {
   console.log('encode error: ', err.message);
   process.exit(1);
 }
 
 try {
-  var res = Decoder.decode(buf);
+  var res = hessian.decode(buf);
   // res.should.eql(testObject);
 } catch (err) {
   console.log('decode error: ', err.message);
 }
-
 ```
 
-## Todo
+## TODO
 
 1. more unit test, include test with other language.
 2. benchmark test.
 3. maybe support hessian 2.x.
+
+[Hessian Serialization 2.0](http://hessian.caucho.com/doc/hessian-serialization.html) has 3 internal reference maps:
+
+1. An object/list reference map.
+2. An class definition reference map.
+3. A type (class name) reference map.
 
 ## Authors
 
