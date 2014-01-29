@@ -3,7 +3,11 @@ hessian.js [![Build Status](https://secure.travis-ci.org/dead-horse/hessian.js.p
 
 Hessian protocal written by pure javascipt. Support all kind of types in java.
 
-[![NPM](https://nodei.co/npm/hessian.js.png?downloads=true)](https://nodei.co/npm/hessian.js/)
+## Install
+
+```
+npm install hessian.js
+```
 
 ## Support Types
 
@@ -130,6 +134,21 @@ try {
 1. more unit test, include test with other language.
 2. benchmark test.
 3. maybe support hessian 2.x.
+
+## Authors
+
+```
+$ git summary
+
+ project  : hessian.js
+ repo age : 2 weeks ago
+ commits  : 27
+ active   : 6 days
+ files    : 17
+ authors  :
+    25  dead_horse              92.6%
+     2  fengmk2                 7.4%
+```
 
 ## Licences
 (The MIT License)
