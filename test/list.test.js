@@ -63,5 +63,12 @@ describe('list.test.js', function () {
     ]);
 
     hessian.decode(anonymousList).should.eql([0, 'foobar']);
+
+    // empty
+    var emptyList = Buffer.concat([
+      new Buffer('V'),
+      new Buffer('z'),
+    ]);
+    hessian.decode(emptyList).should.eql([]);
   });
 });
