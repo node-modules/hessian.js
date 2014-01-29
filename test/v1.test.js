@@ -328,8 +328,8 @@ describe('hessian v1', function () {
       var oneTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE).toString();
       var buf = encoder.writeString(oneTrunkString).get();
       decoder.init(buf).readString().should.eql(oneTrunkString);
-
       encoder.clean();
+
       var twoTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE * 2).toString();
       buf = encoder.writeString(twoTrunkString).get();
       decoder.init(buf).read().should.eql(twoTrunkString);

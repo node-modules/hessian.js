@@ -25,4 +25,8 @@ describe('int.test.js', function () {
   it('should write integer 300', function () {
     hessian.encode(300).should.eql(new Buffer(['I'.charCodeAt(0), 0x00, 0x00, 0x01, 0x2c]));
   });
+
+  it('should write integer 0', function () {
+    hessian.encode(0).should.eql(new Buffer(['I'.charCodeAt(0), 0, 0, 0, 0]));
+  });
 });

@@ -1,20 +1,17 @@
 {
   "name": "hessian.js",
   "version": "0.0.1",
-  "description": "hession protocol in js",
+  "description": "Hessian Serialization written by pure JavaScript, support all kind of types in Java.",
   "main": "index.js",
   "scripts": {
     "test": "make test-all"
   },
   "config": {
     "blanket": {
-      "pattern": "//^((?!(node_modules|test|common)).)*$/",
-      "data-cover-flags": {
-        "debug": false
-      }
+      "pattern": "//^((?!(node_modules|test|common)).)*$/"
     },
    "travis-cov": {
-      "threshold": 90
+      "threshold": 100
     }
   },
   "repository": {
@@ -23,12 +20,16 @@
   },
   "keywords": [
     "hessian",
-    "protocol"
+    "protocol",
+    "java",
+    "rpc",
+    "serialization"
   ],
   "author": "dead_horse <dead_horse@qq.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dead-horse/hessian.js/issues"
+    "url": "https://github.com/dead-horse/hessian.js/issues",
+    "email": "dead_horse@qq.com"
   },
   "homepage": "https://github.com/dead-horse/hessian.js",
   "dependencies": {

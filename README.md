@@ -1,8 +1,8 @@
 hessian.js [![Build Status](https://secure.travis-ci.org/dead-horse/hessian.js.png)](http://travis-ci.org/dead-horse/hessian.js) [![Coverage Status](https://coveralls.io/repos/dead-horse/hessian.js/badge.png)](https://coveralls.io/r/dead-horse/hessian.js) [![Dependency Status](https://gemnasium.com/dead-horse/hessian.js.png)](https://gemnasium.com/dead-horse/hessian.js)
 =========
 
-[Hessian Serialization 1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) written by pure javascipt.
-Support all kind of types in java.
+[Hessian Serialization 1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) written by pure JavaScript.
+Support all kind of types in Java.
 
 ## Install
 
@@ -38,7 +38,7 @@ one special contruct:
 ### Simple javascript type
 
 ```js
-var hessian = require('hession.js');
+var hessian = require('hessian.js');
 var encoder = new hessian.Encoder();
 
 encoder.write(1); // int
@@ -50,7 +50,7 @@ encoder.write(null); // null
 encoder.write('test'); // string
 
 // java base types
-encoder.write(hession.java.long(3001010320));
+encoder.write(hessian.java.long(3001010320));
 
 var object = {};
 object.prop1 = [1, 2, 3];
@@ -63,7 +63,7 @@ encoder.write(object); // object
 ### Complex java type
 
 ```js
-var hessian = require('hession.js');
+var hessian = require('hessian.js');
 var encoder = new hessian.Encoder();
 
 var long = {
@@ -86,7 +86,7 @@ encoder.write(testObject);
 ## Decoder
 
 ```js
-var hessian = require('hession.js');
+var hessian = require('hessian.js');
 var decoder = new hessian.Decoder(buf);
 
 decoder.read(); //return what it is

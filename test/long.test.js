@@ -31,4 +31,9 @@ describe('long.test.js', function () {
     }).should.eql(longBuffer);
     hessian.encode(hessian.java.long(300)).should.eql(longBuffer);
   });
+
+  it('should write long 0', function () {
+    hessian.encode(hessian.java.long(0)).should.eql(
+      new Buffer(['L'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0]));
+  });
 });
