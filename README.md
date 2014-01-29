@@ -50,7 +50,9 @@ encoder.write(null); // null
 encoder.write('test'); // string
 
 // java base types
-encoder.write(hessian.java.long(3001010320));
+encoder.write(hessian.java.long(3001010320)); // 3001010320L
+encoder.write(hessian.java.double(100)); // double
+encoder.write(hessian.java.intList([0, 1, 2])); // int[] = {0, 1, 2}
 
 var object = {};
 object.prop1 = [1, 2, 3];

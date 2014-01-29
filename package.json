@@ -11,7 +11,7 @@
       "pattern": "//^((?!(node_modules|test|common)).)*$/"
     },
    "travis-cov": {
-      "threshold": 100
+      "threshold": 95
     }
   },
   "repository": {
