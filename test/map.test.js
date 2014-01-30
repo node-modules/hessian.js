@@ -91,6 +91,12 @@ describe('map.test.js', function () {
     });
   });
 
+  it('should write {hasOwnProperty: 1, a: 0, b: false, c: null} obj', function () {
+    var buf = hessian.encode({hasOwnProperty: 1, a: 0, b: false, c: null});
+    buf.should.be.a.Buffer;
+    hessian.decode(buf).should.eql({hasOwnProperty: 1, a: 0, b: false, c: null});
+  });
+
   it('should read A sparse array', function () {
     // map = new HashMap();
     // map.put(new Integer(1), "fee");
