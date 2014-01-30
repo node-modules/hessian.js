@@ -328,8 +328,8 @@ describe('hessian v1', function () {
       var oneTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE).toString();
       var buf = encoder.writeString(oneTrunkString).get();
       decoder.init(buf).readString().should.eql(oneTrunkString);
-
       encoder.clean();
+
       var twoTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE * 2).toString();
       buf = encoder.writeString(twoTrunkString).get();
       decoder.init(buf).read().should.eql(twoTrunkString);
@@ -529,7 +529,7 @@ describe('hessian v1', function () {
       var buf = new Buffer([0x72, 0x11]);
       (function() {
         Decoder.decode(buf);
-      }).should.throw('hessian read got an unexpect label: r');
+      }).should.throw('hessian read got an unexpect label: 0x72');
     });
   });
 });
