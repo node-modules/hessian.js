@@ -1,4 +1,4 @@
-hessian.js [![Build Status](https://secure.travis-ci.org/dead-horse/hessian.js.png)](http://travis-ci.org/dead-horse/hessian.js) [![Coverage Status](https://coveralls.io/repos/dead-horse/hessian.js/badge.png)](https://coveralls.io/r/dead-horse/hessian.js) [![Dependency Status](https://gemnasium.com/dead-horse/hessian.js.png)](https://gemnasium.com/dead-horse/hessian.js)
+hessian.js [![Build Status](https://secure.travis-ci.org/dead-horse/hessian.js.png)](http://travis-ci.org/dead-horse/hessian.js) [![Coverage Status](https://coveralls.io/repos/dead-horse/hessian.js/badge.png)](https://coveralls.io/r/dead-horse/hessian.js) [![Dependency Status](https://gemnasium.com/dead-horse/hessian.js.png)](https://gemnasium.com/dead-horse/hessian.js) [![NPM version](https://badge.fury.io/js/hessian.js.png)](http://badge.fury.io/js/hessian.js)
 =========
 
 [Hessian Serialization 1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) written by pure JavaScript.
