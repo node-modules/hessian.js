@@ -204,7 +204,7 @@ describe('hessian v1', function () {
     it('should read date error', function () {
       var tests = [
         [new Buffer([0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDate only accept label `d` but got unexpect label `e`'],
+        'hessian readDate only accept label `d,J` but got unexpect label `e`'],
         [new Buffer([0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         'Trying to access beyond buffer length']
       ];
@@ -297,8 +297,8 @@ describe('hessian v1', function () {
 
     it('should read string error', function () {
       var tests = [
-        [new Buffer([0x72, 0x00, 0x02, 0x00]), 'hessian readString only accept label `s,S` but got unexpect label `r`'],
-        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'hessian readString only accept label `s,S` but got unexpect label `\u0001`'],
+        [new Buffer([0x72, 0x00, 0x02, 0x00]), 'hessian readString error, unexpect string code: 0x72'],
+        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'string is not valid UTF-8 encode'],
         [new Buffer([0x73, 0x00, 0x01, 0xf0, 0x20]), 'string is not valid UTF-8 encode'],
       ];
 
@@ -544,10 +544,10 @@ describe('hessian v1', function () {
     });
 
     it('should decode error', function () {
-      var buf = new Buffer([0x72, 0x11]);
+      var buf = new Buffer([0x50, 0x11]);
       (function() {
         Decoder.decode(buf);
-      }).should.throw('hessian read got an unexpect label: 0x72');
+      }).should.throw('hessian read got an unexpect label: 0x50');
     });
   });
 });

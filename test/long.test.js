@@ -36,4 +36,25 @@ describe('long.test.js', function () {
     hessian.encode(hessian.java.long(0)).should.eql(
       new Buffer(['L'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0]));
   });
+
+  describe('v2.0', function () {
+    it('should read compact long', function () {
+      hessian.decode(new Buffer([0xe0])).should.equal(0);
+      hessian.decode(new Buffer([0xd8])).should.equal(-8);
+      hessian.decode(new Buffer([0xef])).should.equal(15);
+
+      hessian.decode(new Buffer([0xf8, 0x00])).should.equal(0);
+      hessian.decode(new Buffer([0xf0, 0x00])).should.equal(-2048);
+      hessian.decode(new Buffer([0xf7, 0x00])).should.equal(-256);
+      hessian.decode(new Buffer([0xff, 0xff])).should.equal(2047);
+
+      hessian.decode(new Buffer([0x3c, 0x00, 0x00])).should.equal(0);
+      hessian.decode(new Buffer([0x38, 0x00, 0x00])).should.equal(-262144);
+      hessian.decode(new Buffer([0x3f, 0xff, 0xff])).should.equal(262143);
+
+      // TODO: four octet longs
+      // hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00])).should.equal(0);
+      // hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x01, 0x2c])).should.equal(300);
+    });
+  });
 });

@@ -1,7 +1,7 @@
 hessian.js [![Build Status](https://secure.travis-ci.org/dead-horse/hessian.js.png)](http://travis-ci.org/dead-horse/hessian.js) [![Coverage Status](https://coveralls.io/repos/dead-horse/hessian.js/badge.png)](https://coveralls.io/r/dead-horse/hessian.js) [![Dependency Status](https://gemnasium.com/dead-horse/hessian.js.png)](https://gemnasium.com/dead-horse/hessian.js) [![NPM version](https://badge.fury.io/js/hessian.js.png)](http://badge.fury.io/js/hessian.js)
 =========
 
-[Hessian Serialization 1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) written by pure JavaScript.
+Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) and [2.0](http://hessian.caucho.com/doc/hessian-serialization.html) written by pure JavaScript.
 Support all kind of types in Java.
 
 ## Install
@@ -25,13 +25,19 @@ npm install hessian.js
 
 3 recursive types:
 
-1. list for lists and arrays
-2. map for maps and dictionaries
-3. object for objects
+1. `list` for lists and arrays
+2. `map` for maps and dictionaries
+3. `object` for objects
 
 one special contruct:
 
 1. ref for shared and circular object references
+
+Hessian 2.0 has 3 internal reference maps:
+
+* An object/list reference map.
+* An class definition reference map.
+* A type (class name) reference map.
 
 ## Encoder
 
@@ -140,13 +146,164 @@ try {
 
 1. more unit test, include test with other language.
 2. benchmark test.
-3. maybe support hessian 2.x.
+3. ~~hessian 2.0 decode~~
+3. hessian 2.0 encode
 
-[Hessian Serialization 2.0](http://hessian.caucho.com/doc/hessian-serialization.html) has 3 internal reference maps:
+## What's different between hassian 1.0 and 2.0?
 
-1. An object/list reference map.
-2. An class definition reference map.
-3. A type (class name) reference map.
+* `R` meaning `ref` on 1.0, but `x52 ('R')` represents any non-final string chunk on 2.0
+
+## Hessian 2.0 Serialization Grammar
+
+```
+           # starting production
+top        ::= value
+
+           # 8-bit binary data split into 64k chunks
+binary     ::= x41 b1 b0 <binary-data> binary # non-final chunk
+           ::= 'B' b1 b0 <binary-data>        # final chunk
+           ::= [x20-x2f] <binary-data>        # binary data of
+                                                 #  length 0-15
+           ::= [x34-x37] <binary-data>        # binary data of
+                                                 #  length 0-1023
+
+           # boolean true/false
+boolean    ::= 'T'
+           ::= 'F'
+
+           # definition for an object (compact map)
+class-def  ::= 'C' string int string*
+
+           # time in UTC encoded as 64-bit long milliseconds since
+           #  epoch
+date       ::= x4a b7 b6 b5 b4 b3 b2 b1 b0
+           ::= x4b b3 b2 b1 b0       # minutes since epoch
+
+           # 64-bit IEEE double
+double     ::= 'D' b7 b6 b5 b4 b3 b2 b1 b0
+           ::= x5b                   # 0.0
+           ::= x5c                   # 1.0
+           ::= x5d b0                # byte cast to double
+                                     #  (-128.0 to 127.0)
+           ::= x5e b1 b0             # short cast to double
+           ::= x5f b3 b2 b1 b0       # 32-bit float cast to double
+
+           # 32-bit signed integer
+int        ::= 'I' b3 b2 b1 b0
+           ::= [x80-xbf]             # -x10 to x3f
+           ::= [xc0-xcf] b0          # -x800 to x7ff
+           ::= [xd0-xd7] b1 b0       # -x40000 to x3ffff
+
+           # list/vector
+list       ::= x55 type value* 'Z'   # variable-length list
+     ::= 'V' type int value*   # fixed-length list
+           ::= x57 value* 'Z'        # variable-length untyped list
+           ::= x58 int value*        # fixed-length untyped list
+     ::= [x70-77] type value*  # fixed-length typed list
+     ::= [x78-7f] value*       # fixed-length untyped list
+
+           # 64-bit signed long integer
+long       ::= 'L' b7 b6 b5 b4 b3 b2 b1 b0
+           ::= [xd8-xef]             # -x08 to x0f
+           ::= [xf0-xff] b0          # -x800 to x7ff
+           ::= [x38-x3f] b1 b0       # -x40000 to x3ffff
+           ::= x59 b3 b2 b1 b0       # 32-bit integer cast to long
+
+           # map/object
+map        ::= 'M' type (value value)* 'Z'  # key, value map pairs
+     ::= 'H' (value value)* 'Z'       # untyped key, value
+
+           # null value
+null       ::= 'N'
+
+           # Object instance
+object     ::= 'O' int value*
+     ::= [x60-x6f] value*
+
+           # value reference (e.g. circular trees and graphs)
+ref        ::= x51 int            # reference to nth map/list/object
+
+           # UTF-8 encoded character string split into 64k chunks
+string     ::= x52 b1 b0 <utf8-data> string  # non-final chunk
+           ::= 'S' b1 b0 <utf8-data>         # string of length
+                                             #  0-65535
+           ::= [x00-x1f] <utf8-data>         # string of length
+                                             #  0-31
+           ::= [x30-x34] <utf8-data>         # string of length
+                                             #  0-1023
+
+           # map/list types for OO languages
+type       ::= string                        # type name
+           ::= int                           # type reference
+
+           # main production
+value      ::= null
+           ::= binary
+           ::= boolean
+           ::= class-def value
+           ::= date
+           ::= double
+           ::= int
+           ::= list
+           ::= long
+           ::= map
+           ::= object
+           ::= ref
+           ::= string
+```
+
+## Hessian 2.0 Bytecode map
+
+Hessian 2.0 is organized as a bytecode protocol.
+A Hessian reader is essentially a switch statement on the initial octet.
+
+```
+x00 - x1f    # utf-8 string length 0-32
+x20 - x2f    # binary data length 0-16
+x30 - x33    # utf-8 string length 0-1023
+x34 - x37    # binary data length 0-1023
+x38 - x3f    # three-octet compact long (-x40000 to x3ffff)
+x40          # reserved (expansion/escape)
+x41          # 8-bit binary data non-final chunk ('A')
+x42          # 8-bit binary data final chunk ('B')
+x43          # object type definition ('C')
+x44          # 64-bit IEEE encoded double ('D')
+x45          # reserved
+x46          # boolean false ('F')
+x47          # reserved
+x48          # untyped map ('H')
+x49          # 32-bit signed integer ('I')
+x4a          # 64-bit UTC millisecond date
+x4b          # 32-bit UTC minute date
+x4c          # 64-bit signed long integer ('L')
+x4d          # map with type ('M')
+x4e          # null ('N')
+x4f          # object instance ('O')
+x50          # reserved
+x51          # reference to map/list/object - integer ('Q')
+x52          # utf-8 string non-final chunk ('R')
+x53          # utf-8 string final chunk ('S')
+x54          # boolean true ('T')
+x55          # variable-length list/vector ('U')
+x56          # fixed-length list/vector ('V')
+x57          # variable-length untyped list/vector ('W')
+x58          # fixed-length untyped list/vector ('X')
+x59          # long encoded as 32-bit int ('Y')
+x5a          # list/map terminator ('Z')
+x5b          # double 0.0
+x5c          # double 1.0
+x5d          # double represented as byte (-128.0 to 127.0)
+x5e          # double represented as short (-32768.0 to 327676.0)
+x5f          # double represented as float
+x60 - x6f    # object with direct type (` ... n, o)
+x70 - x77    # fixed list with direct length (p, q, r, s, t, u, v, w)
+x78 - x7f    # fixed untyped list with direct length (x, y, z, {, |, }, ~, .....)
+x80 - xbf    # one-octet compact int (-x10 to x3f, x90 is 0)
+xc0 - xcf    # two-octet compact int (-x800 to x7ff)
+xd0 - xd7    # three-octet compact int (-x40000 to x3ffff)
+xd8 - xef    # one-octet compact long (-x8 to xf, xe0 is 0)
+xf0 - xff    # two-octet compact long (-x800 to x7ff, xf8 is 0)
+```
 
 ## Authors
 

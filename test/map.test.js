@@ -137,4 +137,233 @@ describe('map.test.js', function () {
       '256': 'foe',
     });
   });
+
+  describe('v2.0', function () {
+    // map = new HashMap();
+    // map.put(new Integer(1), "fee");
+    // map.put(new Integer(16), "fie");
+    // map.put(new Integer(256), "foe");
+    var hashmapBuffer = Buffer.concat([
+      new Buffer([
+        'H'.charCodeAt(0),
+        0x91, // 1
+        0x03,
+      ]),
+      new Buffer('fee'), // 'fee'
+      new Buffer([
+        0xa0, // 16
+        0x03,
+      ]),
+      new Buffer('fie'), // 'fie'
+      new Buffer([
+        0xc9, 0x00, // 256
+        0x03,
+      ]),
+      new Buffer('foe'), // 'foe'
+      new Buffer('Z')
+    ]);
+
+    it('should read java hash map', function () {
+      hessian.decode(hashmapBuffer).should.eql({
+        1: 'fee',
+        16: 'fie',
+        256: 'foe'
+      });
+    });
+
+    it('should read Circular map', function () {
+      var buf = Buffer.concat([
+        new Buffer([
+          'H'.charCodeAt(0),
+          0x05
+        ]),
+        new Buffer('color'),
+        new Buffer([
+          0x0a
+        ]),
+        new Buffer('aquamarine'),
+
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('model'),
+        new Buffer([
+          0x06
+        ]),
+        new Buffer('Beetle'),
+
+        new Buffer([
+          0x04
+        ]),
+        new Buffer('self'), // map.self => map
+        new Buffer([
+          0x51, 0x90
+        ]),
+        new Buffer('Z')
+      ]);
+
+      var obj = hessian.decode(buf, '2.0');
+      obj.should.have.keys('color', 'model', 'self');
+      obj.color.should.equal('aquamarine');
+      obj.model.should.equal('Beetle');
+      obj.self.should.equal(obj);
+      obj.self.should.have.keys('color', 'model', 'self');
+    });
+
+    it('should read a java Object', function () {
+      // public class Car implements Serializable {
+      //   String color = "aquamarine";
+      //   String model = "Beetle";
+      //   int mileage = 65536;
+      // }
+      var buf = Buffer.concat([
+        new Buffer([
+          'M'.charCodeAt(0),
+          0x13
+        ]),
+        new Buffer('com.caucho.test.Car'),
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('color'),
+        new Buffer([
+          0x0a
+        ]),
+        new Buffer('aquamarine'),
+
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('model'),
+        new Buffer([
+          0x06
+        ]),
+        new Buffer('Beetle'),
+
+        new Buffer([
+          0x07
+        ]),
+        new Buffer('mileage'),
+        new Buffer([
+          'I'.charCodeAt(0),
+          0x00, 0x01, 0x00, 0x00
+        ]),
+        new Buffer('Z')
+      ]);
+      hessian.decode(buf, '2.0').should.eql({
+        color: 'aquamarine',
+        model: 'Beetle',
+        mileage: 65536
+      });
+
+      hessian.decode(buf, '2.0', true).should.eql({
+        $class: 'com.caucho.test.Car',
+        $: {
+          color: 'aquamarine',
+          model: 'Beetle',
+          mileage: 65536
+        }
+      });
+    });
+
+    it('should read a Circular java Object', function () {
+      var buf = Buffer.concat([
+        new Buffer([
+          'M'.charCodeAt(0),
+          0x13
+        ]),
+        new Buffer('com.caucho.test.Car'),
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('color'),
+        new Buffer([
+          0x0a
+        ]),
+        new Buffer('aquamarine'),
+
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('model'),
+        new Buffer([
+          0x06
+        ]),
+        new Buffer('Beetle'),
+
+        new Buffer([
+          0x07
+        ]),
+        new Buffer('mileage'),
+        new Buffer([
+          'I'.charCodeAt(0),
+          0x00, 0x01, 0x00, 0x00
+        ]),
+
+        new Buffer([
+          0x04
+        ]),
+        new Buffer('self'),
+        new Buffer([
+          0x51, 0x90
+        ]),
+        new Buffer('Z'),
+
+        new Buffer([
+          'M'.charCodeAt(0),
+          0x90,
+          0x05
+        ]),
+        new Buffer('color'),
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('black'),
+
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('model'),
+        new Buffer([
+          0x05
+        ]),
+        new Buffer('smark'),
+
+        new Buffer([
+          0x04
+        ]),
+        new Buffer('prev'),
+        new Buffer([
+          0x51, 0x90
+        ]),
+
+        new Buffer([
+          0x04
+        ]),
+        new Buffer('self'),
+        new Buffer([
+          0x51, 0x91
+        ]),
+        new Buffer('Z')
+      ]);
+
+      var decoder = new hessian.Decoder(buf, '2.0');
+      var obj = decoder.read();
+      obj.should.have.keys('color', 'model', 'mileage', 'self');
+      obj.self.should.equal(obj);
+      decoder.types[0].should.equal('com.caucho.test.Car');
+
+      var o = decoder.read(true);
+      o.should.have.keys('$class', '$');
+      o.$.should.have.keys('color', 'model', 'prev', 'self');
+      o.$.prev.$.should.equal(obj);
+      o.$.self.should.equal(o);
+
+      var obj2 = hessian.decode(buf, '2.0', true);
+      obj2.should.have.keys('$class', '$');
+      obj2.$.should.have.keys('color', 'model', 'mileage', 'self');
+      obj2.$.self.should.have.keys('$class', '$');
+    });
+
+  });
 });
