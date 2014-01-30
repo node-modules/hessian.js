@@ -155,12 +155,12 @@ $ git summary
 
  project  : hessian.js
  repo age : 2 weeks ago
- commits  : 27
- active   : 6 days
- files    : 17
+ commits  : 35
+ active   : 9 days
+ files    : 29
  authors  :
-    25  dead_horse              92.6%
-     2  fengmk2                 7.4%
+    27  dead_horse              77.1%
+     8  fengmk2                 22.9%
 ```
 
 ## Licences
