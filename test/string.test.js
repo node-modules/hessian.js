@@ -61,5 +61,39 @@ describe('string.test.js', function () {
         new Buffer('hello, '), new Buffer([0x05]), new Buffer('world')]), '2.0')
       .should.equal('hello, world');
     });
+
+    it('should write short strings', function () {
+      hessian.encode('', '2.0').should.eql(new Buffer([0x00]));
+      hessian.encode('foo', '2.0').should.eql(
+        Buffer.concat([
+          new Buffer([0x03]),
+          new Buffer('foo')
+        ])
+      );
+      hessian.encode('0123456789012345678901234567890', '2.0').should.eql(
+        Buffer.concat([
+          new Buffer([0x1f]),
+          new Buffer('0123456789012345678901234567890')
+        ])
+      );
+
+      var len32Buf = new Buffer(2);
+      len32Buf.writeInt16BE(32, 0);
+      hessian.encode('01234567890123456789012345678901', '2.0').should.eql(
+        Buffer.concat([
+          new Buffer([0x53]),
+          len32Buf,
+          new Buffer('01234567890123456789012345678901')
+        ])
+      );
+
+      var largeBuf = new Buffer(65535);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0');
+
+      largeBuf = new Buffer(65535 * 3 + 100);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0');
+    });
   });
 });

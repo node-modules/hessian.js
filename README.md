@@ -113,6 +113,8 @@ decoder.readRef();
 
 ## Simple Usage
 
+hessian 1.0:
+
 ```js
 var hessian = require('hessian.js');
 
@@ -136,6 +138,37 @@ try {
 
 try {
   var res = hessian.decode(buf);
+  // res.should.eql(testObject);
+} catch (err) {
+  console.log('decode error: ', err.message);
+}
+```
+
+hessian 2.0:
+
+```js
+var hessian = require('hessian.js');
+
+var testObject = {
+  a: 1,
+  b: 'string',
+  c: true,
+  d: 1.1,
+  e: Math.pow(2, 40),
+  f: [1, 2, 3, '4', true, 5],
+  g: {a: 1, b: true, c: 'string'}
+};
+
+var buf;
+try {
+  buf = hessian.encode(testObject, '2.0');
+} catch (err) {
+  console.log('encode error: ', err.message);
+  process.exit(1);
+}
+
+try {
+  var res = hessian.decode(buf, '2.0');
   // res.should.eql(testObject);
 } catch (err) {
   console.log('decode error: ', err.message);

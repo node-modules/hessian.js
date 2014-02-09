@@ -1,4 +1,4 @@
-/*!
+/**!
  * hessian.js - test/null.test.js
  *
  * Copyright(c) 2014
@@ -25,5 +25,12 @@ describe('null.test.js', function () {
 
   it('should write null', function () {
     hessian.Encoder.encode(null).should.eql(new Buffer('N'));
+  });
+
+  describe('v2.0', function () {
+    it('should read write as 1.0', function () {
+      hessian.encode(null, '2.0').should.eql(new Buffer('N'));
+      should.ok(hessian.decode(new Buffer('N'), '2.0') === null);
+    });
   });
 });

@@ -34,4 +34,26 @@ describe('binary.test.js', function () {
 
     hessian.encode(new Buffer('')).should.eql(new Buffer(['B'.charCodeAt(0), 0x00, 0x00]));
   });
+
+  describe('v2.0', function () {
+    it('should write short binary', function () {
+      hessian.encode(new Buffer(''), '2.0').should.eql(new Buffer([0x20]));
+      var buf = hessian.encode(new Buffer(65535), '2.0');
+      // 'b' + b1b0 + 65535 + 0x20
+      buf.should.length(65535 + 4);
+      buf[65538].should.equal(0x20);
+
+      buf = hessian.encode(new Buffer(65536), '2.0');
+      // 'b' + b1b0 + 65535 + 0x21 b0
+      buf.should.length(65535 + 5);
+      buf[65538].should.equal(0x21);
+    });
+
+    it('should write long binary', function () {
+      var buf = hessian.encode(new Buffer(65535 * 2 - 10), '2.0');
+      // 'b' + b1b0 + 65535 * 2 - 10
+      buf.should.length(65535 * 2 - 10 + 6);
+      buf[65538].should.equal('B'.charCodeAt(0));
+    });
+  });
 });

@@ -70,5 +70,18 @@ describe('double.test.js', function () {
       hessian.decode(new Buffer([0x5f, 0x00, 0x00, 0x00, 0x00])).should.equal(0.0);
       hessian.decode(new Buffer([0x5f, 0x41, 0x44, 0x00, 0x00])).should.equal(12.25);
     });
+
+    it('should write 0.0 and 1.0', function () {
+      hessian.encode(hessian.java.double(0), '2.0').should.eql(new Buffer([0x5b]));
+      hessian.encode(hessian.java.double(0.0), '2.0').should.eql(new Buffer([0x5b]));
+
+      hessian.encode(hessian.java.double(1), '2.0').should.eql(new Buffer([0x5c]));
+      hessian.encode(hessian.java.double(1.0), '2.0').should.eql(new Buffer([0x5c]));
+    });
+
+    it('should write big double', function () {
+      hessian.encode(hessian.java.double(10), '2.0')
+        .should.eql(new Buffer([0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0]));
+    });
   });
 });

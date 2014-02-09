@@ -44,7 +44,7 @@ describe('date.test.js', function () {
 
     it('should read date 09:51:31 May 8, 1998 UTC', function () {
       var d = hessian.decode(dateV2Buffer);
-      d.should.be.an.Date;
+      d.should.be.a.Date;
       d.getFullYear().should.equal(1998);
       d.getTime().should.equal(894621091000);
       d.toUTCString().should.equal('Fri, 08 May 1998 09:51:31 GMT');
@@ -54,11 +54,15 @@ describe('date.test.js', function () {
     it('should read Compact: date in minutes, 09:51:00 May 8, 1998 UTC', function () {
       var dateBuf = new Buffer([0x4b, 0x00, 0xe3, 0x83, 0x8f]);
       var d = hessian.decode(dateBuf);
-      d.should.be.an.Date;
+      d.should.be.a.Date;
       d.getFullYear().should.equal(1998);
       d.getTime().should.equal(894621060000);
       d.toUTCString().should.equal('Fri, 08 May 1998 09:51:00 GMT');
       d.toISOString().should.equal('1998-05-08T09:51:00.000Z');
+    });
+
+    it('should write date', function () {
+      hessian.encode(new Date(894621091000), '2.0').should.eql(dateV2Buffer);
     });
   });
 });
