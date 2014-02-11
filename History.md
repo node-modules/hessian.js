@@ -1,4 +1,12 @@
 
+0.0.3 / 2014-02-12
+==================
+
+  * add decoder.position method
+  * update dependencies
+  * fix encode long, read end of buffer
+  * add npm badge
+
 0.0.2 / 2014-01-30
 ==================
 
