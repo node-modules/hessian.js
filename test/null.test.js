@@ -19,12 +19,12 @@ var hessian = require('../');
 
 describe('null.test.js', function () {
   it('should read null', function () {
-    var a = hessian.Decoder.decode(new Buffer('N'));
+    var a = hessian.decode(new Buffer('N'));
     should.ok(a === null);
   });
 
   it('should write null', function () {
-    hessian.Encoder.encode(null).should.eql(new Buffer('N'));
+    hessian.encode(null).should.eql(new Buffer('N'));
   });
 
   describe('v2.0', function () {

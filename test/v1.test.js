@@ -11,8 +11,9 @@
 var fs = require('fs');
 var path = require('path');
 var should = require('should');
-var Encoder = require('../').Encoder;
-var Decoder = require('../').Decoder;
+var hessian = require('../');
+var Encoder = hessian.Encoder;
+var Decoder = hessian.Decoder;
 var utils = require('../lib/utils');
 
 var encoder = new Encoder();
@@ -298,7 +299,7 @@ describe('hessian v1', function () {
     it('should read string error', function () {
       var tests = [
         [new Buffer([0x72, 0x00, 0x02, 0x00]), 'hessian readString error, unexpect string code: 0x72'],
-        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'string is not valid UTF-8 encode'],
+        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'hessian readString error, unexpect string code: 0x1'],
         [new Buffer([0x73, 0x00, 0x01, 0xf0, 0x20]), 'string is not valid UTF-8 encode'],
       ];
 
@@ -533,8 +534,8 @@ describe('hessian v1', function () {
       ];
 
       tests.forEach(function (t) {
-        var buf = Encoder.encode(t[0]);
-        var res = Decoder.decode(buf, true);
+        var buf = hessian.encode(t[0]);
+        var res = hessian.decode(buf, true);
         if (res) {
           res.should.eql(t[1] || t[0]);
         } else {
@@ -546,7 +547,7 @@ describe('hessian v1', function () {
     it('should decode error', function () {
       var buf = new Buffer([0x50, 0x11]);
       (function() {
-        Decoder.decode(buf);
+        hessian.decode(buf);
       }).should.throw('hessian read got an unexpect label: 0x50');
     });
   });

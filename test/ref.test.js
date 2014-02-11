@@ -55,7 +55,7 @@ describe('ref.test.js', function () {
         ]),
       ]);
 
-      var decoder = new hessian.Decoder(buf, '2.0');
+      var decoder = new hessian.DecoderV2(buf);
       var list = decoder.read();
       list.should.have.keys('data', 'tail');
       list.data.should.equal(1);

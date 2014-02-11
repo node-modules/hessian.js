@@ -32,21 +32,21 @@ describe('int.test.js', function () {
 
   describe('v2.0', function () {
     it('should read compact integers', function () {
-      hessian.decode(new Buffer([0x90])).should.equal(0);
-      hessian.decode(new Buffer([0x80])).should.equal(-16);
-      hessian.decode(new Buffer([0xbf])).should.equal(47);
+      hessian.decode(new Buffer([0x90]), '2.0').should.equal(0);
+      hessian.decode(new Buffer([0x80]), '2.0').should.equal(-16);
+      hessian.decode(new Buffer([0xbf]), '2.0').should.equal(47);
 
-      hessian.decode(new Buffer([0xc8, 0x00])).should.equal(0);
-      hessian.decode(new Buffer([0xc0, 0x00])).should.equal(-2048);
-      hessian.decode(new Buffer([0xc7, 0x00])).should.equal(-256);
-      hessian.decode(new Buffer([0xcf, 0xff])).should.equal(2047);
+      hessian.decode(new Buffer([0xc8, 0x00]), '2.0').should.equal(0);
+      hessian.decode(new Buffer([0xc0, 0x00]), '2.0').should.equal(-2048);
+      hessian.decode(new Buffer([0xc7, 0x00]), '2.0').should.equal(-256);
+      hessian.decode(new Buffer([0xcf, 0xff]), '2.0').should.equal(2047);
 
-      hessian.decode(new Buffer([0xd4, 0x00, 0x00])).should.equal(0);
-      hessian.decode(new Buffer([0xd0, 0x00, 0x00])).should.equal(-262144);
-      hessian.decode(new Buffer([0xd7, 0xff, 0xff])).should.equal(262143);
+      hessian.decode(new Buffer([0xd4, 0x00, 0x00]), '2.0').should.equal(0);
+      hessian.decode(new Buffer([0xd0, 0x00, 0x00]), '2.0').should.equal(-262144);
+      hessian.decode(new Buffer([0xd7, 0xff, 0xff]), '2.0').should.equal(262143);
 
-      hessian.decode(new Buffer(['I'.charCodeAt(0), 0x00, 0x00, 0x00, 0x00])).should.equal(0);
-      hessian.decode(new Buffer(['I'.charCodeAt(0), 0x00, 0x00, 0x01, 0x2c])).should.equal(300);
+      hessian.decode(new Buffer(['I'.charCodeAt(0), 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
+      hessian.decode(new Buffer(['I'.charCodeAt(0), 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
     });
 
     it('should write compact integers', function () {

@@ -68,7 +68,7 @@ describe('object.test.js', function () {
         new Buffer('golf'),
       ]);
 
-      var decoder = new hessian.Decoder(buf, '2.0');
+      var decoder = new hessian.DecoderV2(buf);
       decoder.read().should.eql({
         color: 'red',
         model: 'corvette'
@@ -155,7 +155,7 @@ describe('object.test.js', function () {
         new Buffer([0x51, 0x92]), // object ref #2, i.e. Color.BLUE
       ]);
 
-      var decoder = new hessian.Decoder(buf, '2.0');
+      var decoder = new hessian.DecoderV2(buf);
       decoder.read().should.eql({
         name: 'RED'
       });

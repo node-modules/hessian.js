@@ -239,7 +239,7 @@ describe('list.test.js', function () {
           0x78
         ])
       ]);
-      var decoder = new hessian.Decoder(buf, '2.0');
+      var decoder = new hessian.DecoderV2(buf);
       decoder.read().should.eql([0, 1]);
       decoder.read().should.eql([]);
       decoder.read().should.eql([3, 4, 5]);
@@ -292,7 +292,7 @@ describe('list.test.js', function () {
         ])
       ]);
 
-      var decoder = new hessian.Decoder(buf, '2.0');
+      var decoder = new hessian.DecoderV2(buf);
       decoder.read().should.eql([0, 1]);
       decoder.read(true).should.eql({
         $class: '[int',

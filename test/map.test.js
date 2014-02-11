@@ -164,7 +164,7 @@ describe('map.test.js', function () {
     ]);
 
     it('should read java hash map', function () {
-      hessian.decode(hashmapBuffer).should.eql({
+      hessian.decode(hashmapBuffer, '2.0').should.eql({
         1: 'fee',
         16: 'fie',
         256: 'foe'
@@ -347,7 +347,7 @@ describe('map.test.js', function () {
         new Buffer('Z')
       ]);
 
-      var decoder = new hessian.Decoder(buf, '2.0');
+      var decoder = new hessian.DecoderV2(buf);
       var obj = decoder.read();
       obj.should.have.keys('color', 'model', 'mileage', 'self');
       obj.self.should.equal(obj);

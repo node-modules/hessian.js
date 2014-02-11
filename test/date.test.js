@@ -43,7 +43,7 @@ describe('date.test.js', function () {
     var dateV2Buffer = new Buffer([0x4a, 0x00, 0x00, 0x00, 0xd0, 0x4b, 0x92, 0x84, 0xb8]);
 
     it('should read date 09:51:31 May 8, 1998 UTC', function () {
-      var d = hessian.decode(dateV2Buffer);
+      var d = hessian.decode(dateV2Buffer, '2.0');
       d.should.be.a.Date;
       d.getFullYear().should.equal(1998);
       d.getTime().should.equal(894621091000);
@@ -53,7 +53,7 @@ describe('date.test.js', function () {
 
     it('should read Compact: date in minutes, 09:51:00 May 8, 1998 UTC', function () {
       var dateBuf = new Buffer([0x4b, 0x00, 0xe3, 0x83, 0x8f]);
-      var d = hessian.decode(dateBuf);
+      var d = hessian.decode(dateBuf, '2.0');
       d.should.be.a.Date;
       d.getFullYear().should.equal(1998);
       d.getTime().should.equal(894621060000);
