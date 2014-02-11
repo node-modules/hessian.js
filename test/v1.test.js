@@ -341,7 +341,7 @@ describe('hessian v1', function () {
     });
   });
 
-  describe('object', function () {
+  describe.only('object', function () {
     it('should write and get simple object ok', function () {
       var testObject = {
         a: 1,
@@ -396,6 +396,24 @@ describe('hessian v1', function () {
       res.should.eql({a:1, b:[1, 2, 3]});
       var resWithType = decoder.init(buf).readObject(true);
       resWithType.should.eql(testObject);
+    });
+
+    it('should read complex object type use positon ok', function () {
+      var testObject = {
+        $class: 'com.hessian.TestObject',
+        $: {
+          a: 1,
+          b: {$class: 'java.util.List', $: [1, 2, 3]}
+        }
+      };
+
+      var buf = encoder.writeObject(testObject).get();
+      decoder.init(buf);
+      decoder.position().should.equal(0);
+      decoder.position(1); //skip 'M'
+      decoder.readType().should.equal('com.hessian.TestObject');
+      decoder.position().should.equal(26);
+      decoder.position(0).readObject(true).should.eql(testObject);
     });
 
     it('should write "java.util.HashMap" treat as {}', function () {
