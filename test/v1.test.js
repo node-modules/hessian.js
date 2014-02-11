@@ -341,7 +341,7 @@ describe('hessian v1', function () {
     });
   });
 
-  describe.only('object', function () {
+  describe('object', function () {
     it('should write and get simple object ok', function () {
       var testObject = {
         a: 1,
