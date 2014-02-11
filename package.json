@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/dead-horse/hessian.js",
   "dependencies": {
-    "byte": "0.2.0",
+    "byte": "0.2.1",
     "debug": "0.7.4"
   },
   "devDependencies": {
@@ -43,7 +43,7 @@
     "coveralls": "*",
     "mocha": "*",
     "mocha-lcov-reporter": "*",
-    "should": "3.1.0",
+    "should": "3.1.2",
     "travis-cov": "*"
   }
 }
