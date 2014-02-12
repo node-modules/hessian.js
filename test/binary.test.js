@@ -35,7 +35,7 @@ describe('binary.test.js', function () {
     hessian.encode(new Buffer('')).should.eql(new Buffer(['B'.charCodeAt(0), 0x00, 0x00]));
   });
 
-  describe('short_binary.test.js', function () {
+  describe('v2.0', function () {
     it('should read zero length binary data', function () {
       var buf = hessian.decode(new Buffer([0x20]), '2.0');
       buf.should.length(0);
@@ -67,14 +67,25 @@ describe('binary.test.js', function () {
       output.fill(0x2f);
       buf.should.eql(output);
     });
-  });
 
-  describe('v2.0', function () {
+    it('should read long binary', function () {
+      var buf = hessian.encode(new Buffer(65535), '2.0');
+      buf[0].should.equal(0x41);
+      hessian.decode(buf, '2.0');
+
+      buf = hessian.encode(new Buffer(65536), '2.0');
+      hessian.decode(buf, '2.0');
+
+      buf = hessian.encode(new Buffer(65535 * 2 - 10), '2.0');
+      hessian.decode(buf, '2.0');
+    });
+
     it('should write short binary', function () {
       hessian.encode(new Buffer(''), '2.0').should.eql(new Buffer([0x20]));
       var buf = hessian.encode(new Buffer(65535), '2.0');
       // 'b' + b1b0 + 65535 + 0x20
       buf.should.length(65535 + 4);
+      buf[0].should.equal(0x41);
       buf[65538].should.equal(0x20);
 
       buf = hessian.encode(new Buffer(65536), '2.0');

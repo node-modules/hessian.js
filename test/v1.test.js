@@ -205,7 +205,7 @@ describe('hessian v1', function () {
     it('should read date error', function () {
       var tests = [
         [new Buffer([0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDate only accept label `d,J` but got unexpect label `e`'],
+        'hessian readDate only accept label `d` but got unexpect label `e`'],
         [new Buffer([0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         'Trying to access beyond buffer length']
       ];
@@ -548,7 +548,7 @@ describe('hessian v1', function () {
       var buf = new Buffer([0x50, 0x11]);
       (function() {
         hessian.decode(buf);
-      }).should.throw('hessian read got an unexpect label: 0x50');
+      }).should.throw('hessian read got an unexpect code: 0x50');
     });
   });
 });

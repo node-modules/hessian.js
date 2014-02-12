@@ -59,6 +59,10 @@ describe('long.test.js', function () {
       hessian.decode(new Buffer([0x59, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(-2147483648);
     });
 
+    it('should read normal long', function () {
+      hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(2147483648);
+    });
+
     it('should write compact long', function () {
       // -8 ~ 15
       var buf = hessian.encode(hessian.java.long(0), '2.0');

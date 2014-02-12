@@ -71,6 +71,10 @@ describe('double.test.js', function () {
       hessian.decode(new Buffer([0x5f, 0x41, 0x44, 0x00, 0x00]), '2.0').should.equal(12.25);
     });
 
+    it('should read normal double', function () {
+      hessian.decode(new Buffer([0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0]), '2.0').should.equal(10.0);
+    });
+
     it('should write 0.0 and 1.0', function () {
       hessian.encode(hessian.java.double(0), '2.0').should.eql(new Buffer([0x5b]));
       hessian.encode(hessian.java.double(0.0), '2.0').should.eql(new Buffer([0x5b]));
