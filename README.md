@@ -229,11 +229,11 @@ int        ::= 'I' b3 b2 b1 b0
 
            # list/vector
 list       ::= x55 type value* 'Z'   # variable-length list
-     ::= 'V' type int value*   # fixed-length list
+           ::= 'V' type int value*   # fixed-length list
            ::= x57 value* 'Z'        # variable-length untyped list
            ::= x58 int value*        # fixed-length untyped list
-     ::= [x70-77] type value*  # fixed-length typed list
-     ::= [x78-7f] value*       # fixed-length untyped list
+           ::= [x70-77] type value*  # fixed-length typed list
+           ::= [x78-7f] value*       # fixed-length untyped list
 
            # 64-bit signed long integer
 long       ::= 'L' b7 b6 b5 b4 b3 b2 b1 b0
@@ -244,14 +244,14 @@ long       ::= 'L' b7 b6 b5 b4 b3 b2 b1 b0
 
            # map/object
 map        ::= 'M' type (value value)* 'Z'  # key, value map pairs
-     ::= 'H' (value value)* 'Z'       # untyped key, value
+           ::= 'H' (value value)* 'Z'       # untyped key, value
 
            # null value
 null       ::= 'N'
 
            # Object instance
 object     ::= 'O' int value*
-     ::= [x60-x6f] value*
+           ::= [x60-x6f] value*
 
            # value reference (e.g. circular trees and graphs)
 ref        ::= x51 int            # reference to nth map/list/object
