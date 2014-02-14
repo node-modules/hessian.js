@@ -27,4 +27,13 @@ describe('boolean.test.js', function () {
     hessian.encode(true).should.eql(new Buffer('T'));
     hessian.encode(false).should.eql(new Buffer('F'));
   });
+
+  describe('v2.0', function () {
+    it('should read write as 1.0', function () {
+      hessian.encode(true, '2.0').should.eql(new Buffer('T'));
+      hessian.encode(false, '2.0').should.eql(new Buffer('F'));
+      hessian.decode(new Buffer('T'), '2.0').should.equal(true);
+      hessian.decode(new Buffer('F'), '2.0').should.equal(false);
+    });
+  });
 });
