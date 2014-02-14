@@ -191,5 +191,9 @@ describe('object.test.js', function () {
         fields: ['name']
       });
     });
+
+    // it('should write class and obj', function () {
+
+    // });
   });
 });

@@ -365,5 +365,55 @@ describe('map.test.js', function () {
       obj2.$.self.should.have.keys('$class', '$');
     });
 
+    it('should write simple map to java hash map', function () {
+      // map = new HashMap();
+      // map.put(new Integer(1), "fee");
+      // map.put(new Integer(16), "fie");
+      // map.put(new Integer(256), "foe");
+      // ---
+
+      // H           # untyped map (HashMap for Java)
+      //   x91       # 1
+      //   x03 fee   # "fee"
+
+      //   xa0       # 16
+      //   x03 fie   # "fie"
+
+      //   xc9 x00   # 256
+      //   x03 foe   # "foe"
+
+      //   Z
+      var map = {
+        1: "fee",
+        2: "fie",
+        3: "foe"
+      };
+      var encoder = new hessian.EncoderV2();
+      var buf = encoder.write(map).get();
+      hessian.decode(buf, '2.0').should.eql(map);
+
+      // writeRef
+      var bufRef = encoder.write(map).get();
+      hessian.decode(bufRef, '2.0').should.eql(map);
+      bufRef.slice(buf.length).should.eql(new Buffer([0x51, 0x90]));
+
+      var buf2 = hessian.encode({
+        $class: 'java.util.HashMap',
+        $: map
+      }, '2.0');
+      buf2.should.eql(buf);
+      hessian.decode(buf2, '2.0').should.eql(map);
+    });
+
+    it('should write "{$class: java.utils.Map, $: {a: 1}}"', function () {
+      var obj = {
+        $class: 'java.utils.Map',
+        $: {a: 1, b: 'map'}
+      };
+      var buf = hessian.encode(obj, '2.0');
+      buf[0].should.equal(0x4d);
+      hessian.decode(buf, '2.0').should.eql(obj.$);
+      hessian.decode(buf, '2.0', true).should.eql(obj);
+    });
   });
 });
