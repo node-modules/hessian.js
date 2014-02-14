@@ -87,7 +87,36 @@ describe('list.test.js', function () {
     hessian.decode(emptyList).should.eql([]);
   });
 
-  describe('v2.0', function () {
+  describe('v2.0 write', function () {
+    it('should write untyped fixed-length list', function () {
+      var list = [1, 2, 'foo'];
+      var encoder = new hessian.EncoderV2();
+      var buf = encoder.write(list).get();
+      hessian.decode(buf, '2.0').should.eql(list);
+
+      // java.util.ArrayList as simple
+      hessian.encode({
+        $class: 'java.util.ArrayList',
+        $: list
+      }, '2.0').should.eql(buf);
+
+      var bufRef = encoder.write(list).get().slice(buf.length);
+      bufRef.should.length(2);
+      bufRef.should.eql(new Buffer([0x51, 0x90]));
+    });
+
+    it('should write typed fixed-length list', function () {
+      var list = {
+        $class: '[int',
+        $: [1, 2, 3]
+      };
+      var buf = hessian.encode(list, '2.0');
+      hessian.decode(buf, '2.0').should.eql([1, 2, 3]);
+      hessian.decode(buf, '2.0', true).should.eql(list);
+    });
+  });
+
+  describe('v2.0 read', function () {
     it('should read fixed-length typed list', function () {
       // Serialization of a typed int array: int[] = {0, 1}
       var buf = Buffer.concat([
