@@ -1,4 +1,17 @@
 
+0.1.0 / 2014-02-14
+==================
+
+  * Merge pull request #9 from fengmk2/hessian-v2
+  * encode hessian 2.0 list
+  * encode hessian 2.0 map
+  * add readRefId() to share code logic between v1.0 and v2.0
+  * change decoder switch and if else to hash map code detect
+  * add hessian 2.0 decoder
+  * Support hessian 2.0 encoder.
+  * Support hessian 2.0 decode. #8
+  * fix test
+
 0.0.3 / 2014-02-12
 ==================
 

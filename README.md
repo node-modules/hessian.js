@@ -180,7 +180,7 @@ try {
 1. more unit test, include test with other language.
 2. benchmark test.
 3. ~~hessian 2.0 decode~~
-3. hessian 2.0 encode
+3. ~~hessian 2.0 encode~~
 
 ## What's different between hassian 1.0 and 2.0?
 
@@ -344,13 +344,13 @@ xf0 - xff    # two-octet compact long (-x800 to x7ff, xf8 is 0)
 $ git summary
 
  project  : hessian.js
- repo age : 2 weeks ago
- commits  : 35
- active   : 9 days
- files    : 29
+ repo age : 4 weeks ago
+ commits  : 51
+ active   : 18 days
+ files    : 33
  authors  :
-    27  dead_horse              77.1%
-     8  fengmk2                 22.9%
+    36  dead_horse              70.6%
+    15  fengmk2                 29.4%
 ```
 
 ## Licences
