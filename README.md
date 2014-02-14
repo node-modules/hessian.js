@@ -6,9 +6,7 @@ Support all kind of types in Java.
 
 ## Install
 
-```
-npm install hessian.js
-```
+[![NPM](https://nodei.co/npm/hessian.js.png?downloads=true)](https://nodei.co/npm/hessian.js/)
 
 ## Support Types
 
