@@ -1,4 +1,11 @@
 
+0.1.1 / 2014-03-13
+==================
+
+  * Merge pull request #11 from dead-horse/use-is-type-of
+  * use is-type-of to do type check
+  * use badge replace install code
+
 0.1.0 / 2014-02-14
 ==================
 
