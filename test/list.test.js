@@ -15,6 +15,7 @@
  */
 
 var should = require('should');
+var java = require('js-to-java');
 var hessian = require('../');
 
 describe('list.test.js', function () {
@@ -40,7 +41,7 @@ describe('list.test.js', function () {
   });
 
   it('should write int[] = {0, 1}', function () {
-    var buf = hessian.encode(hessian.java.intList([0, 1]));
+    var buf = hessian.encode(java.array.int([0, 1]));
     buf.should.be.a.Buffer;
     buf.should.length(intListBuffer.length);
     buf.should.eql(intListBuffer);

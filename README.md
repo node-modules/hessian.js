@@ -39,10 +39,13 @@ Hessian 2.0 has 3 internal reference maps:
 
 ## Encoder
 
+Tips: you can use with [js-to-java](https://github.com/dead-horse/js-to-java) to help you write java class in js.
+
 ### Simple javascript type
 
 ```js
 var hessian = require('hessian.js');
+var java = require('js-to-java');
 var encoder = new hessian.Encoder();
 
 encoder.write(1); // int
@@ -54,9 +57,9 @@ encoder.write(null); // null
 encoder.write('test'); // string
 
 // java base types
-encoder.write(hessian.java.long(3001010320)); // 3001010320L
-encoder.write(hessian.java.double(100)); // double
-encoder.write(hessian.java.intList([0, 1, 2])); // int[] = {0, 1, 2}
+encoder.write(java.long(3001010320)); // 3001010320L
+encoder.write(java.double(100)); // double
+encoder.write(java.array.int([0, 1, 2])); // int[] = {0, 1, 2}
 
 var object = {};
 object.prop1 = [1, 2, 3];

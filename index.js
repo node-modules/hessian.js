@@ -35,6 +35,3 @@ exports.encode = function encode(obj, version) {
   }
   return new EncoderV1().write(obj).get();
 };
-
-// java types
-exports.java = require('./lib/java');
