@@ -1,4 +1,9 @@
 
+0.1.2 / 2014-03-20
+==================
+
+  * remove exports.java, just let people use js-to-java module
+
 0.1.1 / 2014-03-13
 ==================
 
