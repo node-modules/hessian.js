@@ -84,14 +84,13 @@ describe('hessian v1', function () {
       tests.forEach(function (t) {
         (function () {
           var buf = encoder.writeInt(t);
-        }).should.throw('value is out of bounds');
+        }).should.throw('hessian writeInt expect input type is `int32`, but got `number`');
       });
     });
 
     it('should read int error', function () {
       var tests = [
         [new Buffer([0x48, 0x00, 0x00, 0x00, 0x00]), 'hessian readInt only accept label `I` but got unexpect label `H`'],
-        [new Buffer([0x49, 0x00, 0x00, 0x00]), 'Trying to access beyond buffer length']
       ];
       tests.forEach(function (t) {
         (function () {
@@ -138,9 +137,7 @@ describe('hessian v1', function () {
     it('should read long error', function () {
       var tests = [
         [new Buffer([0x4b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readLong only accept label `L` but got unexpect label `K`'],
-        [new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'Trying to access beyond buffer length']
+        'hessian readLong only accept label `L` but got unexpect label `K`']
       ];
       tests.forEach(function (t) {
         (function () {
@@ -174,9 +171,7 @@ describe('hessian v1', function () {
     it('should read double error', function () {
       var tests = [
         [new Buffer([0x45, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDouble only accept label `D` but got unexpect label `E`'],
-        [new Buffer([0x44, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'Trying to access beyond buffer length']
+        'hessian readDouble only accept label `D` but got unexpect label `E`']
       ];
       tests.forEach(function (t) {
         (function () {
@@ -205,9 +200,7 @@ describe('hessian v1', function () {
     it('should read date error', function () {
       var tests = [
         [new Buffer([0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDate only accept label `d` but got unexpect label `e`'],
-        [new Buffer([0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'Trying to access beyond buffer length']
+        'hessian readDate only accept label `d` but got unexpect label `e`']
       ];
       tests.forEach(function (t) {
         (function () {
@@ -431,9 +424,6 @@ describe('hessian v1', function () {
     });
 
     it('should write type error', function () {
-      (function () {
-        encoder.writeObject();
-      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `undefined`');
       (function () {
         encoder.writeObject('123');
       }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `string`');
