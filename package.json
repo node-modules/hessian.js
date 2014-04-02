@@ -35,7 +35,7 @@
   "dependencies": {
     "byte": "0.2.1",
     "debug": "0.7.4",
-    "is-type-of": "0.0.2"
+    "is-type-of": "0.1.0"
   },
   "devDependencies": {
     "js-to-java": "~0.0.2",
