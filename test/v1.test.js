@@ -502,6 +502,23 @@ describe('hessian v1', function () {
     });
   });
 
+  describe('java.lang.Object', function () {
+    it('should encode and decode ok', function () {
+      [
+        100,
+        'string',
+        true,
+        new Date(),
+        [1, 2, 3],
+        {foo: 'bar'}
+      ].forEach(function(val) {
+        var buf = encoder.write({$class:'java.lang.Object', $: val}).get();
+        encoder.clean();
+        decoder.init(buf).read().should.eql(val);
+      });
+    });
+  });
+
   describe('encode and decode', function () {
     it('should encode and decode work ok', function () {
       var tests = [
