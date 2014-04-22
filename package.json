@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/dead-horse/hessian.js",
   "dependencies": {
-    "byte": "0.2.1",
+    "byte": "^0.2",
     "debug": "0.7.4",
     "is-type-of": "0.1.0"
   },
