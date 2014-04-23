@@ -9,6 +9,8 @@
  *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
  */
 
+'use strict';
+
 var EncoderV1 = exports.EncoderV1 = exports.Encoder = require('./lib/v1/encoder');
 var DecoderV1 = exports.DecoderV1 = exports.Decoder = require('./lib/v1/decoder');
 
@@ -22,6 +24,8 @@ exports.decode = function decode(buf, version, withType) {
     version = withType;
     withType = t;
   }
+
+  withType = !!withType;
 
   if (version === '2.0') {
     return new DecoderV2(buf).read(withType);

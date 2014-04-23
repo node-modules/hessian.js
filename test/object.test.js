@@ -20,9 +20,10 @@ var utils = require('./utils');
 
 describe('object.test.js', function () {
   describe('v2.0', function () {
-    it('shold write enum Color', function () {
+    it('should write enum Color', function () {
       hessian.encode({
         $class: 'hessian.Main$Color',
+        $isEnum: true,
         $: {
           name: 'RED'
         }
@@ -30,6 +31,7 @@ describe('object.test.js', function () {
 
       hessian.encode({
         $class: 'hessian.Main$Color',
+        $isEnum: true,
         $: {
           name: 'GREEN'
         }
@@ -41,6 +43,36 @@ describe('object.test.js', function () {
           name: 'BLUE'
         }
       }, '2.0').should.eql(utils.bytes('v2/enum/blue'));
+    });
+
+    it('should write enum with ref', function () {
+      // list = new ArrayList();
+      // list.add(Color.BLUE);
+      // list.add(Color.RED);
+      // list.add(Color.GREEN);
+      hessian.encode([
+        {
+          $class: 'hessian.Main$Color',
+          $isEnum: true,
+          $: {
+            name: 'BLUE'
+          }
+        },
+        {
+          $class: 'hessian.Main$Color',
+          $isEnum: true,
+          $: {
+            name: 'RED'
+          }
+        },
+        {
+          $class: 'hessian.Main$Color',
+          $isEnum: true,
+          $: {
+            name: 'GREEN'
+          }
+        },
+      ], '2.0').should.eql(utils.bytes('v2/enum/lists'));
     });
 
     it('should read enum Color', function () {
@@ -77,6 +109,16 @@ describe('object.test.js', function () {
           name: 'RED'
         }
       });
+
+      hessian.decode(utils.bytes('v2/enum/lists'), '2.0').should.eql(
+        [ { name: 'BLUE' }, { name: 'RED' }, { name: 'GREEN' } ]
+      );
+
+      hessian.decode(utils.bytes('v2/enum/lists'), '2.0', true).should.eql([
+        { '$class': 'hessian.Main$Color', '$': { name: 'BLUE' } },
+        { '$class': 'hessian.Main$Color', '$': { name: 'RED' } },
+        { '$class': 'hessian.Main$Color', '$': { name: 'GREEN' } }
+      ]);
     });
   });
 });
