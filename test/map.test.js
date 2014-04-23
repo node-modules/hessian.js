@@ -323,7 +323,7 @@ describe('map.test.js', function () {
       // writeRef
       var bufRef = encoder.write(map).get();
       hessian.decode(bufRef, '2.0').should.eql(map);
-      bufRef.slice(buf.length).should.eql(new Buffer([0x51, 0x90]));
+      bufRef.slice(buf.length).should.eql(new Buffer([0x4a, 0x00]));
 
       var buf2 = hessian.encode({
         $class: 'java.util.HashMap',
