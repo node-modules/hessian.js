@@ -1,4 +1,13 @@
 
+0.2.0 / 2014-04-23
+==================
+
+ * hessian 2.0 refator
+ * refactor readArray
+ * encode and decode enum
+ * refactor writeObject, writeRef, writeDate
+ * refactor hessian writeObject with real java codes
+
 0.1.11 / 2014-04-22 
 ==================
 
