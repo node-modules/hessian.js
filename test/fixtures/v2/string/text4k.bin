@@ -1,0 +1,740 @@
+S~@current.url = http://helloworld.${inner.domain}
+
+; hsf
+hsf.masterIp = confregsession-1-1.test.alipay.net
+hsf.responseTimeout = 5000
+hsf.refreshInterval = 30000
+
+; log
+log.level = DEBUG
+log.stdoutLevel = INFO
+log.dir = /tmp/chair/logs
+
+abtest.template = ${personalportal.root}/uiweb/abtest/templates
+acctrans.service.url = http://acctrans.${inner.domain}:8080
+acctransquery.service.url = http://acctransquery.${inner.domain}:8080
+aliloan.aso.url = http://login.taobao.com
+aliloan.cbu.url = https://dk.aliloan.com
+aliloan.gateway.url = http://mizar.aliloan.com
+aliloan.partner = 10003204
+aliloan.taobao.url = https://taobao.creditloan.aliloan.com
+apimg.url = http://apimg.alipay.net
+apimgServer.host = apimg.alipay.net
+appstore.url = http://appstore.${inner.domain}
+assets.url = http://assets.stable.alipay.net
+assetsServer.host = assets.stable.alipay.net
+assetsServer.port = 80
+authcenter.url = http://authcenter.${inner.domain}
+benefitprod.url = http://benefitprod.${inner.domain}
+cbu.url = http://china.alibaba.com
+ccrprod.url = http://ccrprod.${inner.domain}
+certify.url = http://certify.${inner.domain}
+cif.service.url = http://cif.${inner.domain}:8080
+cif.tr.service.url = cif.${inner.domain}:12200
+cms.root.2 = ${personalportal.root}/sharedata/ecmng_publish
+cmspromo.url = http://cmspromo.${inner.domain}
+communityweb.url = http://communityweb.${inner.domain}
+consumeprod.tile.url = http://consumeprod.${inner.domain}
+consumeprod.url = http://consumeprod.${inner.domain}
+consumequery.service.url = http://consumequery.${inner.domain}:8080
+core.esb.h2.db.home = ${personalportal.data}/esbdata
+core.esb.tcpm.port = 6200
+couponcore.service.url = http://couponcore.${inner.domain}:8080
+couponweb.url = http://couponweb.${inner.domain}
+couriercore.url = http://couriercore.${inner.domain}
+download.url = http://download.${inner.domain}
+enterpriseportal.url = http://enterpriseportal.${inner.domain}
+faq.root = ${personalportal.root}/sharedata/faqroot
+financeprod.tr.service.url = financeprod.${inner.domain}:12200
+financeprod.url = http://financeprod.${inner.domain}
+fundcardprod.url = http://fundcardprod.${inner.domain}
+fundpay.url = http://fundpay.${inner.domain}
+help.url = http://help.${inner.domain}
+huiyuan.url = http://memberweb.${inner.domain}
+image.url = http://img.${inner.domain}
+imageServer.host = img.${inner.domain}
+inner.domain = stable.alipay.net
+katong.url = http://katongweb.${inner.domain}
+katongprod.service.url = http://katongprod.${inner.domain}:8080
+kmi.service.url = http://kmi.${inner.domain}:8080
+kuai.url = http://productchannel.${inner.domain}
+membercenter.url = http://membercenter.${inner.domain}
+memberprod.url = http://memberprod.${inner.domain}
+merchantprod.url = http://merchantprod.${inner.domain}
+merchantweb.tile.url = http://merchantweb.${inner.domain}
+merchantweb.url = http://merchantweb.${inner.domain}
+minitrans.service.url = http://minitrans.${inner.domain}:8080
+mipgw.url = http://mipgw.${inner.domain}
+mktbi.service.url = http://mktbi.${inner.domain}:8080
+mobilebc.service.url = http://mobilebc.${inner.domain}:8080
+openauth.url = http://openauth.${inner.domain}
+pcreditprod.service.url = http://pcreditprod.${inner.domain}:8080
+pcreditprod.tr.service.url = pcreditprod.${inner.domain}:12200
+pcreditprod.url = http://pcreditprod.${inner.domain}
+
+personal.service.url = http://personal.${inner.domain}:8080
+personal.tile.url = http://personal.${inner.domain}
+personal.url = http://personal.${inner.domain}
+personalportal.app.port = 7001
+personalportal.appName = personalportal
+personalportal.data = ${personalportal.output}/sharedata
+personalportal.domainName = ${inner.domain}
+personalportal.host = localhost
+personalportal.inbound.timer.threshold = 300
+personalportal.loggingLevel = debug
+personalportal.loggingLevel.info = debug
+personalportal.loggingRoot = ${personalportal.output}/logs
+personalportal.output = ${personalportal.root}
+personalportal.port = 8080
+personalportal.protocol = http
+personalportal.root = /home/admin
+personalportal.run = ${personalportal.root}/personalportal-run
+personalportal.session.access.rule = remote
+personalportal.session.domain = alipay.net
+personalportal.session.impl = com.alipay.common.webx.session.request.internal.DefaultSessionImpl
+personalportal.session.maxInactiveInterval = 600
+personalportal.session.sysName = personalportal
+personalportal.tairsession.configServerList.master = tair.stable.alipay.net:5198
+personalportal.tairsession.localConfPath = ${personalportal.root}/conf/zdal
+personalportal.tairsession.zdalConsoleUrl = http://zdataconsole.${inner.domain}:8080
+personalportal.tdbmsession.configServerList = sessioncache.${inner.domain}:5189
+personalportal.tdbmsession.domain = ${inner.domain}
+personalportal.templates = ${personalportal.root}/uiweb/benz/templates
+personalportal.tile.url = http://personalportal-pool.${inner.domain}
+personalportal.url = http://personalportal.${inner.domain}
+personalportal.web.port = 80
+personalprod.service.url = http://personalprod.${inner.domain}:8080
+personalprod.url = http://personalprod.${inner.domain}
+
+pointndcprod.url = http://pointndcprod.${inner.domain}
+pointprod.url = http://pointprod.${inner.domain}
+prod.ui.template = ${personalportal.root}/uiweb/benz/uisvr
+prodtrans.service.url = http://prodtrans.${inner.domain}:8080
+promoadprod.url = http://promoadprod.${inner.domain}
+robot.url = http://personalportal.${inner.domain}
+run.mode = 0
+securitycenter.url = http://securitycenter.${inner.domain}
+securityprod.service.url = http://securityprod.${inner.domain}:8080
+self.url = http://membercenter.${inner.domain}
+
+; session
+session.cookieName = ALIPAYJSESSIONID
+session.globalStrategy = cover
+session.phase = TAIRTT
+
+shenghuo.url = http://personalprod.${inner.domain}
+staticServer.host = assets.dev.alipay.net
+staticServer2.host = assets.dev.alipay.net
+
+tair.configServerList.master = tair.stable.alipay.net:5198
+tair.configServerList.slave = tair2.stable.alipay.net:5198
+tair.group.name = public
+tair.namespace = 82
+
+taobao.domain = daily.taobao.net
+taobao.port = 80
+
+tfsImageServer.host = tfs.${inner.domain}
+tfsImageServer.port = 80
+
+ui.tpl = ${personalportal.root}/uiweb/uitpl
+uninav.url = http://uninav.${inner.domain}
+userview.service.url = http://userview.${inner.domain}:8080
+vip.url = http://memberweb.${inner.domain}
+
+zdrmdata.rest.url = http://zdrmdata.${inner.domain}
+zdrmdata.url = http://zdrmdata.${inner.domain}
+zhangdan.url = http://consumeprod.${inner.domain}
+zizhu.url = http://help.${inner.domain}
+current.url = http://helloworld.${inner.domain}
+
+; hsf
+hsf.masterIp = confregsession-1-1.test.alipay.net
+hsf.responseTimeout = 5000
+hsf.refreshInterval = 30000
+
+; log
+log.level = DEBUG
+log.stdoutLevel = INFO
+log.dir = /tmp/chair/logs
+
+abtest.template = ${personalportal.root}/uiweb/abtest/templates
+acctrans.service.url = http://acctrans.${inner.domain}:8080
+acctransquery.service.url = http://acctransquery.${inner.domain}:8080
+aliloan.aso.url = http://login.taobao.com
+aliloan.cbu.url = https://dk.aliloan.com
+aliloan.gateway.url = http://mizar.aliloan.com
+aliloan.partner = 10003204
+aliloan.taobao.url = https://taobao.creditloan.aliloan.com
+apimg.url = http://apimg.alipay.net
+apimgServer.host = apimg.alipay.net
+appstore.url = http://appstore.${inner.domain}
+assets.url = http://assets.stable.alipay.net
+assetsServer.host = assets.stable.alipay.net
+assetsServer.port = 80
+authcenter.url = http://authcenter.${inner.domain}
+benefitprod.url = http://benefitprod.${inner.domain}
+cbu.url = http://china.alibaba.com
+ccrprod.url = http://ccrprod.${inner.domain}
+certify.url = http://certify.${inner.domain}
+cif.service.url = http://cif.${inner.domain}:8080
+cif.tr.service.url = cif.${inner.domain}:12200
+cms.root.2 = ${personalportal.root}/sharedata/ecmng_publish
+cmspromo.url = http://cmspromo.${inner.domain}
+communityweb.url = http://communityweb.${inner.domain}
+consumeprod.tile.url = http://consumeprod.${inner.domain}
+consumeprod.url = http://consumeprod.${inner.domain}
+consumequery.service.url = http://consumequery.${inner.domain}:8080
+core.esb.h2.db.home = ${personalportal.data}/esbdata
+core.esb.tcpm.port = 6200
+couponcore.service.url = http://couponcore.${inner.domain}:8080
+couponweb.url = http://couponweb.${inner.domain}
+couriercore.url = http://couriercore.${inner.domain}
+download.url = http://download.${inner.domain}
+enterpriseportal.url = http://enterpriseportal.${inner.domain}
+faq.root = ${personalportal.root}/sharedata/faqroot
+financeprod.tr.service.url = financeprod.${inner.domain}:12200
+financeprod.url = http://financeprod.${inner.domain}
+fundcardprod.url = http://fundcardprod.${inner.domain}
+fundpay.url = http://fundpay.${inner.domain}
+help.url = http://help.${inner.domain}
+huiyuan.url = http://memberweb.${inner.domain}
+image.url = http://img.${inner.domain}
+imageServer.host = img.${inner.domain}
+inner.domain = stable.alipay.net
+katong.url = http://katongweb.${inner.domain}
+katongprod.service.url = http://katongprod.${inner.domain}:8080
+kmi.service.url = http://kmi.${inner.domain}:8080
+kuai.url = http://productchannel.${inner.domain}
+membercenter.url = http://membercenter.${inner.domain}
+memberprod.url = http://memberprod.${inner.domain}
+merchantprod.url = http://merchantprod.${inner.domain}
+merchantweb.tile.url = http://merchantweb.${inner.domain}
+merchantweb.url = http://merchantweb.${inner.domain}
+minitrans.service.url = http://minitrans.${inner.domain}:8080
+mipgw.url = http://mipgw.${inner.domain}
+mktbi.service.url = http://mktbi.${inner.domain}:8080
+mobilebc.service.url = http://mobilebc.${inner.domain}:8080
+openauth.url = http://openauth.${inner.domain}
+pcreditprod.service.url = http://pcreditprod.${inner.domain}:8080
+pcreditprod.tr.service.url = pcreditprod.${inner.domain}:12200
+pcreditprod.url = http://pcreditprod.${inner.domain}
+
+personal.service.url = http://personal.${inner.domain}:8080
+personal.tile.url = http://personal.${inner.domain}
+personal.url = http://personal.${inner.domain}
+personalportal.app.port = 7001
+personalportal.appName = personalportal
+personalportal.data = ${personalportal.output}/sharedata
+personalportal.domainName = ${inner.domain}
+personalportal.host = localhost
+personalportal.inbound.timer.threshold = 300
+personalportal.loggingLevel = debug
+personalportal.loggingLevel.info = debug
+personalportal.loggingRoot = ${personalportal.output}/logs
+personalportal.output = ${personalportal.root}
+personalportal.port = 8080
+personalportal.protocol = http
+personalportal.root = /home/admin
+personalportal.run = ${personalportal.root}/personalportal-run
+personalportal.session.access.rule = remote
+personalportal.session.domain = alipay.net
+personalportal.session.impl = com.alipay.common.webx.session.request.internal.DefaultSessionImpl
+personalportal.session.maxInactiveInterval = 600
+personalportal.session.sysName = personalportal
+personalportal.tairsession.configServerList.master = tair.stable.alipay.net:5198
+personalportal.tairsession.localConfPath = ${personalportal.root}/conf/zdal
+personalportal.tairsession.zdalConsoleUrl = http://zdataconsole.${inner.domain}:8080
+personalportal.tdbmsession.configServerList = sessioncache.${inner.domain}:5189
+personalportal.tdbmsession.domain = ${inner.domain}
+personalportal.templates = ${personalportal.root}/uiweb/benz/templates
+personalportal.tile.url = http://personalportal-pool.${inner.domain}
+personalportal.url = http://personalportal.${inner.domain}
+personalportal.web.port = 80
+personalprod.service.url = http://personalprod.${inner.domain}:8080
+personalprod.url = http://personalprod.${inner.domain}
+
+pointndcprod.url = http://pointndcprod.${inner.domain}
+pointprod.url = http://pointprod.${inner.domain}
+prod.ui.template = ${personalportal.root}/uiweb/benz/uisvr
+prodtrans.service.url = http://prodtrans.${inner.domain}:8080
+promoadprod.url = http://promoadprod.${inner.domain}
+robot.url = http://personalportal.${inner.domain}
+run.mode = 0
+securitycenter.url = http://securitycenter.${inner.domain}
+securityprod.service.url = http://securityprod.${inner.domain}:8080
+self.url = http://membercenter.${inner.domain}
+
+; session
+session.cookieName = ALIPAYJSESSIONID
+session.globalStrategy = cover
+session.phase = TAIRTT
+
+shenghuo.url = http://personalprod.${inner.domain}
+staticServer.host = assets.dev.alipay.net
+staticServer2.host = assets.dev.alipay.net
+
+tair.configServerList.master = tair.stable.alipay.net:5198
+tair.configServerList.slave = tair2.stable.alipay.net:5198
+tair.group.name = public
+tair.namespace = 82
+
+taobao.domain = daily.taobao.net
+taobao.port = 80
+
+tfsImageServer.host = tfs.${inner.domain}
+tfsImageServer.port = 80
+
+ui.tpl = ${personalportal.root}/uiweb/uitpl
+uninav.url = http://uninav.${inner.domain}
+userview.service.url = http://userview.${inner.domain}:8080
+vip.url = http://memberweb.${inner.domain}
+
+zdrmdata.rest.url = http://zdrmdata.${inner.domain}
+zdrmdata.url = http://zdrmdata.${inner.domain}
+zhangdan.url = http://consumeprod.${inner.domain}
+zizhu.url = http://help.${inner.domain}
+current.url = http://helloworld.${inner.domain}
+
+; hsf
+hsf.masterIp = confregsession-1-1.test.alipay.net
+hsf.responseTimeout = 5000
+hsf.refreshInterval = 30000
+
+; log
+log.level = DEBUG
+log.stdoutLevel = INFO
+log.dir = /tmp/chair/logs
+
+abtest.template = ${personalportal.root}/uiweb/abtest/templates
+acctrans.service.url = http://acctrans.${inner.domain}:8080
+acctransquery.service.url = http://acctransquery.${inner.domain}:8080
+aliloan.aso.url = http://login.taobao.com
+aliloan.cbu.url = https://dk.aliloan.com
+aliloan.gateway.url = http://mizar.aliloan.com
+aliloan.partner = 10003204
+aliloan.taobao.url = https://taobao.creditloan.aliloan.com
+apimg.url = http://apimg.alipay.net
+apimgServer.host = apimg.alipay.net
+appstore.url = http://appstore.${inner.domain}
+assets.url = http://assets.stable.alipay.net
+assetsServer.host = assets.stable.alipay.net
+assetsServer.port = 80
+authcenter.url = http://authcenter.${inner.domain}
+benefitprod.url = http://benefitprod.${inner.domain}
+cbu.url = http://china.alibaba.com
+ccrprod.url = http://ccrprod.${inner.domain}
+certify.url = http://certify.${inner.domain}
+cif.service.url = http://cif.${inner.domain}:8080
+cif.tr.service.url = cif.${inner.domain}:12200
+cms.root.2 = ${personalportal.root}/sharedata/ecmng_publish
+cmspromo.url = http://cmspromo.${inner.domain}
+communityweb.url = http://communityweb.${inner.domain}
+consumeprod.tile.url = http://consumeprod.${inner.domain}
+consumeprod.url = http://consumeprod.${inner.domain}
+consumequery.service.url = http://consumequery.${inner.domain}:8080
+core.esb.h2.db.home = ${personalportal.data}/esbdata
+core.esb.tcpm.port = 6200
+couponcore.service.url = http://couponcore.${inner.domain}:8080
+couponweb.url = http://couponweb.${inner.domain}
+couriercore.url = http://couriercore.${inner.domain}
+download.url = http://download.${inner.domain}
+enterpriseportal.url = http://enterpriseportal.${inner.domain}
+faq.root = ${personalportal.root}/sharedata/faqroot
+financeprod.tr.service.url = financeprod.${inner.domain}:12200
+financeprod.url = http://financeprod.${inner.domain}
+fundcardprod.url = http://fundcardprod.${inner.domain}
+fundpay.url = http://fundpay.${inner.domain}
+help.url = http://help.${inner.domain}
+huiyuan.url = http://memberweb.${inner.domain}
+image.url = http://img.${inner.domain}
+imageServer.host = img.${inner.domain}
+inner.domain = stable.alipay.net
+katong.url = http://katongweb.${inner.domain}
+katongprod.service.url = http://katongprod.${inner.domain}:8080
+kmi.service.url = http://kmi.${inner.domain}:8080
+kuai.url = http://productchannel.${inner.domain}
+membercenter.url = http://membercenter.${inner.domain}
+memberprod.url = http://memberprod.${inner.domain}
+merchantprod.url = http://merchantprod.${inner.domain}
+merchantweb.tile.url = http://merchantweb.${inner.domain}
+merchantweb.url = http://merchantweb.${inner.domain}
+minitrans.service.url = http://minitrans.${inner.domain}:8080
+mipgw.url = http://mipgw.${inner.domain}
+mktbi.service.url = http://mktbi.${inner.domain}:8080
+mobilebc.service.url = http://mobilebc.${inner.domain}:8080
+openauth.url = http://openauth.${inner.domain}
+pcreditprod.service.url = http://pcreditprod.${inner.domain}:8080
+pcreditprod.tr.service.url = pcreditprod.${inner.domain}:12200
+pcreditprod.url = http://pcreditprod.${inner.domain}
+
+personal.service.url = http://personal.${inner.domain}:8080
+personal.tile.url = http://personal.${inner.domain}
+personal.url = http://personal.${inner.domain}
+personalportal.app.port = 7001
+personalportal.appName = personalportal
+personalportal.data = ${personalportal.output}/sharedata
+personalportal.domainName = ${inner.domain}
+personalportal.host = localhost
+personalportal.inbound.timer.threshold = 300
+personalportal.loggingLevel = debug
+personalportal.loggingLevel.info = debug
+personalportal.loggingRoot = ${personalportal.output}/logs
+personalportal.output = ${personalportal.root}
+personalportal.port = 8080
+personalportal.protocol = http
+personalportal.root = /home/admin
+personalportal.run = ${personalportal.root}/personalportal-run
+personalportal.session.access.rule = remote
+personalportal.session.domain = alipay.net
+personalportal.session.impl = com.alipay.common.webx.session.request.internal.DefaultSessionImpl
+personalportal.session.maxInactiveInterval = 600
+personalportal.session.sysName = personalportal
+personalportal.tairsession.configServerList.master = tair.stable.alipay.net:5198
+personalportal.tairsession.localConfPath = ${personalportal.root}/conf/zdal
+personalportal.tairsession.zdalConsoleUrl = http://zdataconsole.${inner.domain}:8080
+personalportal.tdbmsession.configServerList = sessioncache.${inner.domain}:5189
+personalportal.tdbmsession.domain = ${inner.domain}
+personalportal.templates = ${personalportal.root}/uiweb/benz/templates
+personalportal.tile.url = http://personalportal-pool.${inner.domain}
+personalportal.url = http://personalportal.${inner.domain}
+personalportal.web.port = 80
+personalprod.service.url = http://personalprod.${inner.domain}:8080
+personalprod.url = http://personalprod.${inner.domain}
+
+pointndcprod.url = http://pointndcprod.${inner.domain}
+pointprod.url = http://pointprod.${inner.domain}
+prod.ui.template = ${personalportal.root}/uiweb/benz/uisvr
+prodtrans.service.url = http://prodtrans.${inner.domain}:8080
+promoadprod.url = http://promoadprod.${inner.domain}
+robot.url = http://personalportal.${inner.domain}
+run.mode = 0
+securitycenter.url = http://securitycenter.${inner.domain}
+securityprod.service.url = http://securityprod.${inner.domain}:8080
+self.url = http://membercenter.${inner.domain}
+
+; session
+session.cookieName = ALIPAYJSESSIONID
+session.globalStrategy = cover
+session.phase = TAIRTT
+
+shenghuo.url = http://personalprod.${inner.domain}
+staticServer.host = assets.dev.alipay.net
+staticServer2.host = assets.dev.alipay.net
+
+tair.configServerList.master = tair.stable.alipay.net:5198
+tair.configServerList.slave = tair2.stable.alipay.net:5198
+tair.group.name = public
+tair.namespace = 82
+
+taobao.domain = daily.taobao.net
+taobao.port = 80
+
+tfsImageServer.host = tfs.${inner.domain}
+tfsImageServer.port = 80
+
+ui.tpl = ${personalportal.root}/uiweb/uitpl
+uninav.url = http://uninav.${inner.domain}
+userview.service.url = http://userview.${inner.domain}:8080
+vip.url = http://memberweb.${inner.domain}
+
+zdrmdata.rest.url = http://zdrmdata.${inner.domain}
+zdrmdata.url = http://zdrmdata.${inner.domain}
+zhangdan.url = http://consumeprod.${inner.domain}
+zizhu.url = http://help.${inner.domain}
+current.url = http://helloworld.${inner.domain}
+
+; hsf
+hsf.masterIp = confregsession-1-1.test.alipay.net
+hsf.responseTimeout = 5000
+hsf.refreshInterval = 30000
+
+; log
+log.level = DEBUG
+log.stdoutLevel = INFO
+log.dir = /tmp/chair/logs
+
+abtest.template = ${personalportal.root}/uiweb/abtest/templates
+acctrans.service.url = http://acctrans.${inner.domain}:8080
+acctransquery.service.url = http://acctransquery.${inner.domain}:8080
+aliloan.aso.url = http://login.taobao.com
+aliloan.cbu.url = https://dk.aliloan.com
+aliloan.gateway.url = http://mizar.aliloan.com
+aliloan.partner = 10003204
+aliloan.taobao.url = https://taobao.creditloan.aliloan.com
+apimg.url = http://apimg.alipay.net
+apimgServer.host = apimg.alipay.net
+appstore.url = http://appstore.${inner.domain}
+assets.url = http://assets.stable.alipay.net
+assetsServer.host = assets.stable.alipay.net
+assetsServer.port = 80
+authcenter.url = http://authcenter.${inner.domain}
+benefitprod.url = http://benefitprod.${inner.domain}
+cbu.url = http://china.alibaba.com
+ccrprod.url = http://ccrprod.${inner.domain}
+certify.url = http://certify.${inner.domain}
+cif.service.url = http://cif.${inner.domain}:8080
+cif.tr.service.url = cif.${inner.domain}:12200
+cms.root.2 = ${personalportal.root}/sharedata/ecmng_publish
+cmspromo.url = http://cmspromo.${inner.domain}
+communityweb.url = http://communityweb.${inner.domain}
+consumeprod.tile.url = http://consumeprod.${inner.domain}
+consumeprod.url = http://consumeprod.${inner.domain}
+consumequery.service.url = http://consumequery.${inner.domain}:8080
+core.esb.h2.db.home = ${personalportal.data}/esbdata
+core.esb.tcpm.port = 6200
+couponcore.service.url = http://couponcore.${inner.domain}:8080
+couponweb.url = http://couponweb.${inner.domain}
+couriercore.url = http://couriercore.${inner.domain}
+download.url = http://download.${inner.domain}
+enterpriseportal.url = http://enterpriseportal.${inner.domain}
+faq.root = ${personalportal.root}/sharedata/faqroot
+financeprod.tr.service.url = financeprod.${inner.domain}:12200
+financeprod.url = http://financeprod.${inner.domain}
+fundcardprod.url = http://fundcardprod.${inner.domain}
+fundpay.url = http://fundpay.${inner.domain}
+help.url = http://help.${inner.domain}
+huiyuan.url = http://memberweb.${inner.domain}
+image.url = http://img.${inner.domain}
+imageServer.host = img.${inner.domain}
+inner.domain = stable.alipay.net
+katong.url = http://katongweb.${inner.domain}
+katongprod.service.url = http://katongprod.${inner.domain}:8080
+kmi.service.url = http://kmi.${inner.domain}:8080
+kuai.url = http://productchannel.${inner.domain}
+membercenter.url = http://membercenter.${inner.domain}
+memberprod.url = http://memberprod.${inner.domain}
+merchantprod.url = http://merchantprod.${inner.domain}
+merchantweb.tile.url = http://merchantweb.${inner.domain}
+merchantweb.url = http://merchantweb.${inner.domain}
+minitrans.service.url = http://minitrans.${inner.domain}:8080
+mipgw.url = http://mipgw.${inner.domain}
+mktbi.service.url = http://mktbi.${inner.domain}:8080
+mobilebc.service.url = http://mobilebc.${inner.domain}:8080
+openauth.url = http://openauth.${inner.domain}
+pcreditprod.service.url = http://pcreditprod.${inner.domain}:8080
+pcreditprod.tr.service.url = pcreditprod.${inner.domain}:12200
+pcreditprod.url = http://pcreditprod.${inner.domain}
+
+personal.service.url = http://personal.${inner.domain}:8080
+personal.tile.url = http://personal.${inner.domain}
+personal.url = http://personal.${inner.domain}
+personalportal.app.port = 7001
+personalportal.appName = personalportal
+personalportal.data = ${personalportal.output}/sharedata
+personalportal.domainName = ${inner.domain}
+personalportal.host = localhost
+personalportal.inbound.timer.threshold = 300
+personalportal.loggingLevel = debug
+personalportal.loggingLevel.info = debug
+personalportal.loggingRoot = ${personalportal.output}/logs
+personalportal.output = ${personalportal.root}
+personalportal.port = 8080
+personalportal.protocol = http
+personalportal.root = /home/admin
+personalportal.run = ${personalportal.root}/personalportal-run
+personalportal.session.access.rule = remote
+personalportal.session.domain = alipay.net
+personalportal.session.impl = com.alipay.common.webx.session.request.internal.DefaultSessionImpl
+personalportal.session.maxInactiveInterval = 600
+personalportal.session.sysName = personalportal
+personalportal.tairsession.configServerList.master = tair.stable.alipay.net:5198
+personalportal.tairsession.localConfPath = ${personalportal.root}/conf/zdal
+personalportal.tairsession.zdalConsoleUrl = http://zdataconsole.${inner.domain}:8080
+personalportal.tdbmsession.configServerList = sessioncache.${inner.domain}:5189
+personalportal.tdbmsession.domain = ${inner.domain}
+personalportal.templates = ${personalportal.root}/uiweb/benz/templates
+personalportal.tile.url = http://personalportal-pool.${inner.domain}
+personalportal.url = http://personalportal.${inner.domain}
+personalportal.web.port = 80
+personalprod.service.url = http://personalprod.${inner.domain}:8080
+personalprod.url = http://personalprod.${inner.domain}
+
+pointndcprod.url = http://pointndcprod.${inner.domain}
+pointprod.url = http://pointprod.${inner.domain}
+prod.ui.template = ${personalportal.root}/uiweb/benz/uisvr
+prodtrans.service.url = http://prodtrans.${inner.domain}:8080
+promoadprod.url = http://promoadprod.${inner.domain}
+robot.url = http://personalportal.${inner.domain}
+run.mode = 0
+securitycenter.url = http://securitycenter.${inner.domain}
+securityprod.service.url = http://securityprod.${inner.domain}:8080
+self.url = http://membercenter.${inner.domain}
+
+; session
+session.cookieName = ALIPAYJSESSIONID
+session.globalStrategy = cover
+session.phase = TAIRTT
+
+shenghuo.url = http://personalprod.${inner.domain}
+staticServer.host = assets.dev.alipay.net
+staticServer2.host = assets.dev.alipay.net
+
+tair.configServerList.master = tair.stable.alipay.net:5198
+tair.configServerList.slave = tair2.stable.alipay.net:5198
+tair.group.name = public
+tair.namespace = 82
+
+taobao.domain = daily.taobao.net
+taobao.port = 80
+
+tfsImageServer.host = tfs.${inner.domain}
+tfsImageServer.port = 80
+
+ui.tpl = ${personalportal.root}/uiweb/uitpl
+uninav.url = http://uninav.${inner.domain}
+userview.service.url = http://userview.${inner.domain}:8080
+vip.url = http://memberweb.${inner.domain}
+
+zdrmdata.rest.url = http://zdrmdata.${inner.domain}
+zdrmdata.url = http://zdrmdata.${inner.domain}
+zhangdan.url = http://consumeprod.${inner.domain}
+zizhu.url = http://help.${inner.domain}
+current.url = http://helloworld.${inner.domain}
+
+; hsf
+hsf.masterIp = confregsession-1-1.test.alipay.net
+hsf.responseTimeout = 5000
+hsf.refreshInterval = 30000
+
+; log
+log.level = DEBUG
+log.stdoutLevel = INFO
+log.dir = /tmp/chair/logs
+
+abtest.template = ${personalportal.root}/uiweb/abtest/templates
+acctrans.service.url = http://acctrans.${inner.domain}:8080
+acctransquery.service.url = http://acctransquery.${inner.domain}:8080
+aliloan.aso.url = http://login.taobao.com
+aliloan.cbu.url = https://dk.aliloan.com
+aliloan.gateway.url = http://mizar.aliloan.com
+aliloan.partner = 10003204
+aliloan.taobao.url = https://taobao.creditloan.aliloan.com
+apimg.url = http://apimg.alipay.net
+apimgServer.host = apimg.alipay.net
+appstore.url = http://appstore.${inner.domain}
+assets.url = http://assets.stable.alipay.net
+assetsServer.host = assets.stable.alipay.net
+assetsServer.port = 80
+authcenter.url = http://authcenter.${inner.domain}
+benefitprod.url = http://benefitprod.${inner.domain}
+cbu.url = http://china.alibaba.com
+ccrprod.url = http://ccrprod.${inner.domain}
+certify.url = http://certify.${inner.domain}
+cif.service.url = http://cif.${inner.domain}:8080
+cif.tr.service.url = cif.${inner.domain}:12200
+cms.root.2 = ${personalportal.root}/sharedata/ecmng_publish
+cmspromo.url = http://cmspromo.${inner.domain}
+communityweb.url = http://communityweb.${inner.domain}
+consumeprod.tile.url = http://consumeprod.${inner.domain}
+consumeprod.url = http://consumeprod.${inner.domain}
+consumequery.service.url = http://consumequery.${inner.domain}:8080
+core.esb.h2.db.home = ${personalportal.data}/esbdata
+core.esb.tcpm.port = 6200
+couponcore.service.url = http://couponcore.${inner.domain}:8080
+couponweb.url = http://couponweb.${inner.domain}
+couriercore.url = http://couriercore.${inner.domain}
+download.url = http://download.${inner.domain}
+enterpriseportal.url = http://enterpriseportal.${inner.domain}
+faq.root = ${personalportal.root}/sharedata/faqroot
+financeprod.tr.service.url = financeprod.${inner.domain}:12200
+financeprod.url = http://financeprod.${inner.domain}
+fundcardprod.url = http://fundcardprod.${inner.domain}
+fundpay.url = http://fundpay.${inner.domain}
+help.url = http://help.${inner.domain}
+huiyuan.url = http://memberweb.${inner.domain}
+image.url = http://img.${inner.domain}
+imageServer.host = img.${inner.domain}
+inner.domain = stable.alipay.net
+katong.url = http://katongweb.${inner.domain}
+katongprod.service.url = http://katongprod.${inner.domain}:8080
+kmi.service.url = http://kmi.${inner.domain}:8080
+kuai.url = http://productchannel.${inner.domain}
+membercenter.url = http://membercenter.${inner.domain}
+memberprod.url = http://memberprod.${inner.domain}
+merchantprod.url = http://merchantprod.${inner.domain}
+merchantweb.tile.url = http://merchantweb.${inner.domain}
+merchantweb.url = http://merchantweb.${inner.domain}
+minitrans.service.url = http://minitrans.${inner.domain}:8080
+mipgw.url = http://mipgw.${inner.domain}
+mktbi.service.url = http://mktbi.${inner.domain}:8080
+mobilebc.service.url = http://mobilebc.${inner.domain}:8080
+openauth.url = http://openauth.${inner.domain}
+pcreditprod.service.url = http://pcreditprod.${inner.domain}:8080
+pcreditprod.tr.service.url = pcreditprod.${inner.domain}:12200
+pcreditprod.url = http://pcreditprod.${inner.domain}
+
+personal.service.url = http://personal.${inner.domain}:8080
+personal.tile.url = http://personal.${inner.domain}
+personal.url = http://personal.${inner.domain}
+personalportal.app.port = 7001
+personalportal.appName = personalportal
+personalportal.data = ${personalportal.output}/sharedata
+personalportal.domainName = ${inner.domain}
+personalportal.host = localhost
+personalportal.inbound.timer.threshold = 300
+personalportal.loggingLevel = debug
+personalportal.loggingLevel.info = debug
+personalportal.loggingRoot = ${personalportal.output}/logs
+personalportal.output = ${personalportal.root}
+personalportal.port = 8080
+personalportal.protocol = http
+personalportal.root = /home/admin
+personalportal.run = ${personalportal.root}/personalportal-run
+personalportal.session.access.rule = remote
+personalportal.session.domain = alipay.net
+personalportal.session.impl = com.alipay.common.webx.session.request.internal.DefaultSessionImpl
+personalportal.session.maxInactiveInterval = 600
+personalportal.session.sysName = personalportal
+personalportal.tairsession.configServerList.master = tair.stable.alipay.net:5198
+personalportal.tairsession.localConfPath = ${personalportal.root}/conf/zdal
+personalportal.tairsession.zdalConsoleUrl = http://zdataconsole.${inner.domain}:8080
+personalportal.tdbmsession.configServerList = sessioncache.${inner.domain}:5189
+personalportal.tdbmsession.domain = ${inner.domain}
+personalportal.templates = ${personalportal.root}/uiweb/benz/templates
+personalportal.tile.url = http://personalportal-pool.${inner.domain}
+personalportal.url = http://personalportal.${inner.domain}
+personalportal.web.port = 80
+personalprod.service.url = http://personalprod.${inner.domain}:8080
+personalprod.url = http://personalprod.${inner.domain}
+
+pointndcprod.url = http://pointndcprod.${inner.domain}
+pointprod.url = http://pointprod.${inner.domain}
+prod.ui.template = ${personalportal.root}/uiweb/benz/uisvr
+prodtrans.service.url = http://prodtrans.${inner.domain}:8080
+promoadprod.url = http://promoadprod.${inner.domain}
+robot.url = http://personalportal.${inner.domain}
+run.mode = 0
+securitycenter.url = http://securitycenter.${inner.domain}
+securityprod.service.url = http://securityprod.${inner.domain}:8080
+self.url = http://membercenter.${inner.domain}
+
+; session
+session.cookieName = ALIPAYJSESSIONID
+session.globalStrategy = cover
+session.phase = TAIRTT
+
+shenghuo.url = http://personalprod.${inner.domain}
+staticServer.host = assets.dev.alipay.net
+staticServer2.host = assets.dev.alipay.net
+
+tair.configServerList.master = tair.stable.alipay.net:5198
+tair.configServerList.slave = tair2.stable.alipay.net:5198
+tair.group.name = public
+tair.namespace = 82
+
+taobao.domain = daily.taobao.net
+taobao.port = 80
+
+tfsImageServer.host = tfs.${inner.domain}
+tfsImageServer.port = 80
+
+ui.tpl = ${personalportal.root}/uiweb/uitpl
+uninav.url = http://uninav.${inner.domain}
+userview.service.url = http://userview.${inner.domain}:8080
+vip.url = http://memberweb.${inner.domain}
+
+zdrmdata.rest.url = http://zdrmdata.${inner.domain}
+zdrmdata.url = http://zdrmdata.${inner.domain}
+zhangdan.url = http://consumeprod.${inner.domain}
+zizhu.url = http://help.${inner.domain}

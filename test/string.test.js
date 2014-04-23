@@ -16,6 +16,7 @@
 
 var should = require('should');
 var hessian = require('../');
+var utils = require('./utils');
 
 describe('string.test.js', function () {
   var helloBuffer = Buffer.concat([new Buffer(['S'.charCodeAt(0), 0x00, 0x05]),
@@ -56,8 +57,8 @@ describe('string.test.js', function () {
         new Buffer('hello')]), '2.0').should.equal('hello');
     });
 
-    it('should read split into two chunks: R and short strings', function () {
-      hessian.decode(Buffer.concat([new Buffer([0x52, 0x00, 0x07]),
+    it('should read split into two chunks: s and short strings', function () {
+      hessian.decode(Buffer.concat([new Buffer(['s'.charCodeAt(0), 0x00, 0x07]),
         new Buffer('hello, '), new Buffer([0x05]), new Buffer('world')]), '2.0')
       .should.equal('hello, world');
     });
@@ -94,6 +95,39 @@ describe('string.test.js', function () {
       largeBuf = new Buffer(65535 * 3 + 100);
       largeBuf.fill(0x41);
       hessian.encode(largeBuf.toString(), '2.0');
+    });
+
+    it('should read java string', function () {
+      hessian.decode(utils.bytes('v2/string/empty'), '2.0').should.equal('');
+      hessian.decode(utils.bytes('v2/string/foo'), '2.0').should.equal('foo');
+      hessian.decode(utils.bytes('v2/string/chinese'), '2.0').should.equal('中文 Chinese');
+      hessian.decode(utils.bytes('v2/string/text4k'), '2.0').should.equal(utils.string('4k'));
+
+      var largeBuf = new Buffer(65535);
+      largeBuf.fill(0x41);
+      hessian.decode(utils.bytes('v2/string/large_string_65535'), '2.0').should.equal(largeBuf.toString());
+    });
+
+    it('should write string same as java write', function () {
+      hessian.encode('', '2.0').should.eql(utils.bytes('v2/string/empty'));
+      hessian.encode('foo', '2.0').should.eql(utils.bytes('v2/string/foo'));
+      hessian.encode('中文 Chinese', '2.0').should.eql(utils.bytes('v2/string/chinese'));
+      var text4k = utils.string('4k');
+      hessian.encode(text4k, '2.0').should.eql(utils.bytes('v2/string/text4k'));
+
+      var largeBuf = new Buffer(65535);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_65535'));
+
+      var largeString = new Array(65535);
+      for (var i = 0; i < largeString.length; i += 2) {
+        largeString[i] = String.fromCharCode(0xd800);
+        if (i + 1 < largeString.length) {
+          largeString[i + 1] = String.fromCharCode(0xdbff);
+        }
+      }
+      largeString = largeString.join('');
+      hessian.encode(largeString, '2.0').should.eql(utils.bytes('v2/string/large_string_chars'));
     });
   });
 });
