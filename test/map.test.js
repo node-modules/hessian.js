@@ -16,10 +16,11 @@
 
 var should = require('should');
 var hessian = require('../');
-
-// http://hessian.caucho.com/doc/hessian-1.0-spec.xtp#map
+var utils = require('./utils');
 
 describe('map.test.js', function () {
+  // http://hessian.caucho.com/doc/hessian-1.0-spec.xtp#map
+
   it('should read Serialization of a Java Object', function () {
     // public class Car implements Serializable {
     //   String model = "Beetle";
@@ -145,7 +146,7 @@ describe('map.test.js', function () {
     // map.put(new Integer(256), "foe");
     var hashmapBuffer = Buffer.concat([
       new Buffer([
-        'H'.charCodeAt(0),
+        'M'.charCodeAt(0),
         0x91, // 1
         0x03,
       ]),
@@ -160,8 +161,26 @@ describe('map.test.js', function () {
         0x03,
       ]),
       new Buffer('foe'), // 'foe'
-      new Buffer('Z')
+      new Buffer('z')
     ]);
+
+    it('should write a java Class instance', function () {
+      var encoder = new hessian.EncoderV2();
+      var car = {
+        $class: 'hessian.demo.Car',
+        $: {
+          // field defined sort must same as java Class defined
+          a: 'a',
+          c: 'c',
+          b: 'b',
+          model: 'Beetle',
+          color: 'aquamarine',
+          mileage: 65536,
+        }
+      };
+      var buf = encoder.write(car).get();
+      buf.should.eql(utils.bytes('v2/map/car'));
+    });
 
     it('should read java hash map', function () {
       hessian.decode(hashmapBuffer, '2.0').should.eql({
@@ -171,10 +190,10 @@ describe('map.test.js', function () {
       });
     });
 
-    it('should read Circular map', function () {
+    it.skip('should read Circular map', function () {
       var buf = Buffer.concat([
         new Buffer([
-          'H'.charCodeAt(0),
+          'M'.charCodeAt(0),
           0x05
         ]),
         new Buffer('color'),
@@ -199,7 +218,7 @@ describe('map.test.js', function () {
         new Buffer([
           0x51, 0x90
         ]),
-        new Buffer('Z')
+        new Buffer('z')
       ]);
 
       var obj = hessian.decode(buf, '2.0');
@@ -210,159 +229,68 @@ describe('map.test.js', function () {
       obj.self.should.have.keys('color', 'model', 'self');
     });
 
-    it('should read a java Object', function () {
-      // public class Car implements Serializable {
+    it('should read a Circular java Object', function () {
+      // public class CarSelf implements Serializable {
       //   String color = "aquamarine";
       //   String model = "Beetle";
       //   int mileage = 65536;
+      //   CarSelf self = this;
+      //   CarSelf prev = null;
+      //
+      //   public CarSelf(CarSelf prev) {
+      //     this.prev = prev;
+      //   }
+      //
+      //   public CarSelf() {
+      //   }
       // }
-      var buf = Buffer.concat([
-        new Buffer([
-          'M'.charCodeAt(0),
-          0x13
-        ]),
-        new Buffer('com.caucho.test.Car'),
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('color'),
-        new Buffer([
-          0x0a
-        ]),
-        new Buffer('aquamarine'),
 
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('model'),
-        new Buffer([
-          0x06
-        ]),
-        new Buffer('Beetle'),
-
-        new Buffer([
-          0x07
-        ]),
-        new Buffer('mileage'),
-        new Buffer([
-          'I'.charCodeAt(0),
-          0x00, 0x01, 0x00, 0x00
-        ]),
-        new Buffer('Z')
-      ]);
-      hessian.decode(buf, '2.0').should.eql({
-        color: 'aquamarine',
+      var car = hessian.decode(utils.bytes('v2/map/car'), '2.0');
+      car.should.eql({
+        a: 'a',
+        c: 'c',
+        b: 'b',
         model: 'Beetle',
+        color: 'aquamarine',
         mileage: 65536
       });
 
-      hessian.decode(buf, '2.0', true).should.eql({
-        $class: 'com.caucho.test.Car',
-        $: {
-          color: 'aquamarine',
-          model: 'Beetle',
-          mileage: 65536
-        }
-      });
+      var obj = hessian.decode(utils.bytes('v2/map/car1'), '2.0');
+      obj.should.have.keys('color', 'model', 'mileage', 'self', 'prev');
+      obj.self.should.equal(obj);
+      should.not.exist(obj.prev);
+      obj.self.should.have.keys('color', 'model', 'mileage', 'self', 'prev');
+
+    //   var obj2 = hessian.decode(utils.bytes('v2/map/car2'), '2.0', true);
+    //   obj2.should.have.keys('$class', '$');
+    //   obj2.$.should.have.keys('color', 'model', 'mileage', 'self');
+    //   obj2.$.self.should.have.keys('$class', '$');
     });
 
-    it('should read a Circular java Object', function () {
-      var buf = Buffer.concat([
-        new Buffer([
-          'M'.charCodeAt(0),
-          0x13
-        ]),
-        new Buffer('com.caucho.test.Car'),
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('color'),
-        new Buffer([
-          0x0a
-        ]),
-        new Buffer('aquamarine'),
+    it('should write js object to no type hash map', function () {
+      var encoder = new hessian.EncoderV2();
+      var buf = encoder.write({ foo: '' }).get();
+      buf.should.eql(utils.bytes('v2/map/foo_empty'));
+      hessian.decode(utils.bytes('v2/map/foo_empty'), '2.0').should.eql({
+        foo: ''
+      });
 
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('model'),
-        new Buffer([
-          0x06
-        ]),
-        new Buffer('Beetle'),
+      encoder = new hessian.EncoderV2();
+      buf = encoder.write({
+        foo: 'bar',
+        '中文key': '中文哈哈value',
+        '123': 456,
+        zero: 0,
+      }).get();
+      buf.should.eql(utils.bytes('v2/map/foo_bar'));
 
-        new Buffer([
-          0x07
-        ]),
-        new Buffer('mileage'),
-        new Buffer([
-          'I'.charCodeAt(0),
-          0x00, 0x01, 0x00, 0x00
-        ]),
-
-        new Buffer([
-          0x04
-        ]),
-        new Buffer('self'),
-        new Buffer([
-          0x51, 0x90
-        ]),
-        new Buffer('Z'),
-
-        new Buffer([
-          'M'.charCodeAt(0),
-          0x90,
-          0x05
-        ]),
-        new Buffer('color'),
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('black'),
-
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('model'),
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('smark'),
-
-        new Buffer([
-          0x04
-        ]),
-        new Buffer('prev'),
-        new Buffer([
-          0x51, 0x90
-        ]),
-
-        new Buffer([
-          0x04
-        ]),
-        new Buffer('self'),
-        new Buffer([
-          0x51, 0x91
-        ]),
-        new Buffer('Z')
-      ]);
-
-      var decoder = new hessian.DecoderV2(buf);
-      var obj = decoder.read();
-      obj.should.have.keys('color', 'model', 'mileage', 'self');
-      obj.self.should.equal(obj);
-      decoder.types[0].should.equal('com.caucho.test.Car');
-
-      var o = decoder.read(true);
-      o.should.have.keys('$class', '$');
-      o.$.should.have.keys('color', 'model', 'prev', 'self');
-      o.$.prev.$.should.equal(obj);
-      o.$.self.should.equal(o);
-
-      var obj2 = hessian.decode(buf, '2.0', true);
-      obj2.should.have.keys('$class', '$');
-      obj2.$.should.have.keys('color', 'model', 'mileage', 'self');
-      obj2.$.self.should.have.keys('$class', '$');
+      // read it
+      hessian.decode(utils.bytes('v2/map/foo_bar'), '2.0').should.eql({
+        foo: 'bar',
+        '中文key': '中文哈哈value',
+        '123': 456,
+        zero: 0,
+      });
     });
 
     it('should write simple map to java hash map', function () {
@@ -395,7 +323,7 @@ describe('map.test.js', function () {
       // writeRef
       var bufRef = encoder.write(map).get();
       hessian.decode(bufRef, '2.0').should.eql(map);
-      bufRef.slice(buf.length).should.eql(new Buffer([0x51, 0x90]));
+      bufRef.slice(buf.length).should.eql(new Buffer([0x4a, 0x00]));
 
       var buf2 = hessian.encode({
         $class: 'java.util.HashMap',
@@ -405,13 +333,13 @@ describe('map.test.js', function () {
       hessian.decode(buf2, '2.0').should.eql(map);
     });
 
-    it('should write "{$class: java.utils.Map, $: {a: 1}}"', function () {
+    it('should write "{$class: "hessian.test.demo.Car", $: {a: 1}}"', function () {
       var obj = {
-        $class: 'java.utils.Map',
+        $class: 'hessian.test.demo.Car',
         $: {a: 1, b: 'map'}
       };
       var buf = hessian.encode(obj, '2.0');
-      buf[0].should.equal(0x4d);
+      buf[0].should.equal(0x4f);
       hessian.decode(buf, '2.0').should.eql(obj.$);
       hessian.decode(buf, '2.0', true).should.eql(obj);
     });

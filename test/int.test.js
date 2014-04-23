@@ -16,6 +16,7 @@
 
 var should = require('should');
 var hessian = require('../');
+var utils = require('./utils');
 
 describe('int.test.js', function () {
   it('should read integer 300', function () {
@@ -47,6 +48,26 @@ describe('int.test.js', function () {
 
       hessian.decode(new Buffer(['I'.charCodeAt(0), 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
       hessian.decode(new Buffer(['I'.charCodeAt(0), 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
+    });
+
+    it('should write number as java write', function () {
+      hessian.encode(0, '2.0').should.eql(utils.bytes('v2/number/0'));
+      hessian.encode(1, '2.0').should.eql(utils.bytes('v2/number/1'));
+      hessian.encode(10, '2.0').should.eql(utils.bytes('v2/number/10'));
+      hessian.encode(16, '2.0').should.eql(utils.bytes('v2/number/16'));
+      hessian.encode(2047, '2.0').should.eql(utils.bytes('v2/number/2047'));
+      hessian.encode(255, '2.0').should.eql(utils.bytes('v2/number/255'));
+      hessian.encode(256, '2.0').should.eql(utils.bytes('v2/number/256'));
+      hessian.encode(262143, '2.0').should.eql(utils.bytes('v2/number/262143'));
+      hessian.encode(262144, '2.0').should.eql(utils.bytes('v2/number/262144'));
+      hessian.encode(46, '2.0').should.eql(utils.bytes('v2/number/46'));
+      hessian.encode(47, '2.0').should.eql(utils.bytes('v2/number/47'));
+
+      hessian.encode(-16, '2.0').should.eql(utils.bytes('v2/number/-16'));
+      hessian.encode(-2048, '2.0').should.eql(utils.bytes('v2/number/-2048'));
+      hessian.encode(-256, '2.0').should.eql(utils.bytes('v2/number/-256'));
+      hessian.encode(-262144, '2.0').should.eql(utils.bytes('v2/number/-262144'));
+      hessian.encode(-262145, '2.0').should.eql(utils.bytes('v2/number/-262145'));
     });
 
     it('should write compact integers', function () {

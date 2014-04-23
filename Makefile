@@ -2,7 +2,8 @@ TESTS = test/*.test.js
 REPORTER = spec
 TIMEOUT = 5000
 MOCHA_OPTS =
-NPM_INSTALL = npm install --registry=http://registry.cnpmjs.org --cache=${HOME}/.npm/.cache/cnpm --disturl=http://dist.u.qiniudn.com
+NPM_INSTALL = npm install --registry=http://registry.npm.taobao.org --disturl=http://dist.u.qiniudn.com
+
 install:
 	@$(NPM_INSTALL)
 
@@ -23,12 +24,12 @@ test-cov-html:
 
 test-coveralls: test
 	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
-	@-$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js
+	@-$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=mocha-lcov-reporter | ./node_modules/.bin/coveralls
 
 test-all: test test-cov
 
 contributors: install
-	@./node_modules/contributors/bin/contributors -f plain -o AUTHORS
+	@./node_modules/.bin/contributors -f plain -o AUTHORS
 
 autod: install
 	@./node_modules/.bin/autod -w -e benchmark
