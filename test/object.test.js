@@ -23,7 +23,6 @@ describe('object.test.js', function () {
     it('should write enum Color', function () {
       hessian.encode({
         $class: 'hessian.Main$Color',
-        $isEnum: true,
         $: {
           name: 'RED'
         }
@@ -31,7 +30,6 @@ describe('object.test.js', function () {
 
       hessian.encode({
         $class: 'hessian.Main$Color',
-        $isEnum: true,
         $: {
           name: 'GREEN'
         }
@@ -53,21 +51,18 @@ describe('object.test.js', function () {
       hessian.encode([
         {
           $class: 'hessian.Main$Color',
-          $isEnum: true,
           $: {
             name: 'BLUE'
           }
         },
         {
           $class: 'hessian.Main$Color',
-          $isEnum: true,
           $: {
             name: 'RED'
           }
         },
         {
           $class: 'hessian.Main$Color',
-          $isEnum: true,
           $: {
             name: 'GREEN'
           }
@@ -119,6 +114,146 @@ describe('object.test.js', function () {
         { '$class': 'hessian.Main$Color', '$': { name: 'RED' } },
         { '$class': 'hessian.Main$Color', '$': { name: 'GREEN' } }
       ]);
+    });
+
+    it('should write "{$class: "hessian.test.demo.Car", $: {a: 1}}"', function () {
+      var obj = {
+        $class: 'hessian.test.demo.Car',
+        $: {a: 1, b: 'map'}
+      };
+      var buf = hessian.encode(obj, '2.0');
+      buf[0].should.equal(0x4f);
+      hessian.decode(buf, '2.0').should.eql(obj.$);
+      hessian.decode(buf, '2.0', true).should.eql(obj);
+    });
+
+    it('should read one car list', function () {
+      hessian.decode(utils.bytes('v2/map/one_car_list'), '2.0').should.eql([
+        { a: 'a',
+          c: 'c',
+          b: 'b',
+          model: 'model 1',
+          color: 'aquamarine',
+          mileage: 65536 }
+      ]);
+
+      var cars = hessian.decode(utils.bytes('v2/map/one_car_list'), '2.0', true);
+      cars.should.eql([
+        {
+          $class: 'hessian.demo.Car',
+          $: {
+            a: 'a',
+            c: 'c',
+            b: 'b',
+            model: 'model 1',
+            color: 'aquamarine',
+            mileage: 65536 }
+        }
+      ]);
+
+      hessian.encode(cars, '2.0').should.eql(utils.bytes('v2/map/one_car_list'));
+    });
+
+    it('should read two car list', function () {
+      hessian.decode(utils.bytes('v2/map/two_car_list'), '2.0').should.eql([
+        { a: 'a',
+          c: 'c',
+          b: 'b',
+          model: 'model 1',
+          color: 'aquamarine',
+          mileage: 65536 },
+        { a: 'a',
+          c: 'c',
+          b: 'b',
+          model: 'model 2',
+          color: 'aquamarine',
+          mileage: 65536 }
+      ]);
+
+      var cars = hessian.decode(utils.bytes('v2/map/two_car_list'), '2.0', true);
+      cars.should.eql([
+        {
+          $class: 'hessian.demo.Car',
+          $: {
+            a: 'a',
+            c: 'c',
+            b: 'b',
+            model: 'model 1',
+            color: 'aquamarine',
+            mileage: 65536 }
+        },
+        {
+          $class: 'hessian.demo.Car',
+          $: {
+            a: 'a',
+            c: 'c',
+            b: 'b',
+            model: 'model 2',
+            color: 'aquamarine',
+            mileage: 65536 }
+        }
+      ]);
+
+      var buf = hessian.encode(cars, '2.0');
+      buf.should.length(utils.bytes('v2/map/two_car_list').length);
+      buf.should.eql(utils.bytes('v2/map/two_car_list'));
+    });
+
+    it('should read many cars', function () {
+      // list = new ArrayList();
+      // list.add(new Car("model 1"));
+      // list.add(new Car("model 2"));
+      // list.add(new Car("model 3"));
+      hessian.decode(utils.bytes('v2/map/car_list'), '2.0').should.eql([
+        { a: 'a',
+          c: 'c',
+          b: 'b',
+          model: 'model 1',
+          color: 'aquamarine',
+          mileage: 65536 },
+        { a: 'a',
+          c: 'c',
+          b: 'b',
+          model: 'model 2',
+          color: 'aquamarine',
+          mileage: 65536 },
+        { a: 'a',
+          c: 'c',
+          b: 'b',
+          model: 'model 3',
+          color: 'aquamarine',
+          mileage: 65536 }
+      ]);
+
+      var cars = hessian.decode(utils.bytes('v2/map/car_list'), '2.0', true);
+      cars.should.eql([
+        { '$class': 'hessian.demo.Car',
+          '$':
+           { a: 'a',
+             c: 'c',
+             b: 'b',
+             model: 'model 1',
+             color: 'aquamarine',
+             mileage: 65536 } },
+        { '$class': 'hessian.demo.Car',
+          '$':
+           { a: 'a',
+             c: 'c',
+             b: 'b',
+             model: 'model 2',
+             color: 'aquamarine',
+             mileage: 65536 } },
+        { '$class': 'hessian.demo.Car',
+          '$':
+           { a: 'a',
+             c: 'c',
+             b: 'b',
+             model: 'model 3',
+             color: 'aquamarine',
+             mileage: 65536 } }
+      ]);
+
+      hessian.encode(cars, '2.0').should.eql(utils.bytes('v2/map/car_list'));
     });
   });
 });

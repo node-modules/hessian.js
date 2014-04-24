@@ -93,6 +93,7 @@ describe('map.test.js', function () {
   });
 
   it('should write {hasOwnProperty: 1, a: 0, b: false, c: null} obj', function () {
+    /* jshint -W001 */
     var buf = hessian.encode({hasOwnProperty: 1, a: 0, b: false, c: null});
     buf.should.be.a.Buffer;
     hessian.decode(buf).should.eql({hasOwnProperty: 1, a: 0, b: false, c: null});
@@ -188,45 +189,6 @@ describe('map.test.js', function () {
         16: 'fie',
         256: 'foe'
       });
-    });
-
-    it.skip('should read Circular map', function () {
-      var buf = Buffer.concat([
-        new Buffer([
-          'M'.charCodeAt(0),
-          0x05
-        ]),
-        new Buffer('color'),
-        new Buffer([
-          0x0a
-        ]),
-        new Buffer('aquamarine'),
-
-        new Buffer([
-          0x05
-        ]),
-        new Buffer('model'),
-        new Buffer([
-          0x06
-        ]),
-        new Buffer('Beetle'),
-
-        new Buffer([
-          0x04
-        ]),
-        new Buffer('self'), // map.self => map
-        new Buffer([
-          0x51, 0x90
-        ]),
-        new Buffer('z')
-      ]);
-
-      var obj = hessian.decode(buf, '2.0');
-      obj.should.have.keys('color', 'model', 'self');
-      obj.color.should.equal('aquamarine');
-      obj.model.should.equal('Beetle');
-      obj.self.should.equal(obj);
-      obj.self.should.have.keys('color', 'model', 'self');
     });
 
     it('should read a Circular java Object', function () {
@@ -331,17 +293,6 @@ describe('map.test.js', function () {
       }, '2.0');
       buf2.should.eql(buf);
       hessian.decode(buf2, '2.0').should.eql(map);
-    });
-
-    it('should write "{$class: "hessian.test.demo.Car", $: {a: 1}}"', function () {
-      var obj = {
-        $class: 'hessian.test.demo.Car',
-        $: {a: 1, b: 'map'}
-      };
-      var buf = hessian.encode(obj, '2.0');
-      buf[0].should.equal(0x4f);
-      hessian.decode(buf, '2.0').should.eql(obj.$);
-      hessian.decode(buf, '2.0', true).should.eql(obj);
     });
   });
 });
