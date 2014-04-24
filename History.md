@@ -1,4 +1,10 @@
 
+0.2.1 / 2014-04-24
+==================
+
+ * fix writeObject 2.0, now Enum as a normal java Object
+ * improve enum write in hessian 2.0
+
 0.2.0 / 2014-04-23
 ==================
 
