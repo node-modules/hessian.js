@@ -158,7 +158,8 @@ describe('hessian v1', function () {
         [0, '<Buffer 44 00 00 00 00 00 00 00 00>'],
         [1, '<Buffer 44 3f f0 00 00 00 00 00 00>'],
         [1.111, '<Buffer 44 3f f1 c6 a7 ef 9d b2 2d>'],
-        [1e320, '<Buffer 44 7f f0 00 00 00 00 00 00>'],
+        // 1e320
+        [Infinity, '<Buffer 44 7f f0 00 00 00 00 00 00>'],
       ];
 
       tests.forEach(function (t) {
@@ -552,6 +553,7 @@ describe('hessian v1', function () {
         if (res) {
           res.should.eql(t[1] || t[0]);
         } else {
+          /* jshint eqeqeq: false */
           should.ok(res == t[0]);
         }
       });

@@ -7,6 +7,9 @@ NPM_INSTALL = npm install --registry=http://registry.npm.taobao.org --disturl=ht
 install:
 	@$(NPM_INSTALL)
 
+jshint: install
+	@./node_modules/.bin/jshint .
+
 test: install
 	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
 		--reporter $(REPORTER) \
@@ -26,7 +29,7 @@ test-coveralls: test
 	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@-$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=mocha-lcov-reporter | ./node_modules/.bin/coveralls
 
-test-all: test test-cov
+test-all: test test-cov jshint
 
 contributors: install
 	@./node_modules/.bin/contributors -f plain -o AUTHORS
