@@ -1,4 +1,4 @@
-/*!
+/**!
  * hessian.js - test/list.test.js
  *
  * Copyright(c) 2014
@@ -87,6 +87,52 @@ describe('list.test.js', function () {
       new Buffer('z'),
     ]);
     hessian.decode(emptyList).should.eql([]);
+  });
+
+  it('should write and read untyped list', function () {
+    hessian.encode([1, 2, 'foo'], '1.0').should.eql(utils.bytes('v1/list/untyped_list'));
+    hessian.encode([], '1.0').should.eql(utils.bytes('v1/list/untyped_[]'));
+
+    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0').should.eql([1, 2, 'foo']);
+    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0', true).should.eql([1, 2, 'foo']);
+    hessian.decode(utils.bytes('v1/list/untyped_[]'), '1.0').should.eql([]);
+    hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '1.0', true).should.eql(['foo', 'bar']);
+
+    // java.util.ArrayList as simple
+    hessian.encode({
+      $class: 'java.util.ArrayList',
+      $: [1, 2, 'foo']
+    }, '1.0').should.eql(utils.bytes('v1/list/untyped_list'));
+  });
+
+  it('should write and read typed fixed-length list', function () {
+    hessian.encode({
+      $class: 'hessian.demo.SomeArrayList',
+      $: ['ok', 'some list']
+    }, '1.0').should.eql(utils.bytes('v1/list/typed_list'));
+    hessian.decode(utils.bytes('v1/list/typed_list'), '1.0', true)
+      .should.eql({
+        '$class': 'hessian.demo.SomeArrayList',
+        '$': [ 'ok', 'some list' ]
+      });
+
+    hessian.decode(utils.bytes('v1/list/typed_list'), '1.0')
+      .should.eql([ 'ok', 'some list' ]);
+
+    var list = {
+      $class: '[int',
+      $: [1, 2, 3]
+    };
+    hessian.encode(list, '1.0').should.eql(utils.bytes('v1/list/[int'));
+    hessian.decode(utils.bytes('v1/list/[int'), '1.0').should.eql([1, 2, 3]);
+    hessian.decode(utils.bytes('v1/list/[int'), '1.0', true).should.eql(list);
+
+    var strs = {
+      $class: '[string',
+      $: ['1', '@', '3']
+    };
+    hessian.encode(strs, '1.0').should.eql(utils.bytes('v1/list/[string'));
+    hessian.decode(utils.bytes('v1/list/[string'), '1.0', true).should.eql(strs);
   });
 
   describe('v2.0', function () {

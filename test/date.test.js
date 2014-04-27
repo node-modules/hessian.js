@@ -38,6 +38,31 @@ describe('date.test.js', function () {
     hessian.encode(new Date(0)).should.eql(new Buffer(['d'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0]));
   });
 
+  it('should read date 09:51:31 May 8, 1998 UTC', function () {
+    var d = hessian.decode(utils.bytes('v1/date/894621091000'), '1.0');
+    d.should.be.a.Date;
+    d.getFullYear().should.equal(1998);
+    d.getTime().should.equal(894621091000);
+    d.toUTCString().should.equal('Fri, 08 May 1998 09:51:31 GMT');
+    d.toISOString().should.equal('1998-05-08T09:51:31.000Z');
+  });
+
+  it('should read date 09:51:00 May 8, 1998 UTC', function () {
+    var d = hessian.decode(utils.bytes('v1/date/894621060000'), '1.0');
+    d.should.be.a.Date;
+    d.getFullYear().should.equal(1998);
+    d.getTime().should.equal(894621060000);
+    d.toUTCString().should.equal('Fri, 08 May 1998 09:51:00 GMT');
+    d.toISOString().should.equal('1998-05-08T09:51:00.000Z');
+  });
+
+  it('should write date', function () {
+    var now = new Date(1398280514000);
+    hessian.encode(now, '1.0').should.eql(utils.bytes('v1/date/now'));
+    // read it
+    hessian.decode(utils.bytes('v2/date/now'), '1.0').should.eql(now);
+  });
+
   describe('hessian 2.0', function () {
     it('should read date 09:51:31 May 8, 1998 UTC', function () {
       var d = hessian.decode(utils.bytes('v2/date/894621091000'), '2.0');
@@ -58,7 +83,6 @@ describe('date.test.js', function () {
     });
 
     it('should write date', function () {
-      // hessian.encode(new Date(894621091000), '2.0').should.eql(dateV2Buffer);
       var now = new Date(1398280514000);
       hessian.encode(now, '2.0').should.eql(utils.bytes('v2/date/now'));
       // read it

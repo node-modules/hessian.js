@@ -140,6 +140,30 @@ describe('map.test.js', function () {
     });
   });
 
+  it('should write js object to no type hash map', function () {
+    var encoder = new hessian.EncoderV1();
+    var buf = encoder.write({ foo: '' }).get();
+    buf.should.eql(utils.bytes('v1/map/foo_empty'));
+    hessian.decode(utils.bytes('v1/map/foo_empty'), '1.0').should.eql({
+      foo: ''
+    });
+
+    hessian.encode({
+      '123': 456,
+      foo: 'bar',
+      zero: 0,
+      '中文key': '中文哈哈value',
+    }).should.eql(utils.bytes('v1/map/foo_bar'));
+
+    // read it
+    hessian.decode(utils.bytes('v1/map/foo_bar'), '1.0').should.eql({
+      foo: 'bar',
+      '中文key': '中文哈哈value',
+      '123': 456,
+      zero: 0,
+    });
+  });
+
   describe('v2.0', function () {
     // map = new HashMap();
     // map.put(new Integer(1), "fee");
