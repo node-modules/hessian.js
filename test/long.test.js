@@ -17,6 +17,7 @@
 var should = require('should');
 var java = require('js-to-java');
 var hessian = require('../');
+var utils = require('./utils');
 
 describe('long.test.js', function () {
   var longBuffer = new Buffer(['L'.charCodeAt(0), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x2c]);
@@ -38,6 +39,28 @@ describe('long.test.js', function () {
       new Buffer(['L'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0]));
   });
 
+  it('should write and read equal java impl', function () {
+    hessian.encode(java.long(0), '1.0').should.eql(utils.bytes('v1/long/0'));
+    hessian.encode(java.long(-8), '1.0').should.eql(utils.bytes('v1/long/-8'));
+    hessian.encode(java.long(-7), '1.0').should.eql(utils.bytes('v1/long/-7'));
+    hessian.encode(java.long(15), '1.0').should.eql(utils.bytes('v1/long/15'));
+    hessian.encode(java.long(14), '1.0').should.eql(utils.bytes('v1/long/14'));
+    hessian.encode(java.long(-9), '1.0').should.eql(utils.bytes('v1/long/-9'));
+    hessian.encode(java.long(16), '1.0').should.eql(utils.bytes('v1/long/16'));
+    hessian.encode(java.long(255), '1.0').should.eql(utils.bytes('v1/long/255'));
+    hessian.encode(java.long(-2048), '1.0').should.eql(utils.bytes('v1/long/-2048'));
+    hessian.encode(java.long(2047), '1.0').should.eql(utils.bytes('v1/long/2047'));
+    hessian.encode(java.long(262143), '1.0').should.eql(utils.bytes('v1/long/262143'));
+    hessian.encode(java.long(-262144), '1.0').should.eql(utils.bytes('v1/long/-262144'));
+    hessian.encode(java.long(2048), '1.0').should.eql(utils.bytes('v1/long/2048'));
+    hessian.encode(java.long(-2049), '1.0').should.eql(utils.bytes('v1/long/-2049'));
+    hessian.encode(java.long(-2147483648), '1.0').should.eql(utils.bytes('v1/long/-2147483648'));
+    hessian.encode(java.long(-2147483647), '1.0').should.eql(utils.bytes('v1/long/-2147483647'));
+    hessian.encode(java.long(2147483647), '1.0').should.eql(utils.bytes('v1/long/2147483647'));
+    hessian.encode(java.long(2147483646), '1.0').should.eql(utils.bytes('v1/long/2147483646'));
+    hessian.encode(java.long(2147483648), '1.0').should.eql(utils.bytes('v1/long/2147483648'));
+  });
+
   describe('v2.0', function () {
     it('should read compact long', function () {
       hessian.decode(new Buffer([0xe0]), '2.0').should.equal(0);
@@ -54,10 +77,10 @@ describe('long.test.js', function () {
       hessian.decode(new Buffer([0x3f, 0xff, 0xff]), '2.0').should.equal(262143);
 
       // four octet longs
-      hessian.decode(new Buffer([0x59, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
-      hessian.decode(new Buffer([0x59, 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
-      hessian.decode(new Buffer([0x59, 0x7f, 0xff, 0xff, 0xff]), '2.0').should.equal(2147483647);
-      hessian.decode(new Buffer([0x59, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(-2147483648);
+      hessian.decode(new Buffer([0x77, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
+      hessian.decode(new Buffer([0x77, 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
+      hessian.decode(new Buffer([0x77, 0x7f, 0xff, 0xff, 0xff]), '2.0').should.equal(2147483647);
+      hessian.decode(new Buffer([0x77, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(-2147483648);
     });
 
     it('should read normal long', function () {
@@ -154,26 +177,67 @@ describe('long.test.js', function () {
       // -2147483648 ~ 2147483647
       buf = hessian.encode(java.long(-2147483648), '2.0');
       buf.should.length(5);
-      buf[0].should.equal(0x59);
+      buf[0].should.equal(0x77);
       buf[1].should.equal(0x80);
       buf[2].should.equal(0x00);
       buf[3].should.equal(0x00);
       buf[4].should.equal(0x00);
-      buf.should.eql(new Buffer([0x59, 0x80, 0x00, 0x00, 0x00]));
+      buf.should.eql(new Buffer([0x77, 0x80, 0x00, 0x00, 0x00]));
 
       buf = hessian.encode(java.long(2147483647), '2.0');
       buf.should.length(5);
-      buf[0].should.equal(0x59);
+      buf[0].should.equal(0x77);
       buf[1].should.equal(0x7f);
       buf[2].should.equal(0xff);
       buf[3].should.equal(0xff);
       buf[4].should.equal(0xff);
-      buf.should.eql(new Buffer([0x59, 0x7f, 0xff, 0xff, 0xff]));
+      buf.should.eql(new Buffer([0x77, 0x7f, 0xff, 0xff, 0xff]));
 
       // L
       buf = hessian.encode(java.long(2147483648), '2.0');
       buf.should.length(9);
       buf.should.eql(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00]));
+    });
+
+    it('should write and read equal java impl', function () {
+      hessian.encode(java.long(0), '2.0').should.eql(utils.bytes('v2/long/0'));
+      hessian.decode(utils.bytes('v2/long/0'), '2.0').should.equal(0);
+      hessian.encode(java.long(-8), '2.0').should.eql(utils.bytes('v2/long/-8'));
+      hessian.decode(utils.bytes('v2/long/-8'), '2.0').should.equal(-8);
+      hessian.encode(java.long(-7), '2.0').should.eql(utils.bytes('v2/long/-7'));
+      hessian.decode(utils.bytes('v2/long/-7'), '2.0').should.equal(-7);
+      hessian.encode(java.long(15), '2.0').should.eql(utils.bytes('v2/long/15'));
+      hessian.decode(utils.bytes('v2/long/15'), '2.0').should.equal(15);
+      hessian.encode(java.long(14), '2.0').should.eql(utils.bytes('v2/long/14'));
+      hessian.decode(utils.bytes('v2/long/14'), '2.0').should.equal(14);
+      hessian.encode(java.long(-9), '2.0').should.eql(utils.bytes('v2/long/-9'));
+      hessian.decode(utils.bytes('v2/long/-9'), '2.0').should.equal(-9);
+      hessian.encode(java.long(16), '2.0').should.eql(utils.bytes('v2/long/16'));
+      hessian.decode(utils.bytes('v2/long/16'), '2.0').should.equal(16);
+      hessian.encode(java.long(255), '2.0').should.eql(utils.bytes('v2/long/255'));
+      hessian.decode(utils.bytes('v2/long/255'), '2.0').should.equal(255);
+      hessian.encode(java.long(-2048), '2.0').should.eql(utils.bytes('v2/long/-2048'));
+      hessian.decode(utils.bytes('v2/long/-2048'), '2.0').should.equal(-2048);
+      hessian.encode(java.long(2047), '2.0').should.eql(utils.bytes('v2/long/2047'));
+      hessian.decode(utils.bytes('v2/long/2047'), '2.0').should.equal(2047);
+      hessian.encode(java.long(262143), '2.0').should.eql(utils.bytes('v2/long/262143'));
+      hessian.decode(utils.bytes('v2/long/262143'), '2.0').should.equal(262143);
+      hessian.encode(java.long(-262144), '2.0').should.eql(utils.bytes('v2/long/-262144'));
+      hessian.decode(utils.bytes('v2/long/-262144'), '2.0').should.equal(-262144);
+      hessian.encode(java.long(2048), '2.0').should.eql(utils.bytes('v2/long/2048'));
+      hessian.decode(utils.bytes('v2/long/2048'), '2.0').should.equal(2048);
+      hessian.encode(java.long(-2049), '2.0').should.eql(utils.bytes('v2/long/-2049'));
+      hessian.decode(utils.bytes('v2/long/-2049'), '2.0').should.equal(-2049);
+      hessian.encode(java.long(-2147483648), '2.0').should.eql(utils.bytes('v2/long/-2147483648'));
+      hessian.decode(utils.bytes('v2/long/-2147483648'), '2.0').should.equal(-2147483648);
+      hessian.encode(java.long(-2147483647), '2.0').should.eql(utils.bytes('v2/long/-2147483647'));
+      hessian.decode(utils.bytes('v2/long/-2147483647'), '2.0').should.equal(-2147483647);
+      hessian.encode(java.long(2147483647), '2.0').should.eql(utils.bytes('v2/long/2147483647'));
+      hessian.decode(utils.bytes('v2/long/2147483647'), '2.0').should.equal(2147483647);
+      hessian.encode(java.long(2147483646), '2.0').should.eql(utils.bytes('v2/long/2147483646'));
+      hessian.decode(utils.bytes('v2/long/2147483646'), '2.0').should.equal(2147483646);
+      hessian.encode(java.long(2147483648), '2.0').should.eql(utils.bytes('v2/long/2147483648'));
+      hessian.decode(utils.bytes('v2/long/2147483648'), '2.0').should.equal(2147483648);
     });
   });
 });
