@@ -1,4 +1,16 @@
 
+0.3.0 / 2014-04-28
+==================
+
+ * hessian 2.0 can decode hessian 1.0 list
+ * hessian 2.0 can read hessian 1.0 hashmap
+ * hessian 2.0 can decode hessian 1.0 int format
+ * hessian 2.0 can decode hessian 1.0 long format
+ * fix hessian 2.0 long decode and encode
+ * add hessian 1.0 enum, list, map bin test
+ * encode string as java hessian 1.0 impl
+ * add number bin test
+
 0.2.1 / 2014-04-24
 ==================
 
