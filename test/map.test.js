@@ -19,8 +19,6 @@ var hessian = require('../');
 var utils = require('./utils');
 
 describe('map.test.js', function () {
-  // http://hessian.caucho.com/doc/hessian-1.0-spec.xtp#map
-
   it('should read Serialization of a Java Object', function () {
     // public class Car implements Serializable {
     //   String model = "Beetle";
@@ -141,8 +139,7 @@ describe('map.test.js', function () {
   });
 
   it('should write js object to no type hash map', function () {
-    var encoder = new hessian.EncoderV1();
-    var buf = encoder.write({ foo: '' }).get();
+    var buf = hessian.encode({ foo: '' });
     buf.should.eql(utils.bytes('v1/map/foo_empty'));
     hessian.decode(utils.bytes('v1/map/foo_empty'), '1.0').should.eql({
       foo: ''
@@ -216,21 +213,6 @@ describe('map.test.js', function () {
     });
 
     it('should read a Circular java Object', function () {
-      // public class CarSelf implements Serializable {
-      //   String color = "aquamarine";
-      //   String model = "Beetle";
-      //   int mileage = 65536;
-      //   CarSelf self = this;
-      //   CarSelf prev = null;
-      //
-      //   public CarSelf(CarSelf prev) {
-      //     this.prev = prev;
-      //   }
-      //
-      //   public CarSelf() {
-      //   }
-      // }
-
       var car = hessian.decode(utils.bytes('v2/map/car'), '2.0');
       car.should.eql({
         a: 'a',
@@ -246,11 +228,6 @@ describe('map.test.js', function () {
       obj.self.should.equal(obj);
       should.not.exist(obj.prev);
       obj.self.should.have.keys('color', 'model', 'mileage', 'self', 'prev');
-
-    //   var obj2 = hessian.decode(utils.bytes('v2/map/car2'), '2.0', true);
-    //   obj2.should.have.keys('$class', '$');
-    //   obj2.$.should.have.keys('color', 'model', 'mileage', 'self');
-    //   obj2.$.self.should.have.keys('$class', '$');
     });
 
     it('should write js object to no type hash map', function () {
@@ -272,6 +249,18 @@ describe('map.test.js', function () {
 
       // read it
       hessian.decode(utils.bytes('v2/map/foo_bar'), '2.0').should.eql({
+        foo: 'bar',
+        '中文key': '中文哈哈value',
+        '123': 456,
+        zero: 0,
+      });
+    });
+
+    it('should read hessian 1.0 hash map', function () {
+      hessian.decode(utils.bytes('v1/map/foo_empty'), '2.0').should.eql({
+        foo: ''
+      });
+      hessian.decode(utils.bytes('v1/map/foo_bar'), '2.0').should.eql({
         foo: 'bar',
         '中文key': '中文哈哈value',
         '123': 456,

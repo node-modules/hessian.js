@@ -279,6 +279,26 @@ describe('object.test.js', function () {
       }, '2.0').should.eql(utils.bytes('v2/enum/blue'));
     });
 
+    it('should read hessian 1.0 enum Color', function () {
+      hessian.decode(utils.bytes('v1/enum/red'), '2.0', true).should.eql({
+        $class: 'hessian.Main$Color',
+        $: {
+          name: 'RED'
+        }
+      });
+
+      hessian.decode(utils.bytes('v1/enum/green'), '2.0', false).should.eql({
+        name: 'GREEN'
+      });
+
+      hessian.decode(utils.bytes('v1/enum/blue'), '2.0', true).should.eql({
+        $class: 'hessian.Main$Color',
+        $: {
+          name: 'BLUE'
+        }
+      });
+    });
+
     it('should write enum with ref', function () {
       // list = new ArrayList();
       // list.add(Color.BLUE);
