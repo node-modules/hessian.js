@@ -181,5 +181,12 @@ describe('list.test.js', function () {
       hessian.encode(strs, '2.0').should.eql(utils.bytes('v2/list/[string'));
       hessian.decode(utils.bytes('v2/list/[string'), '2.0', true).should.eql(strs);
     });
+
+    it('should read hessian 1.0 untyped list', function () {
+      hessian.decode(utils.bytes('v1/list/untyped_list'), '2.0').should.eql([1, 2, 'foo']);
+      hessian.decode(utils.bytes('v1/list/untyped_list'), '2.0', true).should.eql([1, 2, 'foo']);
+      hessian.decode(utils.bytes('v1/list/untyped_[]'), '2.0').should.eql([]);
+      hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '2.0', true).should.eql(['foo', 'bar']);
+    });
   });
 });
