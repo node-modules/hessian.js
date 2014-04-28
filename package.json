@@ -33,16 +33,17 @@
   },
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
-    "byte": "^0.2",
-    "debug": "0.8.0",
+    "byte": "0.2.x",
+    "debug": "0.8.1",
     "is-type-of": "0.2.1"
   },
   "devDependencies": {
-    "autod": "~0.0.13",
+    "autod": "*",
     "blanket": ">=1.1.6",
     "contributors": "*",
     "coveralls": "*",
-    "js-to-java": ">=0.0.3",
+    "js-to-java": "*",
+    "jshint": "*",
     "mocha": "*",
     "mocha-lcov-reporter": "*",
     "should": "3.3.1",

@@ -8,6 +8,8 @@
  *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
  */
 
+'use strict';
+
 var fs = require('fs');
 var path = require('path');
 var should = require('should');
@@ -156,7 +158,8 @@ describe('hessian v1', function () {
         [0, '<Buffer 44 00 00 00 00 00 00 00 00>'],
         [1, '<Buffer 44 3f f0 00 00 00 00 00 00>'],
         [1.111, '<Buffer 44 3f f1 c6 a7 ef 9d b2 2d>'],
-        [1e320, '<Buffer 44 7f f0 00 00 00 00 00 00>'],
+        // 1e320
+        [Infinity, '<Buffer 44 7f f0 00 00 00 00 00 00>'],
       ];
 
       tests.forEach(function (t) {
@@ -319,12 +322,16 @@ describe('hessian v1', function () {
     });
 
     it('should string length equal MAX_CHAR_TRUNK_SIZE work', function () {
-      var oneTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE).toString();
+      var oneTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE);
+      oneTrunkString.fill(0x41);
+      oneTrunkString = oneTrunkString.toString();
       var buf = encoder.writeString(oneTrunkString).get();
       decoder.init(buf).readString().should.eql(oneTrunkString);
       encoder.clean();
 
-      var twoTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE * 2).toString();
+      var twoTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE * 2);
+      twoTrunkString.fill(0x41);
+      twoTrunkString = twoTrunkString.toString();
       buf = encoder.writeString(twoTrunkString).get();
       decoder.init(buf).read().should.eql(twoTrunkString);
     });
@@ -546,7 +553,8 @@ describe('hessian v1', function () {
         if (res) {
           res.should.eql(t[1] || t[0]);
         } else {
-          (res == t[0]).should.be.ok;
+          /* jshint eqeqeq: false */
+          should.ok(res == t[0]);
         }
       });
     });

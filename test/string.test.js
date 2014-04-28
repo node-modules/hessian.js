@@ -41,6 +41,32 @@ describe('string.test.js', function () {
     hessian.encode('').should.eql(new Buffer(['S'.charCodeAt(0), 0, 0]));
   });
 
+  it('should write string same as java write', function () {
+    hessian.encode('', '1.0').should.eql(utils.bytes('v1/string/empty'));
+    hessian.encode('foo').should.eql(utils.bytes('v1/string/foo'));
+    hessian.encode('中文 Chinese', '1.0').should.eql(utils.bytes('v1/string/chinese'));
+    var text4k = utils.string('4k');
+    hessian.encode(text4k, '1.0').should.eql(utils.bytes('v1/string/text4k'));
+    hessian.decode(utils.bytes('v1/string/text4k')).should.equal(text4k);
+
+    var largeBuf = new Buffer(65535);
+    largeBuf.fill(0x41);
+    hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_65535'));
+    hessian.decode(utils.bytes('v1/string/large_string_65535')).should.equal(largeBuf.toString());
+
+    var largeString = new Array(65535);
+    for (var i = 0; i < largeString.length; i += 2) {
+      largeString[i] = String.fromCharCode(0xd800);
+      if (i + 1 < largeString.length) {
+        largeString[i + 1] = String.fromCharCode(0xdbff);
+      }
+    }
+    largeString = largeString.join('');
+    hessian.encode(largeString, '1.0').should.eql(utils.bytes('v1/string/large_string_chars'));
+    // read it
+    hessian.decode(utils.bytes('v1/string/large_string_chars')).should.equal(largeString);
+  });
+
   describe('v2.0', function () {
     it('should read short strings', function () {
       hessian.decode(new Buffer([0x00]), '2.0').should.equal('');

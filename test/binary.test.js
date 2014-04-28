@@ -16,6 +16,7 @@
 
 var should = require('should');
 var hessian = require('../');
+var utils = require('./utils');
 
 describe('binary.test.js', function () {
   it('should read "foo" binary', function () {
@@ -33,6 +34,57 @@ describe('binary.test.js', function () {
     empty.should.length(0);
 
     hessian.encode(new Buffer('')).should.eql(new Buffer(['B'.charCodeAt(0), 0x00, 0x00]));
+  });
+
+  it('should write and read as java impl', function () {
+    var bytes = new Buffer(65535);
+    bytes.fill(0x41);
+    var buf = hessian.encode(bytes, '1.0');
+    buf.should.length(utils.bytes('v1/bytes/65535').length);
+    buf.should.eql(utils.bytes('v1/bytes/65535'));
+    hessian.decode(utils.bytes('v1/bytes/65535'), '1.0').should.eql(bytes);
+
+    var bytes = new Buffer(32768);
+    bytes.fill(0x41);
+    var buf = hessian.encode(bytes, '1.0');
+    buf.should.length(utils.bytes('v1/bytes/32768').length);
+    buf.should.eql(utils.bytes('v1/bytes/32768'));
+    hessian.decode(utils.bytes('v1/bytes/32768'), '1.0').should.eql(bytes);
+
+    var bytes = new Buffer(32769);
+    bytes.fill(0x41);
+    var buf = hessian.encode(bytes, '1.0');
+    buf.should.length(utils.bytes('v1/bytes/32769').length);
+    buf.should.eql(utils.bytes('v1/bytes/32769'));
+    hessian.decode(utils.bytes('v1/bytes/32769'), '1.0').should.eql(bytes);
+
+    var bytes = new Buffer(32767);
+    bytes.fill(0x41);
+    var buf = hessian.encode(bytes, '1.0');
+    buf.should.length(utils.bytes('v1/bytes/32767').length);
+    buf.should.eql(utils.bytes('v1/bytes/32767'));
+    hessian.decode(utils.bytes('v1/bytes/32767'), '1.0').should.eql(bytes);
+
+    var bytes = new Buffer(32769);
+    bytes.fill(0x41);
+    var buf = hessian.encode(bytes, '1.0');
+    buf.should.length(utils.bytes('v1/bytes/32769').length);
+    buf.should.eql(utils.bytes('v1/bytes/32769'));
+    hessian.decode(utils.bytes('v1/bytes/32769'), '1.0').should.eql(bytes);
+
+    var bytes = new Buffer(42769);
+    bytes.fill(0x41);
+    var buf = hessian.encode(bytes, '1.0');
+    buf.should.length(utils.bytes('v1/bytes/42769').length);
+    buf.should.eql(utils.bytes('v1/bytes/42769'));
+    hessian.decode(utils.bytes('v1/bytes/42769'), '1.0').should.eql(bytes);
+
+    var bytes = new Buffer(82769);
+    bytes.fill(0x41);
+    var buf = hessian.encode(bytes, '1.0');
+    buf.should.length(utils.bytes('v1/bytes/82769').length);
+    buf.should.eql(utils.bytes('v1/bytes/82769'));
+    hessian.decode(utils.bytes('v1/bytes/82769'), '1.0').should.eql(bytes);
   });
 
   describe('v2.0', function () {
@@ -70,7 +122,7 @@ describe('binary.test.js', function () {
 
     it('should read long binary', function () {
       var buf = hessian.encode(new Buffer(65535), '2.0');
-      buf[0].should.equal(0x41);
+      buf[0].should.equal(0x62);
       hessian.decode(buf, '2.0');
 
       buf = hessian.encode(new Buffer(65536), '2.0');
@@ -82,23 +134,87 @@ describe('binary.test.js', function () {
 
     it('should write short binary', function () {
       hessian.encode(new Buffer(''), '2.0').should.eql(new Buffer([0x20]));
-      var buf = hessian.encode(new Buffer(65535), '2.0');
-      // 'b' + b1b0 + 65535 + 0x20
-      buf.should.length(65535 + 4);
-      buf[0].should.equal(0x41);
-      buf[65538].should.equal(0x20);
-
-      buf = hessian.encode(new Buffer(65536), '2.0');
-      // 'b' + b1b0 + 65535 + 0x21 b0
-      buf.should.length(65535 + 5);
-      buf[65538].should.equal(0x21);
     });
 
-    it('should write long binary', function () {
-      var buf = hessian.encode(new Buffer(65535 * 2 - 10), '2.0');
-      // 'b' + b1b0 + 65535 * 2 - 10
-      buf.should.length(65535 * 2 - 10 + 6);
-      buf[65538].should.equal('B'.charCodeAt(0));
+    it('should write and read as java impl', function () {
+      var bytes = new Buffer(65535);
+      bytes.fill(0x41);
+      var buf = hessian.encode(bytes, '2.0');
+      buf.should.length(utils.bytes('v2/bytes/65535').length);
+      buf.should.eql(utils.bytes('v2/bytes/65535'));
+      hessian.decode(utils.bytes('v2/bytes/65535'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32768);
+      bytes.fill(0x41);
+      var buf = hessian.encode(bytes, '2.0');
+      buf.should.length(utils.bytes('v2/bytes/32768').length);
+      buf.should.eql(utils.bytes('v2/bytes/32768'));
+      hessian.decode(utils.bytes('v2/bytes/32768'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32769);
+      bytes.fill(0x41);
+      var buf = hessian.encode(bytes, '2.0');
+      buf.should.length(utils.bytes('v2/bytes/32769').length);
+      buf.should.eql(utils.bytes('v2/bytes/32769'));
+      hessian.decode(utils.bytes('v2/bytes/32769'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32767);
+      bytes.fill(0x41);
+      var buf = hessian.encode(bytes, '2.0');
+      buf.should.length(utils.bytes('v2/bytes/32767').length);
+      buf.should.eql(utils.bytes('v2/bytes/32767'));
+      hessian.decode(utils.bytes('v2/bytes/32767'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32769);
+      bytes.fill(0x41);
+      var buf = hessian.encode(bytes, '2.0');
+      buf.should.length(utils.bytes('v2/bytes/32769').length);
+      buf.should.eql(utils.bytes('v2/bytes/32769'));
+      hessian.decode(utils.bytes('v2/bytes/32769'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(42769);
+      bytes.fill(0x41);
+      var buf = hessian.encode(bytes, '2.0');
+      buf.should.length(utils.bytes('v2/bytes/42769').length);
+      buf.should.eql(utils.bytes('v2/bytes/42769'));
+      hessian.decode(utils.bytes('v2/bytes/42769'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(82769);
+      bytes.fill(0x41);
+      var buf = hessian.encode(bytes, '2.0');
+      buf.should.length(utils.bytes('v2/bytes/82769').length);
+      buf.should.eql(utils.bytes('v2/bytes/82769'));
+      hessian.decode(utils.bytes('v2/bytes/82769'), '2.0').should.eql(bytes);
+    });
+
+    it('should read java hessian 1.0 bin format', function () {
+      var bytes = new Buffer(65535);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/65535'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32768);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/32768'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32769);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/32769'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32767);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/32767'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(32769);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/32769'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(42769);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/42769'), '2.0').should.eql(bytes);
+
+      var bytes = new Buffer(82769);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/82769'), '2.0').should.eql(bytes);
     });
   });
 });
