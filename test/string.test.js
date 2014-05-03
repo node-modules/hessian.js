@@ -41,6 +41,57 @@ describe('string.test.js', function () {
     hessian.encode('').should.eql(new Buffer(['S'.charCodeAt(0), 0, 0]));
   });
 
+  it('should read and write utf8 string as java', function () {
+    var str = '';
+    for (var i = 0; i < 32767; i++) {
+      str += '锋';
+    }
+    hessian.encode(str, '1.0').should.eql(utils.bytes('v1/string/utf8_32767'));
+    hessian.decode(utils.bytes('v1/string/utf8_32767')).should.equal(str);
+
+    var str = '';
+    for (var i = 0; i < 32768; i++) {
+      str += '锋';
+    }
+    hessian.encode(str, '1.0').should.eql(utils.bytes('v1/string/utf8_32768'));
+    hessian.decode(utils.bytes('v1/string/utf8_32768')).should.equal(str);
+
+    var str = '';
+    for (var i = 0; i < 32769; i++) {
+      str += '锋';
+    }
+    hessian.encode(str, '1.0').should.eql(utils.bytes('v1/string/utf8_32769'));
+    hessian.decode(utils.bytes('v1/string/utf8_32769')).should.equal(str);
+
+    var str = '';
+    for (var i = 0; i < 65534; i++) {
+      str += '锋';
+    }
+    hessian.encode(str, '1.0').should.eql(utils.bytes('v1/string/utf8_65534'));
+    hessian.decode(utils.bytes('v1/string/utf8_65534')).should.equal(str);
+
+    var str = '';
+    for (var i = 0; i < 65535; i++) {
+      str += '锋';
+    }
+    hessian.encode(str, '1.0').should.eql(utils.bytes('v1/string/utf8_65535'));
+    hessian.decode(utils.bytes('v1/string/utf8_65535')).should.equal(str);
+
+    var str = '';
+    for (var i = 0; i < 65536; i++) {
+      str += '锋';
+    }
+    hessian.encode(str, '1.0').should.eql(utils.bytes('v1/string/utf8_65536'));
+    hessian.decode(utils.bytes('v1/string/utf8_65536')).should.equal(str);
+
+    var str = '';
+    for (var i = 0; i < 65537; i++) {
+      str += '锋';
+    }
+    hessian.encode(str, '1.0').should.eql(utils.bytes('v1/string/utf8_65537'));
+    hessian.decode(utils.bytes('v1/string/utf8_65537')).should.equal(str);
+  });
+
   it('should write string same as java write', function () {
     hessian.encode('', '1.0').should.eql(utils.bytes('v1/string/empty'));
     hessian.encode('foo').should.eql(utils.bytes('v1/string/foo'));
@@ -49,10 +100,40 @@ describe('string.test.js', function () {
     hessian.encode(text4k, '1.0').should.eql(utils.bytes('v1/string/text4k'));
     hessian.decode(utils.bytes('v1/string/text4k')).should.equal(text4k);
 
+    var largeBuf = new Buffer(32767);
+    largeBuf.fill(0x41);
+    hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_32767'));
+    hessian.decode(utils.bytes('v1/string/large_string_32767')).should.equal(largeBuf.toString());
+
+    var largeBuf = new Buffer(32768);
+    largeBuf.fill(0x41);
+    hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_32768'));
+    hessian.decode(utils.bytes('v1/string/large_string_32768')).should.equal(largeBuf.toString());
+
+    var largeBuf = new Buffer(32769);
+    largeBuf.fill(0x41);
+    hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_32769'));
+    hessian.decode(utils.bytes('v1/string/large_string_32769')).should.equal(largeBuf.toString());
+
+    var largeBuf = new Buffer(65534);
+    largeBuf.fill(0x41);
+    hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_65534'));
+    hessian.decode(utils.bytes('v1/string/large_string_65534')).should.equal(largeBuf.toString());
+
     var largeBuf = new Buffer(65535);
     largeBuf.fill(0x41);
     hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_65535'));
     hessian.decode(utils.bytes('v1/string/large_string_65535')).should.equal(largeBuf.toString());
+
+    var largeBuf = new Buffer(65536);
+    largeBuf.fill(0x41);
+    hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_65536'));
+    hessian.decode(utils.bytes('v1/string/large_string_65536')).should.equal(largeBuf.toString());
+
+    var largeBuf = new Buffer(65537);
+    largeBuf.fill(0x41);
+    hessian.encode(largeBuf.toString(), '1.0').should.eql(utils.bytes('v1/string/large_string_65537'));
+    hessian.decode(utils.bytes('v1/string/large_string_65537')).should.equal(largeBuf.toString());
 
     var largeString = new Array(65535);
     for (var i = 0; i < largeString.length; i += 2) {
@@ -129,9 +210,33 @@ describe('string.test.js', function () {
       hessian.decode(utils.bytes('v2/string/chinese'), '2.0').should.equal('中文 Chinese');
       hessian.decode(utils.bytes('v2/string/text4k'), '2.0').should.equal(utils.string('4k'));
 
+      var largeBuf = new Buffer(32767);
+      largeBuf.fill(0x41);
+      hessian.decode(utils.bytes('v2/string/large_string_32767'), '2.0').should.equal(largeBuf.toString());
+
+      var largeBuf = new Buffer(32768);
+      largeBuf.fill(0x41);
+      hessian.decode(utils.bytes('v2/string/large_string_32768'), '2.0').should.equal(largeBuf.toString());
+
+      var largeBuf = new Buffer(32769);
+      largeBuf.fill(0x41);
+      hessian.decode(utils.bytes('v2/string/large_string_32769'), '2.0').should.equal(largeBuf.toString());
+
+      var largeBuf = new Buffer(65534);
+      largeBuf.fill(0x41);
+      hessian.decode(utils.bytes('v2/string/large_string_65534'), '2.0').should.equal(largeBuf.toString());
+
       var largeBuf = new Buffer(65535);
       largeBuf.fill(0x41);
       hessian.decode(utils.bytes('v2/string/large_string_65535'), '2.0').should.equal(largeBuf.toString());
+
+      var largeBuf = new Buffer(65536);
+      largeBuf.fill(0x41);
+      hessian.decode(utils.bytes('v2/string/large_string_65536'), '2.0').should.equal(largeBuf.toString());
+
+      var largeBuf = new Buffer(65537);
+      largeBuf.fill(0x41);
+      hessian.decode(utils.bytes('v2/string/large_string_65537'), '2.0').should.equal(largeBuf.toString());
     });
 
     it('should write string same as java write', function () {
@@ -141,9 +246,31 @@ describe('string.test.js', function () {
       var text4k = utils.string('4k');
       hessian.encode(text4k, '2.0').should.eql(utils.bytes('v2/string/text4k'));
 
+      var largeBuf = new Buffer(32767);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_32767'));
+      var largeBuf = new Buffer(32768);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_32768'));
+      var largeBuf = new Buffer(32769);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_32769'));
+
+      var largeBuf = new Buffer(65534);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_65534'));
+
       var largeBuf = new Buffer(65535);
       largeBuf.fill(0x41);
       hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_65535'));
+
+      var largeBuf = new Buffer(65536);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_65536'));
+
+      var largeBuf = new Buffer(65537);
+      largeBuf.fill(0x41);
+      hessian.encode(largeBuf.toString(), '2.0').should.eql(utils.bytes('v2/string/large_string_65537'));
 
       var largeString = new Array(65535);
       for (var i = 0; i < largeString.length; i += 2) {
@@ -154,6 +281,64 @@ describe('string.test.js', function () {
       }
       largeString = largeString.join('');
       hessian.encode(largeString, '2.0').should.eql(utils.bytes('v2/string/large_string_chars'));
+    });
+
+    it('should read and write utf8 string as java', function () {
+      var str = '';
+      for (var i = 0; i < 32767; i++) {
+        str += '锋';
+      }
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_32767'));
+      hessian.decode(utils.bytes('v2/string/utf8_32767'), '2.0').should.equal(str);
+      hessian.decode(utils.bytes('v1/string/utf8_32767'), '2.0').should.equal(str);
+
+      var str = '';
+      for (var i = 0; i < 32768; i++) {
+        str += '锋';
+      }
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_32768'));
+      hessian.decode(utils.bytes('v2/string/utf8_32768'), '2.0').should.equal(str);
+      hessian.decode(utils.bytes('v1/string/utf8_32768'), '2.0').should.equal(str);
+
+      var str = '';
+      for (var i = 0; i < 32769; i++) {
+        str += '锋';
+      }
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_32769'));
+      hessian.decode(utils.bytes('v2/string/utf8_32769'), '2.0').should.equal(str);
+      hessian.decode(utils.bytes('v1/string/utf8_32769'), '2.0').should.equal(str);
+
+      var str = '';
+      for (var i = 0; i < 65534; i++) {
+        str += '锋';
+      }
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v1/string/utf8_65534'));
+      hessian.decode(utils.bytes('v1/string/utf8_65534'), '2.0').should.equal(str);
+      hessian.decode(utils.bytes('v1/string/utf8_65534'), '2.0').should.equal(str);
+
+      var str = '';
+      for (var i = 0; i < 65535; i++) {
+        str += '锋';
+      }
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_65535'));
+      hessian.decode(utils.bytes('v2/string/utf8_65535'), '2.0').should.equal(str);
+      hessian.decode(utils.bytes('v1/string/utf8_65535'), '2.0').should.equal(str);
+
+      var str = '';
+      for (var i = 0; i < 65536; i++) {
+        str += '锋';
+      }
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_65536'));
+      hessian.decode(utils.bytes('v2/string/utf8_65536'), '2.0').should.equal(str);
+      hessian.decode(utils.bytes('v1/string/utf8_65536'), '2.0').should.equal(str);
+
+      var str = '';
+      for (var i = 0; i < 65537; i++) {
+        str += '锋';
+      }
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_65537'));
+      hessian.decode(utils.bytes('v2/string/utf8_65537'), '2.0').should.equal(str);
+      hessian.decode(utils.bytes('v1/string/utf8_65537'), '2.0').should.equal(str);
     });
   });
 });
