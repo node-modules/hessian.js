@@ -192,6 +192,10 @@ describe('binary.test.js', function () {
       bytes.fill(0x41);
       hessian.decode(utils.bytes('v1/bytes/65535'), '2.0').should.eql(bytes);
 
+      var bytes = new Buffer(32767);
+      bytes.fill(0x41);
+      hessian.decode(utils.bytes('v1/bytes/32767'), '2.0').should.eql(bytes);
+
       var bytes = new Buffer(32768);
       bytes.fill(0x41);
       hessian.decode(utils.bytes('v1/bytes/32768'), '2.0').should.eql(bytes);

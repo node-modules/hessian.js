@@ -60,7 +60,7 @@ describe('date.test.js', function () {
     var now = new Date(1398280514000);
     hessian.encode(now, '1.0').should.eql(utils.bytes('v1/date/now'));
     // read it
-    hessian.decode(utils.bytes('v2/date/now'), '1.0').should.eql(now);
+    hessian.decode(utils.bytes('v1/date/now'), '1.0').should.eql(now);
   });
 
   describe('hessian 2.0', function () {
@@ -82,11 +82,20 @@ describe('date.test.js', function () {
       d.toISOString().should.equal('1998-05-08T09:51:00.000Z');
     });
 
-    it('should write date', function () {
+    it('should write and read date', function () {
       var now = new Date(1398280514000);
       hessian.encode(now, '2.0').should.eql(utils.bytes('v2/date/now'));
       // read it
       hessian.decode(utils.bytes('v2/date/now'), '2.0').should.eql(now);
+    });
+
+    it('should read 1.0 format', function () {
+      hessian.decode(utils.bytes('v1/date/894621091000'), '2.0').getTime()
+        .should.equal(894621091000);
+      hessian.decode(utils.bytes('v1/date/894621060000'), '2.0').getTime()
+        .should.equal(894621060000);
+      hessian.decode(utils.bytes('v1/date/now'), '2.0').getTime()
+        .should.equal(1398280514000);
     });
   });
 });

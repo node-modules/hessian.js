@@ -1,4 +1,4 @@
-/*!
+/**!
  * hessian.js - test/boolean.test.js
  *
  * Copyright(c) 2014
