@@ -20,6 +20,34 @@ var utils = require('./utils');
 
 describe('object.test.js', function () {
   describe('v1.0', function () {
+    it('should decode and encode ConnectionRequest', function () {
+      var javabuf = utils.bytes('v1/object/ConnectionRequest');
+      var connreq = hessian.decode(javabuf, '1.0', true);
+
+      var jsconnreq = {
+        $class: 'hessian.ConnectionRequest',
+        $: {
+          ctx: {
+            $class: 'hessian.ConnectionRequest$RequestContext',
+            $: {
+              id: 101,
+              'this$0': null
+            }
+          }
+        }
+      };
+
+      jsconnreq.$.ctx.$.this$0 = jsconnreq;
+
+      var jsbuf = hessian.encode(connreq, '1.0');
+      var jsbuf2 = hessian.encode(jsconnreq, '1.0');
+      jsbuf2.should.length(javabuf.length);
+      jsbuf2.should.eql(javabuf);
+
+      jsbuf.should.length(javabuf.length);
+      jsbuf.should.eql(javabuf);
+    });
+
     it('should write enum Color', function () {
       hessian.encode({
         $class: 'hessian.Main$Color',
@@ -256,6 +284,45 @@ describe('object.test.js', function () {
   });
 
   describe('v2.0', function () {
+    it('should decode and encode ConnectionRequest', function () {
+      var javabuf = utils.bytes('v2/object/ConnectionRequest');
+      var connreq1 = hessian.decode(javabuf, '2.0');
+      connreq1.should.have.keys('ctx');
+      connreq1.ctx.should.have.keys('id', 'this$0');
+      connreq1.ctx.id.should.equal(101);
+
+      var connreq = hessian.decode(javabuf, '2.0', true);
+      var jsconnreq = {
+        $class: 'hessian.ConnectionRequest',
+        $: {
+          ctx: {
+            $class: 'hessian.ConnectionRequest$RequestContext',
+            $: {
+              id: 101,
+              'this$0': null
+            }
+          }
+        }
+      };
+
+      jsconnreq.$.ctx.$.this$0 = jsconnreq;
+
+      var jsbuf = hessian.encode(connreq, '2.0');
+      var jsbuf2 = hessian.encode(jsconnreq, '2.0');
+      jsbuf2.should.length(javabuf.length);
+      jsbuf2.should.eql(javabuf);
+
+      jsbuf.should.length(javabuf.length);
+      jsbuf.should.eql(javabuf);
+    });
+
+    it('should decode hessian 1.0 ConnectionRequest', function () {
+      var javabuf = utils.bytes('v1/object/ConnectionRequest');
+      var connreq = hessian.decode(javabuf, '1.0', true);
+      connreq.$class.should.equal('hessian.ConnectionRequest');
+      connreq.$.ctx.$class.should.equal('hessian.ConnectionRequest$RequestContext');
+    });
+
     it('should write enum Color', function () {
       hessian.encode({
         $class: 'hessian.Main$Color',
