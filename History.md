@@ -1,4 +1,12 @@
 
+0.3.1 / 2014-05-08
+==================
+
+ * handle xxxx.HSFException
+ * Decode java exception object to js Error object. close #18
+ * hessian 2.0 should read hessian 1.0 date format
+ * add utf8 test cases
+
 0.3.0 / 2014-04-28
 ==================
 
