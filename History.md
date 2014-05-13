@@ -1,4 +1,10 @@
 
+0.4.0 / 2014-05-13
+==================
+
+ * reuse encoder and add base benchmark
+ * fix read object missing with type
+
 0.3.1 / 2014-05-08
 ==================
 
