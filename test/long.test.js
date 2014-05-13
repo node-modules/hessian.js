@@ -32,6 +32,7 @@ describe('long.test.js', function () {
       $: 300
     }).should.eql(longBuffer);
     hessian.encode(java.long(300)).should.eql(longBuffer);
+    hessian.encode(java.long(300)).should.eql(longBuffer);
   });
 
   it('should write long 0', function () {
