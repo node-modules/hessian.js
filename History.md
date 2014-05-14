@@ -1,4 +1,10 @@
 
+0.4.1 / 2014-05-15
+==================
+
+  * Merge pull request #23 from node-modules/cache-class-name
+  * cache class name
+
 0.4.0 / 2014-05-13
 ==================
 
