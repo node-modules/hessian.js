@@ -46,6 +46,9 @@ describe('object.test.js', function () {
 
       jsbuf.should.length(javabuf.length);
       jsbuf.should.eql(javabuf);
+
+      var jsbuf2Again = hessian.encode(jsconnreq, '1.0');
+      jsbuf2Again.should.eql(jsbuf2);
     });
 
     it('should write enum Color', function () {
