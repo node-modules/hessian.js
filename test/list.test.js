@@ -150,6 +150,11 @@ describe('list.test.js', function () {
         $class: 'java.util.ArrayList',
         $: [1, 2, 'foo']
       }, '2.0').should.eql(utils.bytes('v2/list/untyped_list'));
+      // encode again should cache class
+      hessian.encode({
+        $class: 'java.util.ArrayList',
+        $: [1, 2, 'foo']
+      }, '2.0').should.eql(utils.bytes('v2/list/untyped_list'));
     });
 
     it('should write and read typed fixed-length list', function () {
@@ -157,6 +162,12 @@ describe('list.test.js', function () {
         $class: 'hessian.demo.SomeArrayList',
         $: ['ok', 'some list']
       }, '2.0').should.eql(utils.bytes('v2/list/typed_list'));
+      // encode again should use type cache
+      hessian.encode({
+        $class: 'hessian.demo.SomeArrayList',
+        $: ['ok', 'some list']
+      }, '2.0').should.eql(utils.bytes('v2/list/typed_list'));
+
       hessian.decode(utils.bytes('v2/list/typed_list'), '2.0', true)
         .should.eql({
           '$class': 'hessian.demo.SomeArrayList',
@@ -171,7 +182,10 @@ describe('list.test.js', function () {
         $: [1, 2, 3]
       };
       hessian.encode(list, '2.0').should.eql(utils.bytes('v2/list/[int'));
+      hessian.encode(list, '2.0').should.eql(utils.bytes('v2/list/[int'));
+
       hessian.decode(utils.bytes('v2/list/[int'), '2.0').should.eql([1, 2, 3]);
+      // encode again should use type cache
       hessian.decode(utils.bytes('v2/list/[int'), '2.0', true).should.eql(list);
 
       var strs = {

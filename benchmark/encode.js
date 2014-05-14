@@ -134,3 +134,24 @@ suite
 // hessian2 encode: simple object  x   132,938 ops/sec ±3.23% (89 runs sampled)
 // hessian1 encode: complex object x    90,243 ops/sec ±2.08% (93 runs sampled)
 // hessian2 encode: complex object x    80,702 ops/sec ±5.94% (86 runs sampled)
+
+// node version: v0.11.12, date: Wed May 14 2014 18:47:59 GMT+0800 (CST)
+// Starting...
+// 16 tests completed.
+//
+// hessian1 encode: number         x 1,601,925 ops/sec ±2.57% (89 runs sampled)
+// hessian2 encode: number         x 1,800,237 ops/sec ±1.90% (93 runs sampled)
+// hessian1 encode: date           x   773,461 ops/sec ±2.22% (88 runs sampled)
+// hessian2 encode: date           x   703,063 ops/sec ±4.90% (86 runs sampled)
+// hessian1 encode: long           x   555,507 ops/sec ±4.36% (87 runs sampled)
+// hessian2 encode: long           x   598,983 ops/sec ±3.26% (86 runs sampled)
+// hessian1 encode: string         x   911,037 ops/sec ±2.50% (95 runs sampled)
+// hessian2 encode: string         x 1,013,393 ops/sec ±1.75% (92 runs sampled)
+// hessian1 encode: [1, 2, 3]      x   520,715 ops/sec ±1.55% (91 runs sampled)
+// hessian2 encode: [1, 2, 3]      x   552,279 ops/sec ±3.97% (86 runs sampled)
+// hessian1 encode array           x   377,503 ops/sec ±1.40% (94 runs sampled)
+// hessian2 encode array           x   403,264 ops/sec ±3.10% (93 runs sampled)
+// hessian1 encode: simple object  x   132,363 ops/sec ±5.80% (83 runs sampled)
+// hessian2 encode: simple object  x   138,711 ops/sec ±3.52% (89 runs sampled)
+// hessian1 encode: complex object x    94,401 ops/sec ±1.15% (90 runs sampled)
+// hessian2 encode: complex object x    90,484 ops/sec ±1.33% (97 runs sampled)
