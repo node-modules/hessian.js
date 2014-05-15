@@ -11,7 +11,7 @@
       "pattern": "//^((?!(node_modules|test|common)).)*$/"
     },
    "travis-cov": {
-      "threshold": 90
+      "threshold": 89
     }
   },
   "repository": {
@@ -46,6 +46,7 @@
     "coveralls": "*",
     "js-to-java": "~1.0.0",
     "jshint": "*",
+    "long": "~1.1.2",
     "mocha": "*",
     "mocha-lcov-reporter": "*",
     "should": "~3.3.1",

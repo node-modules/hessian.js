@@ -16,6 +16,7 @@
 
 var should = require('should');
 var java = require('js-to-java');
+var Long = require('long');
 var hessian = require('../');
 var utils = require('./utils');
 
@@ -33,6 +34,8 @@ describe('long.test.js', function () {
     }).should.eql(longBuffer);
     hessian.encode(java.long(300)).should.eql(longBuffer);
     hessian.encode(java.long(300)).should.eql(longBuffer);
+    hessian.encode(java.long(Long.fromNumber(300))).should.eql(longBuffer);
+    hessian.encode(Long.fromNumber(300)).should.eql(longBuffer);
   });
 
   it('should write long 0', function () {
@@ -235,6 +238,9 @@ describe('long.test.js', function () {
       hessian.encode(java.long(16), '2.0').should.eql(utils.bytes('v2/long/16'));
       hessian.decode(utils.bytes('v2/long/16'), '2.0').should.equal(16);
       hessian.encode(java.long(255), '2.0').should.eql(utils.bytes('v2/long/255'));
+      hessian.encode(java.long(Long.fromNumber(255)), '2.0').should.eql(utils.bytes('v2/long/255'));
+      hessian.encode(Long.fromNumber(255), '2.0').should.eql(utils.bytes('v2/long/255'));
+
       hessian.decode(utils.bytes('v2/long/255'), '2.0').should.equal(255);
       hessian.encode(java.long(-2048), '2.0').should.eql(utils.bytes('v2/long/-2048'));
       hessian.decode(utils.bytes('v2/long/-2048'), '2.0').should.equal(-2048);
