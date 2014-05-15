@@ -1,4 +1,10 @@
 
+0.4.2 / 2014-05-15
+==================
+
+  * Merge pull request #24 from node-modules/support-Long
+  * support encode Long instance
+
 0.4.1 / 2014-05-15
 ==================
 
