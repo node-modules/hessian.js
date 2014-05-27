@@ -31,6 +31,10 @@ test-coveralls: test
 
 test-all: test test-cov jshint
 
+benchmark:
+	@node benchmark/encode.js
+	@node benchmark/decode.js
+
 contributors: install
 	@./node_modules/.bin/contributors -f plain -o AUTHORS
 
@@ -38,4 +42,4 @@ autod: install
 	@./node_modules/.bin/autod -w -e benchmark --prefix "~"
 	@$(MAKE) install
 
-.PHONY: test
+.PHONY: test benchmark

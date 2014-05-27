@@ -107,7 +107,8 @@ suite
   benchmarks.add(event.target);
 })
 .on('start', function(event) {
-  console.log('\n  node version: %s, date: %s\n  Starting...', process.version, Date());
+  console.log('\n  Hessian Encode Benchmark\n  node version: %s, date: %s\n  Starting...',
+    process.version, Date());
 })
 .on('complete', function done() {
   benchmarks.log();

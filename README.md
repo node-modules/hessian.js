@@ -7,7 +7,7 @@ hessian.js
 
 Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) and
 ~~[2.0](http://hessian.caucho.com/doc/hessian-serialization.html)~~ (read the real java codes instead) written by pure JavaScript.
-Support all kind of types in Java.
+Support all kind of types in Java, with [high performance](benchmark/README.md).
 
 ## Install
 
@@ -44,7 +44,7 @@ Hessian 2.0 has 3 internal reference maps:
 
 ## Encoder
 
-Tips: you can use with [js-to-java](https://github.com/dead-horse/js-to-java) to help you write java class in js.
+Tips: you can use with [js-to-java](https://github.com/node-modules/js-to-java) to help you write java class in js.
 
 ### Simple javascript type
 
