@@ -396,7 +396,20 @@ describe('hessian v1', function () {
       var res = decoder.init(buf).readObject();
       res.should.eql({a:1, b:[1, 2, 3]});
       var resWithType = decoder.init(buf).readObject(true);
-      resWithType.should.eql(testObject);
+      resWithType.should.eql( {
+        '$class': 'com.hessian.TestObject',
+        '$': {
+          a: { '$class': 'int', '$': 1 },
+          b: {
+            '$class': 'java.util.List',
+            '$': [
+              { '$class': 'int', '$': 1 },
+              { '$class': 'int', '$': 2 },
+              { '$class': 'int', '$': 3 }
+            ]
+          }
+        }
+      });
     });
 
     it('should read complex object type use positon ok', function () {
@@ -414,7 +427,20 @@ describe('hessian v1', function () {
       decoder.position(1); //skip 'M'
       decoder.readType().should.equal('com.hessian.TestObject');
       decoder.position().should.equal(26);
-      decoder.position(0).readObject(true).should.eql(testObject);
+      decoder.position(0).readObject(true).should.eql({
+        '$class': 'com.hessian.TestObject',
+        '$': {
+          a: { '$class': 'int', '$': 1 },
+          b: {
+            '$class': 'java.util.List',
+            '$': [
+              { '$class': 'int', '$': 1 },
+              { '$class': 'int', '$': 2 },
+              { '$class': 'int', '$': 3 }
+            ]
+          }
+        }
+      });
     });
 
     it('should write "java.util.HashMap" treat as {}', function () {
@@ -427,7 +453,7 @@ describe('hessian v1', function () {
 
       buf.should.eql(encoder.writeObject({foo: 'bar'}).get());
       decoder.init(buf).read().should.eql({foo: 'bar'});
-      decoder.init(buf).read(true).should.eql({foo: 'bar'});
+      decoder.init(buf).read(true).should.eql({ foo: { '$class': 'java.lang.String', '$': 'bar' } });
     });
 
     it('should write type error', function () {
@@ -469,7 +495,19 @@ describe('hessian v1', function () {
       };
       var buf = encoder.writeArray(testArray).get();
       decoder.init(buf).readArray().should.eql([[1, 2, 3]]);
-      decoder.init(buf).readArray(true).should.eql(testArray);
+      decoder.init(buf).readArray(true).should.eql({
+        '$class': 'java.util.Set',
+        '$': [
+          {
+            '$class': 'java.util.List',
+            '$': [
+              { '$class': 'int', '$': 1 },
+              { '$class': 'int', '$': 2 },
+              { '$class': 'int', '$': 3 }
+            ]
+          }
+        ]
+      });
     });
 
     it('should write "java.util.ArrayList" treat as []', function () {
@@ -482,7 +520,11 @@ describe('hessian v1', function () {
 
       buf.should.eql(encoder.writeArray([1, 2, 3]).get());
       decoder.init(buf).read().should.eql([1, 2, 3]);
-      decoder.init(buf).read(true).should.eql([1, 2, 3]);
+      decoder.init(buf).read(true).should.eql([
+        { '$class': 'int', '$': 1 },
+        { '$class': 'int', '$': 2 },
+        { '$class': 'int', '$': 3 }
+      ]);
     });
 
     it('should read unexpect end label', function () {
@@ -528,25 +570,28 @@ describe('hessian v1', function () {
 
   describe('encode and decode', function () {
     it('should encode and decode work ok', function () {
+      var now = new Date();
       var tests = [
-        [1],
-        [1.1],
-        [-10],
-        [Math.pow(2, 50)],
-        [{$class: 'long', $: '288230376151711740'}, '288230376151711740'],
-        [{$class: 'boolean', $: 1}, true],
-        [new Date()],
-        [true],
-        [false],
+        [1, {$class: 'int', $: 1}],
+        [1.1, {$class: 'double', $: 1.1}],
+        [-10, {$class: 'int', $: -10}],
+        [Math.pow(2, 50), { '$class': 'long', '$': Math.pow(2, 50)}],
+        [{$class: 'long', $: '288230376151711740'}],
+        [{$class: 'boolean', $: 1}, {$class: 'boolean', $: true}],
+        [now, {'$class': 'java.util.Date', $: now}],
+        [true, {$class: 'boolean', $: true}],
+        [false, {$class: 'boolean', $: false}],
         [null],
         [undefined],
-        [{a: 1, b: [true, false], c: new Date(), d: {}, e: null}],
-        [{$class: 'com.hessian.Object', $: {a: {$class: 'java.util.Set', $: [1, 2, 3]}}}],
-        [new Buffer([1, 2, 3, 4, 5])],
-        [new Buffer('test你好啊！（∆˚¬∑∑')],
-        [{$class: '[int', $: [1, 2, 3]}]
+        [{
+          a: 1, b: [true, false], c: now, d: {}, e: null},  {
+          a: { '$class': 'int', '$': 1 },
+          b: [ { '$class': 'boolean', '$': true }, { '$class': 'boolean', '$': false } ],
+          c: { '$class': 'java.util.Date', '$': now },
+          d: {},
+          e: null
+        }]
       ];
-
       tests.forEach(function (t) {
         var buf = hessian.encode(t[0]);
         var res = hessian.decode(buf, true);
