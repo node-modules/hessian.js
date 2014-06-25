@@ -1,4 +1,11 @@
 
+0.5.0 / 2014-06-25
+==================
+
+  * Merge pull request #26 from node-modules/full-with-type
+  * withType return all type info for v1
+  * add bencmark result link
+
 0.4.2 / 2014-05-15
 ==================
 
@@ -52,12 +59,12 @@
  * refactor writeObject, writeRef, writeDate
  * refactor hessian writeObject with real java codes
 
-0.1.11 / 2014-04-22 
+0.1.11 / 2014-04-22
 ==================
 
   * bump byte
 
-0.1.10 / 2014-04-22 
+0.1.10 / 2014-04-22
 ==================
 
   * fix write array error
