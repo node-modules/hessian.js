@@ -37,7 +37,8 @@ describe('list.test.js', function () {
   it('should read int[] = {0, 1}', function () {
     hessian.decode(intListBuffer).should.eql([0, 1]);
     hessian.decode(intListBuffer, true).should.eql({
-      '$class': '[int', '$': [ 0, 1 ]
+      '$class': '[int',
+      '$': [ { '$class': 'int', '$': 0 }, { '$class': 'int', '$': 1 } ]
     });
   });
 
@@ -94,9 +95,16 @@ describe('list.test.js', function () {
     hessian.encode([], '1.0').should.eql(utils.bytes('v1/list/untyped_[]'));
 
     hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0').should.eql([1, 2, 'foo']);
-    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0', true).should.eql([1, 2, 'foo']);
+    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0', true).should.eql([
+      { '$class': 'int', '$': 1 },
+      { '$class': 'int', '$': 2 },
+      { '$class': 'java.lang.String', '$': 'foo' }
+    ]);
     hessian.decode(utils.bytes('v1/list/untyped_[]'), '1.0').should.eql([]);
-    hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '1.0', true).should.eql(['foo', 'bar']);
+    hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '1.0', true).should.eql( [
+      { '$class': 'java.lang.String', '$': 'foo' },
+      { '$class': 'java.lang.String', '$': 'bar' }
+    ]);
 
     // java.util.ArrayList as simple
     hessian.encode({
@@ -113,7 +121,10 @@ describe('list.test.js', function () {
     hessian.decode(utils.bytes('v1/list/typed_list'), '1.0', true)
       .should.eql({
         '$class': 'hessian.demo.SomeArrayList',
-        '$': [ 'ok', 'some list' ]
+        '$': [
+          { '$class': 'java.lang.String', '$': 'ok' },
+          { '$class': 'java.lang.String', '$': 'some list' }
+        ]
       });
 
     hessian.decode(utils.bytes('v1/list/typed_list'), '1.0')
@@ -125,14 +136,28 @@ describe('list.test.js', function () {
     };
     hessian.encode(list, '1.0').should.eql(utils.bytes('v1/list/[int'));
     hessian.decode(utils.bytes('v1/list/[int'), '1.0').should.eql([1, 2, 3]);
-    hessian.decode(utils.bytes('v1/list/[int'), '1.0', true).should.eql(list);
+    hessian.decode(utils.bytes('v1/list/[int'), '1.0', true).should.eql({
+      '$class': '[int',
+      '$': [
+        { '$class': 'int', '$': 1 },
+        { '$class': 'int', '$': 2 },
+        { '$class': 'int', '$': 3 }
+      ]
+    });
 
     var strs = {
       $class: '[string',
       $: ['1', '@', '3']
     };
     hessian.encode(strs, '1.0').should.eql(utils.bytes('v1/list/[string'));
-    hessian.decode(utils.bytes('v1/list/[string'), '1.0', true).should.eql(strs);
+    hessian.decode(utils.bytes('v1/list/[string'), '1.0', true).should.eql({
+      '$class': '[string',
+      '$': [
+        { '$class': 'java.lang.String', '$': '1' },
+        { '$class': 'java.lang.String', '$': '@' },
+        { '$class': 'java.lang.String', '$': '3' }
+      ]
+    });
   });
 
   describe('v2.0', function () {

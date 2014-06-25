@@ -81,11 +81,11 @@ describe('map.test.js', function () {
     });
 
     hessian.decode(mapBuffer, true).should.eql({
-      $class: "com.caucho.test.Car",
-      $: {
-        model: 'Beetle',
-        color: 'aquamarine',
-        mileage: 65536
+      '$class': 'com.caucho.test.Car',
+      '$': {
+        model: { '$class': 'java.lang.String', '$': 'Beetle' },
+        color: { '$class': 'java.lang.String', '$': 'aquamarine' },
+        mileage: { '$class': 'int', '$': 65536 }
       }
     });
   });

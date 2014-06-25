@@ -14,6 +14,7 @@ test: install
 	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
+		--bail \
 		$(MOCHA_OPTS) \
 		$(TESTS)
 
