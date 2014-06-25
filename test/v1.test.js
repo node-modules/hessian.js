@@ -453,7 +453,12 @@ describe('hessian v1', function () {
 
       buf.should.eql(encoder.writeObject({foo: 'bar'}).get());
       decoder.init(buf).read().should.eql({foo: 'bar'});
-      decoder.init(buf).read(true).should.eql({ foo: { '$class': 'java.lang.String', '$': 'bar' } });
+      decoder.init(buf).read(true).should.eql({
+        '$class': 'java.util.HashMap',
+        '$': {
+          foo: { '$class': 'java.lang.String', '$': 'bar' }
+        }
+      });
     });
 
     it('should write type error', function () {
@@ -520,11 +525,14 @@ describe('hessian v1', function () {
 
       buf.should.eql(encoder.writeArray([1, 2, 3]).get());
       decoder.init(buf).read().should.eql([1, 2, 3]);
-      decoder.init(buf).read(true).should.eql([
-        { '$class': 'int', '$': 1 },
-        { '$class': 'int', '$': 2 },
-        { '$class': 'int', '$': 3 }
-      ]);
+      decoder.init(buf).read(true).should.eql({
+        $class: 'java.util.ArrayList',
+        $: [
+          { '$class': 'int', '$': 1 },
+          { '$class': 'int', '$': 2 },
+          { '$class': 'int', '$': 3 }
+        ]
+      });
     });
 
     it('should read unexpect end label', function () {
@@ -583,14 +591,20 @@ describe('hessian v1', function () {
         [false, {$class: 'boolean', $: false}],
         [null],
         [undefined],
-        [{
-          a: 1, b: [true, false], c: now, d: {}, e: null},  {
-          a: { '$class': 'int', '$': 1 },
-          b: [ { '$class': 'boolean', '$': true }, { '$class': 'boolean', '$': false } ],
-          c: { '$class': 'java.util.Date', '$': now },
-          d: {},
-          e: null
-        }]
+        [{ a: 1, b: [true, false], c: now, d: {}, e: null }, {
+            $class: 'java.util.HashMap',
+            $:{
+              a: { '$class': 'int', '$': 1 },
+              b: {
+                $class: 'java.util.ArrayList',
+                $: [ { '$class': 'boolean', '$': true }, { '$class': 'boolean', '$': false } ]
+              },
+              c: { '$class': 'java.util.Date', '$': now },
+              d: { '$class': 'java.util.HashMap', '$': {} },
+              e: null
+            }
+          }
+        ]
       ];
       tests.forEach(function (t) {
         var buf = hessian.encode(t[0]);

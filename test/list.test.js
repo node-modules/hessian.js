@@ -95,16 +95,22 @@ describe('list.test.js', function () {
     hessian.encode([], '1.0').should.eql(utils.bytes('v1/list/untyped_[]'));
 
     hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0').should.eql([1, 2, 'foo']);
-    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0', true).should.eql([
-      { '$class': 'int', '$': 1 },
-      { '$class': 'int', '$': 2 },
-      { '$class': 'java.lang.String', '$': 'foo' }
-    ]);
+    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0', true).should.eql({
+      $class: 'java.util.ArrayList',
+      $: [
+        { '$class': 'int', '$': 1 },
+        { '$class': 'int', '$': 2 },
+        { '$class': 'java.lang.String', '$': 'foo' }
+      ]
+    });
     hessian.decode(utils.bytes('v1/list/untyped_[]'), '1.0').should.eql([]);
-    hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '1.0', true).should.eql( [
-      { '$class': 'java.lang.String', '$': 'foo' },
-      { '$class': 'java.lang.String', '$': 'bar' }
-    ]);
+    hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '1.0', true).should.eql( {
+      $class: 'java.util.ArrayList',
+      $: [
+        { '$class': 'java.lang.String', '$': 'foo' },
+        { '$class': 'java.lang.String', '$': 'bar' }
+      ]
+    });
 
     // java.util.ArrayList as simple
     hessian.encode({

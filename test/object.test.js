@@ -138,11 +138,14 @@ describe('object.test.js', function () {
         [ { name: 'BLUE' }, { name: 'RED' }, { name: 'GREEN' } ]
       );
 
-      hessian.decode(utils.bytes('v1/enum/lists'), '1.0', true).should.eql([
-        { '$class': 'hessian.Main$Color', '$': { name: { '$class': 'java.lang.String', '$': 'BLUE' } } },
-        { '$class': 'hessian.Main$Color', '$': { name: { '$class': 'java.lang.String', '$': 'RED' } } },
-        { '$class': 'hessian.Main$Color', '$': { name: { '$class': 'java.lang.String', '$': 'GREEN' } } }
-      ]);
+      hessian.decode(utils.bytes('v1/enum/lists'), '1.0', true).should.eql({
+        $class: 'java.util.ArrayList',
+        $: [
+          { '$class': 'hessian.Main$Color', '$': { name: { '$class': 'java.lang.String', '$': 'BLUE' } } },
+          { '$class': 'hessian.Main$Color', '$': { name: { '$class': 'java.lang.String', '$': 'RED' } } },
+          { '$class': 'hessian.Main$Color', '$': { name: { '$class': 'java.lang.String', '$': 'GREEN' } } }
+        ]
+      });
     });
 
     it('should write "{$class: "hessian.test.demo.Car", $: {a: 1}}"', function () {
@@ -173,19 +176,22 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v1/map/one_car_list'), '1.0', true);
-      cars.should.eql([
-        {
-          '$class': 'hessian.demo.Car',
-          '$': {
-            a: { '$class': 'java.lang.String', '$': 'a' },
-            c: { '$class': 'java.lang.String', '$': 'c' },
-            b: { '$class': 'java.lang.String', '$': 'b' },
-            model: { '$class': 'java.lang.String', '$': 'model 1' },
-            color: { '$class': 'java.lang.String', '$': 'aquamarine' },
-            mileage: { '$class': 'int', '$': 65536 }
+      cars.should.eql({
+        $class: 'java.util.ArrayList',
+        $: [
+          {
+            '$class': 'hessian.demo.Car',
+            '$': {
+              a: { '$class': 'java.lang.String', '$': 'a' },
+              c: { '$class': 'java.lang.String', '$': 'c' },
+              b: { '$class': 'java.lang.String', '$': 'b' },
+              model: { '$class': 'java.lang.String', '$': 'model 1' },
+              color: { '$class': 'java.lang.String', '$': 'aquamarine' },
+              mileage: { '$class': 'int', '$': 65536 }
+            }
           }
-        }
-      ]);
+        ]
+      });
 
       hessian.encode(cars, '1.0').should.eql(utils.bytes('v1/map/one_car_list'));
     });
@@ -207,29 +213,32 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v1/map/two_car_list'), '1.0', true);
-      cars.should.eql([
-        {
-          '$class': 'hessian.demo.Car',
-          '$': {
-            a: { '$class': 'java.lang.String', '$': 'a' },
-            c: { '$class': 'java.lang.String', '$': 'c' },
-            b: { '$class': 'java.lang.String', '$': 'b' },
-            model: { '$class': 'java.lang.String', '$': 'model 1' },
-            color: { '$class': 'java.lang.String', '$': 'aquamarine' },
-            mileage: { '$class': 'int', '$': 65536 }
+      cars.should.eql({
+        $class: 'java.util.ArrayList',
+        $: [
+          {
+            '$class': 'hessian.demo.Car',
+            '$': {
+              a: { '$class': 'java.lang.String', '$': 'a' },
+              c: { '$class': 'java.lang.String', '$': 'c' },
+              b: { '$class': 'java.lang.String', '$': 'b' },
+              model: { '$class': 'java.lang.String', '$': 'model 1' },
+              color: { '$class': 'java.lang.String', '$': 'aquamarine' },
+              mileage: { '$class': 'int', '$': 65536 }
+            }
+          }, {
+            '$class': 'hessian.demo.Car',
+            '$': {
+              a: { '$class': 'java.lang.String', '$': 'a' },
+              c: { '$class': 'java.lang.String', '$': 'c' },
+              b: { '$class': 'java.lang.String', '$': 'b' },
+              model: { '$class': 'java.lang.String', '$': 'model 2' },
+              color: { '$class': 'java.lang.String', '$': 'aquamarine' },
+              mileage: { '$class': 'int', '$': 65536 }
+            }
           }
-        }, {
-          '$class': 'hessian.demo.Car',
-          '$': {
-            a: { '$class': 'java.lang.String', '$': 'a' },
-            c: { '$class': 'java.lang.String', '$': 'c' },
-            b: { '$class': 'java.lang.String', '$': 'b' },
-            model: { '$class': 'java.lang.String', '$': 'model 2' },
-            color: { '$class': 'java.lang.String', '$': 'aquamarine' },
-            mileage: { '$class': 'int', '$': 65536 }
-          }
-        }
-      ]);
+        ]
+      });
 
       var buf = hessian.encode(cars, '1.0');
       buf.should.length(utils.bytes('v1/map/two_car_list').length);
@@ -263,39 +272,42 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v1/map/car_list'), '1.0', true);
-      cars.should.eql([
-        {
-          '$class': 'hessian.demo.Car',
-          '$': {
-            a: { '$class': 'java.lang.String', '$': 'a' },
-            c: { '$class': 'java.lang.String', '$': 'c' },
-            b: { '$class': 'java.lang.String', '$': 'b' },
-            model: { '$class': 'java.lang.String', '$': 'model 1' },
-            color: { '$class': 'java.lang.String', '$': 'aquamarine' },
-            mileage: { '$class': 'int', '$': 65536 }
+      cars.should.eql({
+        $class: 'java.util.ArrayList',
+        $: [
+          {
+            '$class': 'hessian.demo.Car',
+            '$': {
+              a: { '$class': 'java.lang.String', '$': 'a' },
+              c: { '$class': 'java.lang.String', '$': 'c' },
+              b: { '$class': 'java.lang.String', '$': 'b' },
+              model: { '$class': 'java.lang.String', '$': 'model 1' },
+              color: { '$class': 'java.lang.String', '$': 'aquamarine' },
+              mileage: { '$class': 'int', '$': 65536 }
+            }
+          }, {
+            '$class': 'hessian.demo.Car',
+            '$': {
+              a: { '$class': 'java.lang.String', '$': 'a' },
+              c: { '$class': 'java.lang.String', '$': 'c' },
+              b: { '$class': 'java.lang.String', '$': 'b' },
+              model: { '$class': 'java.lang.String', '$': 'model 2' },
+              color: { '$class': 'java.lang.String', '$': 'aquamarine' },
+              mileage: { '$class': 'int', '$': 65536 }
+            }
+          }, {
+            '$class': 'hessian.demo.Car',
+            '$': {
+              a: { '$class': 'java.lang.String', '$': 'a' },
+              c: { '$class': 'java.lang.String', '$': 'c' },
+              b: { '$class': 'java.lang.String', '$': 'b' },
+              model: { '$class': 'java.lang.String', '$': 'model 3' },
+              color: { '$class': 'java.lang.String', '$': 'aquamarine' },
+              mileage: { '$class': 'int', '$': 65536 }
+            }
           }
-        }, {
-          '$class': 'hessian.demo.Car',
-          '$': {
-            a: { '$class': 'java.lang.String', '$': 'a' },
-            c: { '$class': 'java.lang.String', '$': 'c' },
-            b: { '$class': 'java.lang.String', '$': 'b' },
-            model: { '$class': 'java.lang.String', '$': 'model 2' },
-            color: { '$class': 'java.lang.String', '$': 'aquamarine' },
-            mileage: { '$class': 'int', '$': 65536 }
-          }
-        }, {
-          '$class': 'hessian.demo.Car',
-          '$': {
-            a: { '$class': 'java.lang.String', '$': 'a' },
-            c: { '$class': 'java.lang.String', '$': 'c' },
-            b: { '$class': 'java.lang.String', '$': 'b' },
-            model: { '$class': 'java.lang.String', '$': 'model 3' },
-            color: { '$class': 'java.lang.String', '$': 'aquamarine' },
-            mileage: { '$class': 'int', '$': 65536 }
-          }
-        }
-      ]);
+        ]
+      });
 
       hessian.encode(cars, '1.0').should.eql(utils.bytes('v1/map/car_list'));
     });
