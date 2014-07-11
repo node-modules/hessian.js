@@ -311,6 +311,40 @@ describe('object.test.js', function () {
 
       hessian.encode(cars, '1.0').should.eql(utils.bytes('v1/map/car_list'));
     });
+
+    describe('java.util.concurrent.atomic.AtomicLong', function () {
+      it('should read and write', function () {
+        var javabuf = utils.bytes('v1/object/AtomicLong0');
+        var a0 = hessian.decode(javabuf);
+        a0.should.eql({value: 0});
+        var a0 = hessian.decode(javabuf, true);
+        a0.should.eql({
+          $class: 'java.util.concurrent.atomic.AtomicLong',
+          $: {
+            value: {
+              $: 0,
+              $class: 'long'
+            }
+          }
+        });
+        hessian.encode(a0).should.eql(javabuf);
+
+        javabuf = utils.bytes('v1/object/AtomicLong1');
+        var a1 = hessian.decode(javabuf);
+        a1.should.eql({value: 1});
+        var a1 = hessian.decode(javabuf, true);
+        a1.should.eql({
+          $class: 'java.util.concurrent.atomic.AtomicLong',
+          $: {
+            value: {
+              $: 1,
+              $class: 'long'
+            }
+          }
+        });
+        hessian.encode(a1).should.eql(javabuf);
+      });
+    });
   });
 
   describe('v2.0', function () {
@@ -728,6 +762,50 @@ describe('object.test.js', function () {
              color: 'aquamarine',
              mileage: 65536 } }
       ]);
+    });
+
+    describe('java.util.concurrent.atomic.AtomicLong', function () {
+      it('should read and write', function () {
+        var javabuf = utils.bytes('v2/object/AtomicLong0');
+        var a0 = hessian.decode(javabuf, '2.0');
+        a0.should.eql({value: 0});
+        var a0 = hessian.decode(javabuf, '2.0', true);
+        a0.should.eql({
+          $class: 'java.util.concurrent.atomic.AtomicLong',
+          $: {
+            value: 0
+          }
+        });
+        hessian.encode({
+          $class: 'java.util.concurrent.atomic.AtomicLong',
+          $: {
+            value: {
+              $class: 'long',
+              $: 0
+            }
+          }
+        }, '2.0').should.eql(javabuf);
+
+        javabuf = utils.bytes('v2/object/AtomicLong1');
+        var a1 = hessian.decode(javabuf, '2.0');
+        a1.should.eql({value: 1});
+        var a1 = hessian.decode(javabuf, '2.0', true);
+        a1.should.eql({
+          $class: 'java.util.concurrent.atomic.AtomicLong',
+          $: {
+            value: 1
+          }
+        });
+        hessian.encode({
+          $class: 'java.util.concurrent.atomic.AtomicLong',
+          $: {
+            value: {
+              $class: 'long',
+              $: 1
+            }
+          }
+        }, '2.0').should.eql(javabuf);
+      });
     });
   });
 });
