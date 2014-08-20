@@ -14,3 +14,4 @@ test
 benchmark
 LICENSE
 Makefile
+coverage/

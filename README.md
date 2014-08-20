@@ -1,9 +1,28 @@
 hessian.js
 =========
 
-[![Build Status](https://secure.travis-ci.org/node-modules/hessian.js.png)](http://travis-ci.org/node-modules/hessian.js)
-[![Coverage Status](https://coveralls.io/repos/node-modules/hessian.js/badge.png)](https://coveralls.io/r/node-modules/hessian.js)
-[![Dependency Status](https://gemnasium.com/node-modules/hessian.js.png)](https://gemnasium.com/node-modules/hessian.js)
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
+[![Gittip][gittip-image]][gittip-url]
+[![David deps][david-image]][david-url]
+[![node version][node-image]][node-url]
+[![npm download][download-image]][download-url]
+
+[npm-image]: https://img.shields.io/npm/v/hessian.js.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/hessian.js
+[travis-image]: https://img.shields.io/travis/node-modules/hessian.js.svg?style=flat-square
+[travis-url]: https://travis-ci.org/node-modules/hessian.js
+[coveralls-image]: https://img.shields.io/coveralls/node-modules/hessian.js.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/node-modules/hessian.js?branch=master
+[gittip-image]: https://img.shields.io/gittip/fengmk2.svg?style=flat-square
+[gittip-url]: https://www.gittip.com/fengmk2/
+[david-image]: https://img.shields.io/david/node-modules/hessian.js.svg?style=flat-square
+[david-url]: https://david-dm.org/node-modules/hessian.js
+[node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
+[node-url]: http://nodejs.org/download/
+[download-image]: https://img.shields.io/npm/dm/hessian.js.svg?style=flat-square
+[download-url]: https://npmjs.org/package/hessian.js
 
 Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) and
 ~~[2.0](http://hessian.caucho.com/doc/hessian-serialization.html)~~ (read the real java codes instead) written by pure JavaScript.
@@ -11,7 +30,9 @@ Support all kind of types in Java, with [high performance](benchmark/README.md).
 
 ## Install
 
-[![NPM](https://nodei.co/npm/hessian.js.png?downloads=true)](https://nodei.co/npm/hessian.js/)
+```bash
+$ npm install hessian.js --save
+```
 
 ## Support Types
 
