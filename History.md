@@ -1,4 +1,13 @@
 
+n.n.n / 2014-08-20 
+==================
+
+  * Merge pull request #29 from node-modules/exception-bug-fix
+  * only test on node 0.10.28
+  * change badge and add travis coverage
+  * fix exception convert bug
+  * support `java.util.concurrent.atomic.AtomicLong` fix #27
+
 0.5.1 / 2014-06-25
 ==================
 
