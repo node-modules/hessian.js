@@ -2,7 +2,7 @@ TESTS = test/*.test.js
 REPORTER = spec
 TIMEOUT = 5000
 MOCHA_OPTS =
-NPM_INSTALL = npm install --registry=http://registry.npm.taobao.org --disturl=http://dist.u.qiniudn.com
+NPM_INSTALL = npm install --registry=https://registry.npm.taobao.org
 
 install:
 	@$(NPM_INSTALL)
@@ -11,24 +11,32 @@ jshint: install
 	@./node_modules/.bin/jshint .
 
 test: install
-	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
+	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
-		--bail \
 		$(MOCHA_OPTS) \
 		$(TESTS)
 
-test-cov cov:
-	@$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=travis-cov
+test-cov cov: install
+	@NODE_ENV=test node \
+		node_modules/.bin/istanbul cover --preserve-comments \
+		./node_modules/.bin/_mocha \
+		-- \
+		--reporter $(REPORTER) \
+		--timeout $(TIMEOUT) \
+		$(MOCHA_OPTS) \
+		$(TESTS)
 
-test-cov-html:
-	@rm -f coverage.html
-	@$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=html-cov > coverage.html
-	@ls -lh coverage.html
-
-test-coveralls: test
-	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
-	@-$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=mocha-lcov-reporter | ./node_modules/.bin/coveralls
+test-travis: install
+	@NODE_ENV=test node \
+		node_modules/.bin/istanbul cover --preserve-comments \
+		./node_modules/.bin/_mocha \
+		--report lcovonly \
+		-- \
+		--reporter dot \
+		--timeout $(TIMEOUT) \
+		$(MOCHA_OPTS) \
+		$(TESTS)
 
 test-all: test test-cov jshint
 
