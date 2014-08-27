@@ -1,5 +1,10 @@
 
-n.n.n / 2014-08-20 
+1.0.0 / 2014-08-27
+==================
+
+  * bump byte
+
+0.5.2 / 2014-08-20
 ==================
 
   * Merge pull request #29 from node-modules/exception-bug-fix
