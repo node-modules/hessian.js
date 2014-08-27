@@ -1,5 +1,10 @@
 
-n.n.n / 2014-08-20 
+0.5.3 / 2014-08-27
+==================
+
+ * support decode java.lang.*Error as js Error
+
+0.5.2 / 2014-08-20
 ==================
 
   * Merge pull request #29 from node-modules/exception-bug-fix
