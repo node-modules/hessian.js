@@ -1,4 +1,10 @@
 
+1.0.1 / 2014-08-27 
+==================
+
+  * Merge pull request #30 from node-modules/java.lang.Error
+  * support decode java.lang.*Error as js Error
+
 1.0.0 / 2014-08-27
 ==================
 
