@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
-    "byte": "~0.3.1",
+    "byte": "~1.0.0",
     "debug": "~1.0.4",
     "is-type-of": "~0.3.1"
   },
@@ -46,7 +46,7 @@
     "istanbul": "*",
     "js-to-java": "~1.0.0",
     "jshint": "*",
-    "long": "~2.0.1",
+    "long": "~2.1.0",
     "mocha": "*",
     "should": "~4.0.4"
   }
