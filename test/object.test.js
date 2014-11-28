@@ -807,5 +807,52 @@ describe('object.test.js', function () {
         }, '2.0').should.eql(javabuf);
       });
     });
+
+    it('should decode simpleCar', function () {
+      // https://github.com/node-modules/hessian.js/issues/33#issuecomment-64842980
+      var javabuf = utils.bytes('v2/object/simpleCar');
+      var car = hessian.decode(javabuf, '2.0', true);
+      // console.log(JSON.stringify(car, null, 2));
+      car.should.eql({
+        "$class": "hessian.demo.SimpleCar",
+        "$": {
+          "name": "QQ",
+          "num": 10,
+          "car": {
+            "$class": "hessian.demo.SimpleCar",
+            "$": {
+              "name": "QQ2",
+              "num": 20,
+              "car": null
+            }
+          }
+        }
+      });
+    });
+  });
+
+  describe('com.caucho.hessian.4.0.x', function () {
+    it('should decode simpleCar', function () {
+      // https://github.com/node-modules/hessian.js/issues/33#issuecomment-64842980
+      var javabuf = utils.bytes('com.caucho.hessian.4.0.x/object/simpleCar');
+      // var javabuf = utils.bytes('v2/string/x30_utf8_small');
+      var car = hessian.decode(javabuf, '2.0', true);
+      // console.log(JSON.stringify(car, null, 2));
+      car.should.eql({
+        "$class": "hessian.demo.SimpleCar",
+        "$": {
+          "name": "QQ",
+          "num": 10,
+          "car": {
+            "$class": "hessian.demo.SimpleCar",
+            "$": {
+              "name": "QQ2",
+              "num": 20,
+              "car": null
+            }
+          }
+        }
+      });
+    });
   });
 });

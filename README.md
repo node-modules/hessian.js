@@ -28,6 +28,8 @@ Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) 
 ~~[2.0](http://hessian.caucho.com/doc/hessian-serialization.html)~~ (read the real java codes instead) written by pure JavaScript.
 Support all kind of types in Java, with [high performance](benchmark/README.md).
 
+- Test with `com.caucho.hessian@3.1.3`
+
 ## Install
 
 ```bash
@@ -232,7 +234,7 @@ boolean    ::= 'T'
            ::= 'F'
 
            # definition for an object (compact map)
-class-def  ::= 'C' string int string*
+class-def  ::= 'C'(x43) string int string*
 
            # time in UTC encoded as 64-bit long milliseconds since
            #  epoch
@@ -361,7 +363,7 @@ x78 - x7f    # fixed untyped list with direct length (x, y, z, {, |, }, ~, .....
 x80 - xbf    # one-octet compact int (-x10 to x3f, x90 is 0)
 xc0 - xcf    # two-octet compact int (-x800 to x7ff)
 xd0 - xd7    # three-octet compact int (-x40000 to x3ffff)
-xd8 - xef    # one-octet compact long (-x8 to xf, xe0 is 0)
+xd8 - xef    # one-octet compact long (-x8 to xf, xe0 is 0), direct long
 xf0 - xff    # two-octet compact long (-x800 to x7ff, xf8 is 0)
 ```
 
