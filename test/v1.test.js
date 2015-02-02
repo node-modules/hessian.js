@@ -83,10 +83,10 @@ describe('hessian v1', function () {
         -Math.pow(2, 31) - 1
       ];
 
-      tests.forEach(function (t) {
+      tests.forEach(function (t, idx) {
         (function () {
           var buf = encoder.writeInt(t);
-        }).should.throw('hessian writeInt expect input type is `int32`, but got `number`');
+        }).should.throw('hessian writeInt expect input type is `int32`, but got `number` : ' + tests[idx] + ' ');
       });
     });
 
@@ -257,16 +257,16 @@ describe('hessian v1', function () {
     it('should write type error', function () {
       (function () {
         encoder.writeBytes();
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `undefined`');
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `undefined` : undefined ');
       (function () {
         encoder.writeBytes('');
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `string`');
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `string` : "" ');
       (function () {
         encoder.writeBytes(null);
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `object`');
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `object` : null ');
       (function () {
         encoder.writeBytes(100);
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `number`');
+      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `number` : 100 ');
     });
 
     it('should write and read empty bytes', function () {
@@ -309,16 +309,16 @@ describe('hessian v1', function () {
     it('should write type error', function () {
       (function () {
         encoder.writeString();
-      }).should.throw('hessian writeString expect input type is `string`, but got `undefined`');
+      }).should.throw('hessian writeString expect input type is `string`, but got `undefined` : undefined ');
       (function () {
-        encoder.writeString(new Buffer(10));
-      }).should.throw('hessian writeString expect input type is `string`, but got `object`');
+        encoder.writeString(new Buffer([1,2,3,4,5]));
+      }).should.throw('hessian writeString expect input type is `string`, but got `object` : {"type":"Buffer","data":[1,2,3,4,5]} ');
       (function () {
         encoder.writeString(null);
-      }).should.throw('hessian writeString expect input type is `string`, but got `object`');
+      }).should.throw('hessian writeString expect input type is `string`, but got `object` : null ');
       (function () {
         encoder.writeString(100);
-      }).should.throw('hessian writeString expect input type is `string`, but got `number`');
+      }).should.throw('hessian writeString expect input type is `string`, but got `number` : 100 ');
     });
 
     it('should string length equal MAX_CHAR_TRUNK_SIZE work', function () {
@@ -464,13 +464,13 @@ describe('hessian v1', function () {
     it('should write type error', function () {
       (function () {
         encoder.writeObject('123');
-      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `string`');
+      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `string` : "123" ');
       (function () {
         encoder.writeObject(1.111);
-      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number`');
+      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number` : 1.111 ');
       (function () {
         encoder.writeObject(100);
-      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number`');
+      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number` : 100 ');
     });
   });
 
