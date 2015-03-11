@@ -308,4 +308,10 @@ describe('map.test.js', function () {
       hessian.decode(buf2, '2.0').should.eql(map);
     });
   });
+
+  it('should decode successful when key is null', function () {
+    var data = new Buffer([77, 116, 0, 0, 78, 83, 0, 4, 110, 117, 108, 108, 122]);
+    var rv = hessian.decode(data);
+    rv.should.eql({null: 'null'});
+  });
 });
