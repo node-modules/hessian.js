@@ -13,13 +13,30 @@
 /**
  * Module dependencies.
  */
-
 var should = require('should');
 var hessian = require('../');
 var utils = require('./utils');
 
 describe('object.test.js', function () {
   describe('v1.0', function () {
+
+    it('should _assertType error when encode wrong object', function () {
+      var req = {
+        $class: 'com.alipay.x.biz.User',
+        $: 'abc'
+      };
+      var rs;
+      var buf;
+      try {
+        buf = hessian.encode(req, '1.0');
+      } catch (err) {
+        rs = err;
+      };
+      should.exist(rs);
+      rs.message.should.containEql('com.alipay.x.biz.User');
+      should.not.exist(buf);
+    });
+
     it('should decode and encode ConnectionRequest', function () {
       var javabuf = utils.bytes('v1/object/ConnectionRequest');
       var connreq = hessian.decode(javabuf, '1.0', true);
