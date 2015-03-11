@@ -1,4 +1,12 @@
 
+1.0.3 / 2015-03-11
+==================
+
+  * fix(decode): toString is not stable.
+  * chore(test): skip large string with v0.11.15
+  * fix(writeObject): should assertType obj.$ when writeObject and add more messge
+  * ignore 0xd800 and 0xdbff char test cases
+
 1.0.2 / 2015-01-29
 ==================
 
