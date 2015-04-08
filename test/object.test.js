@@ -20,6 +20,26 @@ var utils = require('./utils');
 describe('object.test.js', function () {
   describe('v1.0', function () {
 
+    it('should write null for property like: { a: { "$class": "yyy.yyy", "$": null } }', function () {
+      var o = { '$class': 'xxx.xxx',
+                '$': { a: { '$class': 'yyy.yyy', '$': null } } };
+      var rightBuf = new Buffer('4d7400077878782e787878530001614e7a', 'hex');
+
+      var buf = hessian.encode(o, '1.0');
+      buf.should.length(rightBuf.length);
+      buf.should.eql(rightBuf);
+    });
+
+    it('should write object for property like: { a: { "$class": "yyy.yyy", "$": {} } }', function () {
+      var o = { '$class': 'xxx.xxx',
+                '$': { a: { '$class': 'yyy.yyy', '$': {} } } };
+      var rightBuf = new Buffer('4d7400077878782e787878530001614d7400077979792e7979797a7a', 'hex');
+
+      var buf = hessian.encode(o, '1.0');
+      buf.should.length(rightBuf.length);
+      buf.should.eql(rightBuf);
+    });
+
     it('should _assertType error when encode wrong object', function () {
       var req = {
         $class: 'com.alipay.x.biz.User',
