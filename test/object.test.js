@@ -51,7 +51,7 @@ describe('object.test.js', function () {
         buf = hessian.encode(req, '1.0');
       } catch (err) {
         rs = err;
-      };
+      }
       should.exist(rs);
       rs.message.should.containEql('com.alipay.x.biz.User');
       should.not.exist(buf);

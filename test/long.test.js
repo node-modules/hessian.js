@@ -23,6 +23,13 @@ var utils = require('./utils');
 describe('long.test.js', function () {
   var longBuffer = new Buffer(['L'.charCodeAt(0), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x2c]);
 
+  it('should write {$class: "java.lang.Long", $: null} => null', function () {
+    var obj = hessian.decode(hessian.encode({
+      $class: "java.lang.Long", $: null
+    }));
+    should.ok(obj === null);
+  });
+
   it('should read long 300', function () {
     hessian.decode(longBuffer).should.equal(300);
   });
