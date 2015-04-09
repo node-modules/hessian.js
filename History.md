@@ -1,4 +1,11 @@
 
+1.0.4 / 2015-04-09
+==================
+
+ * test: add more node version on travis ci
+ * test: add encode {$class: "java.lang.Long", $: null} => null test case
+ * fix(encode) fix object property null issue
+
 1.0.3 / 2015-03-11
 ==================
 

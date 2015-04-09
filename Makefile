@@ -2,10 +2,9 @@ TESTS = test/*.test.js
 REPORTER = spec
 TIMEOUT = 5000
 MOCHA_OPTS =
-NPM_INSTALL = npm install --registry=https://registry.npm.taobao.org
 
 install:
-	@$(NPM_INSTALL)
+	@npm install
 
 jshint: install
 	@./node_modules/.bin/jshint .
@@ -43,9 +42,6 @@ test-all: test test-cov jshint
 benchmark:
 	@node benchmark/encode.js
 	@node benchmark/decode.js
-
-contributors: install
-	@./node_modules/.bin/contributors -f plain -o AUTHORS
 
 autod: install
 	@./node_modules/.bin/autod -w -e benchmark --prefix "~"
