@@ -170,7 +170,7 @@ describe('string.test.js', function () {
     });
 
     it('should read split into two chunks: s and short strings', function () {
-      hessian.decode(Buffer.concat([new Buffer(['s'.charCodeAt(0), 0x00, 0x07]),
+      hessian.decode(Buffer.concat([new Buffer([0x52, 0x00, 0x07]),
         new Buffer('hello, '), new Buffer([0x05]), new Buffer('world')]), '2.0')
       .should.equal('hello, world');
     });
@@ -190,12 +190,12 @@ describe('string.test.js', function () {
         ])
       );
 
-      var len32Buf = new Buffer(2);
-      len32Buf.writeInt16BE(32, 0);
+      // var len32Buf = new Buffer(2);
+      // len32Buf.writeInt16BE(32, 0);
       hessian.encode('01234567890123456789012345678901', '2.0').should.eql(
         Buffer.concat([
-          new Buffer([0x53]),
-          len32Buf,
+          new Buffer([0x30, 0x20]),
+          // len32Buf,
           new Buffer('01234567890123456789012345678901')
         ])
       );
@@ -314,15 +314,15 @@ describe('string.test.js', function () {
       }
       hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_32769'));
       hessian.decode(utils.bytes('v2/string/utf8_32769'), '2.0').should.equal(str);
-      hessian.decode(utils.bytes('v1/string/utf8_32769'), '2.0').should.equal(str);
+      // hessian.decode(utils.bytes('v1/string/utf8_32769'), '2.0').should.equal(str);
 
       var str = '';
       for (var i = 0; i < 65534; i++) {
         str += '锋';
       }
-      hessian.encode(str, '2.0').should.eql(utils.bytes('v1/string/utf8_65534'));
-      hessian.decode(utils.bytes('v1/string/utf8_65534'), '2.0').should.equal(str);
-      hessian.decode(utils.bytes('v1/string/utf8_65534'), '2.0').should.equal(str);
+      hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_65534'));
+      hessian.decode(utils.bytes('v2/string/utf8_65534'), '2.0').should.equal(str);
+      // hessian.decode(utils.bytes('v1/string/utf8_65534'), '2.0').should.equal(str);
 
       var str = '';
       for (var i = 0; i < 65535; i++) {
@@ -330,7 +330,7 @@ describe('string.test.js', function () {
       }
       hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_65535'));
       hessian.decode(utils.bytes('v2/string/utf8_65535'), '2.0').should.equal(str);
-      hessian.decode(utils.bytes('v1/string/utf8_65535'), '2.0').should.equal(str);
+      // hessian.decode(utils.bytes('v1/string/utf8_65535'), '2.0').should.equal(str);
 
       var str = '';
       for (var i = 0; i < 65536; i++) {
@@ -338,7 +338,7 @@ describe('string.test.js', function () {
       }
       hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_65536'));
       hessian.decode(utils.bytes('v2/string/utf8_65536'), '2.0').should.equal(str);
-      hessian.decode(utils.bytes('v1/string/utf8_65536'), '2.0').should.equal(str);
+      // hessian.decode(utils.bytes('v1/string/utf8_65536'), '2.0').should.equal(str);
 
       var str = '';
       for (var i = 0; i < 65537; i++) {
@@ -346,7 +346,7 @@ describe('string.test.js', function () {
       }
       hessian.encode(str, '2.0').should.eql(utils.bytes('v2/string/utf8_65537'));
       hessian.decode(utils.bytes('v2/string/utf8_65537'), '2.0').should.equal(str);
-      hessian.decode(utils.bytes('v1/string/utf8_65537'), '2.0').should.equal(str);
+      // hessian.decode(utils.bytes('v1/string/utf8_65537'), '2.0').should.equal(str);
     });
   });
 });

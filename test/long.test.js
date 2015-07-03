@@ -107,10 +107,14 @@ describe('long.test.js', function () {
       hessian.decode(new Buffer([0x3f, 0xff, 0xff]), '2.0').should.equal(262143);
 
       // four octet longs
-      hessian.decode(new Buffer([0x77, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
-      hessian.decode(new Buffer([0x77, 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
-      hessian.decode(new Buffer([0x77, 0x7f, 0xff, 0xff, 0xff]), '2.0').should.equal(2147483647);
-      hessian.decode(new Buffer([0x77, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(-2147483648);
+      hessian.decode(new Buffer([0x59, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
+      hessian.decode(new Buffer([0x59, 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
+      hessian.decode(new Buffer([0x59, 0x7f, 0xff, 0xff, 0xff]), '2.0').should.equal(2147483647);
+      hessian.decode(new Buffer([0x59, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(-2147483648);
+
+      hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
+      hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
+      hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xff, 0xff, 0xff]), '2.0').should.equal(2147483647);
     });
 
     it('should read normal long', function () {
@@ -207,21 +211,21 @@ describe('long.test.js', function () {
       // -2147483648 ~ 2147483647
       buf = hessian.encode(java.long(-2147483648), '2.0');
       buf.should.length(5);
-      buf[0].should.equal(0x77);
+      buf[0].should.equal(0x59);
       buf[1].should.equal(0x80);
       buf[2].should.equal(0x00);
       buf[3].should.equal(0x00);
       buf[4].should.equal(0x00);
-      buf.should.eql(new Buffer([0x77, 0x80, 0x00, 0x00, 0x00]));
+      buf.should.eql(new Buffer([0x59, 0x80, 0x00, 0x00, 0x00]));
 
       buf = hessian.encode(java.long(2147483647), '2.0');
       buf.should.length(5);
-      buf[0].should.equal(0x77);
+      buf[0].should.equal(0x59);
       buf[1].should.equal(0x7f);
       buf[2].should.equal(0xff);
       buf[3].should.equal(0xff);
       buf[4].should.equal(0xff);
-      buf.should.eql(new Buffer([0x77, 0x7f, 0xff, 0xff, 0xff]));
+      buf.should.eql(new Buffer([0x59, 0x7f, 0xff, 0xff, 0xff]));
 
       // L
       buf = hessian.encode(java.long(2147483648), '2.0');

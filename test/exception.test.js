@@ -89,29 +89,36 @@ describe('exception.test.js', function () {
       e.name.should.equal('java.io.IOException');
       e.message.should.equal('模拟测试异常; this is a java IOException instance');
       e.stack.should.equal('java.io.IOException: 模拟测试异常; this is a java IOException instance\n    at hessian.Main.main (Main.java:1303)');
-    });
-
-    it('should read hessian 1.0 exception', function () {
-      var ioe = hessian.decode(utils.bytes('v1/exception/IOException'), '2.0');
-      ioe.should.be.an.Error;
-      should.ok((ioe instanceof Error) === true);
-      ioe.name.should.equal('java.io.IOException');
-      ioe.message.should.equal('this is a java IOException instance');
-      ioe.stack.should.equal('java.io.IOException: this is a java IOException instance\n    at hessian.Main.main (Main.java:1283)');
-
-      var e = hessian.decode(utils.bytes('v1/exception/UndeclaredThrowableException'), '2.0');
+      
+      var e = hessian.decode(utils.bytes('v2/exception/UndeclaredThrowableException3'), '2.0');
       e.should.be.an.Error;
       should.ok((e instanceof Error) === true);
-      e.name.should.equal('java.io.IOException');
-      e.message.should.equal('this is a java IOException instance');
-      e.stack.should.equal('java.io.IOException: this is a java IOException instance\n    at hessian.Main.main (Main.java:1283)');
-
-      var e = hessian.decode(utils.bytes('v1/exception/UndeclaredThrowableException2'), '2.0');
-      e.should.be.an.Error;
-      should.ok((e instanceof Error) === true);
-      e.name.should.equal('java.io.IOException');
-      e.message.should.equal('模拟测试异常; this is a java IOException instance');
-      e.stack.should.equal('java.io.IOException: 模拟测试异常; this is a java IOException instance\n    at hessian.Main.main (Main.java:1303)');
+      e.name.should.equal('com.taobao.hsf.exception.HSFServiceAddressNotFoundException');
+      e.message.should.equal('HSFServiceAddressNotFoundException-');
+      e.cause.stackTrace.length.should.equal(56);
     });
+
+    // it('should read hessian 1.0 exception', function () {
+    //   var ioe = hessian.decode(utils.bytes('v1/exception/IOException'), '2.0');
+    //   ioe.should.be.an.Error;
+    //   should.ok((ioe instanceof Error) === true);
+    //   ioe.name.should.equal('java.io.IOException');
+    //   ioe.message.should.equal('this is a java IOException instance');
+    //   ioe.stack.should.equal('java.io.IOException: this is a java IOException instance\n    at hessian.Main.main (Main.java:1283)');
+
+    //   var e = hessian.decode(utils.bytes('v1/exception/UndeclaredThrowableException'), '2.0');
+    //   e.should.be.an.Error;
+    //   should.ok((e instanceof Error) === true);
+    //   e.name.should.equal('java.io.IOException');
+    //   e.message.should.equal('this is a java IOException instance');
+    //   e.stack.should.equal('java.io.IOException: this is a java IOException instance\n    at hessian.Main.main (Main.java:1283)');
+
+    //   var e = hessian.decode(utils.bytes('v1/exception/UndeclaredThrowableException2'), '2.0');
+    //   e.should.be.an.Error;
+    //   should.ok((e instanceof Error) === true);
+    //   e.name.should.equal('java.io.IOException');
+    //   e.message.should.equal('模拟测试异常; this is a java IOException instance');
+    //   e.stack.should.equal('java.io.IOException: 模拟测试异常; this is a java IOException instance\n    at hessian.Main.main (Main.java:1303)');
+    // });
   });
 });
