@@ -25,7 +25,7 @@ hessian.js
 [download-url]: https://npmjs.org/package/hessian.js
 
 Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) and
-~~[2.0](http://hessian.caucho.com/doc/hessian-serialization.html)~~ (read the real java codes instead) written by pure JavaScript.
+[2.0](http://hessian.caucho.com/doc/hessian-serialization.html) (base on version [4.0.7](http://mvnrepository.com/artifact/com.caucho/hessian/4.0.7)) written by pure JavaScript.
 Support all kind of types in Java, with [high performance](benchmark/README.md).
 
 ## Install
