@@ -50,7 +50,7 @@ var complexObject = {
 };
 
 var complexObjectBuf1 = hessian.encode(complexObject, '1.0');
-var complexObjectBuf2 = hessian.encode(complexObject, '1.0');
+var complexObjectBuf2 = hessian.encode(complexObject, '2.0');
 
 var number1Buf1 = hessian.encode(1, '1.0');
 var number1Buf2 = hessian.encode(1, '2.0');

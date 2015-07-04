@@ -89,13 +89,13 @@ describe('date.test.js', function () {
       hessian.decode(utils.bytes('v2/date/now'), '2.0').should.eql(now);
     });
 
-    it('should read 1.0 format', function () {
-      hessian.decode(utils.bytes('v1/date/894621091000'), '2.0').getTime()
-        .should.equal(894621091000);
-      hessian.decode(utils.bytes('v1/date/894621060000'), '2.0').getTime()
-        .should.equal(894621060000);
-      hessian.decode(utils.bytes('v1/date/now'), '2.0').getTime()
-        .should.equal(1398280514000);
-    });
+    // it('should read 1.0 format', function () {
+    //   hessian.decode(utils.bytes('v1/date/894621091000'), '2.0').getTime()
+    //     .should.equal(894621091000);
+    //   hessian.decode(utils.bytes('v1/date/894621060000'), '2.0').getTime()
+    //     .should.equal(894621060000);
+    //   hessian.decode(utils.bytes('v1/date/now'), '2.0').getTime()
+    //     .should.equal(1398280514000);
+    // });
   });
 });

@@ -104,29 +104,29 @@ describe('double.test.js', function () {
 
   describe('v2.0', function () {
     it('should read 0.0 and 1.0', function () {
-      hessian.decode(new Buffer([0x67]), '2.0').should.equal(0.0);
-      hessian.decode(new Buffer([0x68]), '2.0').should.equal(1.0);
+      hessian.decode(new Buffer([0x5b]), '2.0').should.equal(0.0);
+      hessian.decode(new Buffer([0x5c]), '2.0').should.equal(1.0);
     });
 
     it('should read 8 bits double', function () {
-      hessian.decode(new Buffer([0x69, 0x00]), '2.0').should.equal(0.0);
-      hessian.decode(new Buffer([0x69, 0x01]), '2.0').should.equal(1.0);
-      hessian.decode(new Buffer([0x69, 0x80]), '2.0').should.equal(-128.0);
-      hessian.decode(new Buffer([0x69, 0x7f]), '2.0').should.equal(127.0);
+      hessian.decode(new Buffer([0x5d, 0x00]), '2.0').should.equal(0.0);
+      hessian.decode(new Buffer([0x5d, 0x01]), '2.0').should.equal(1.0);
+      hessian.decode(new Buffer([0x5d, 0x80]), '2.0').should.equal(-128.0);
+      hessian.decode(new Buffer([0x5d, 0x7f]), '2.0').should.equal(127.0);
     });
 
     it('should read 16 bits double', function () {
-      hessian.decode(new Buffer([0x6a, 0x00, 0x00]), '2.0').should.equal(0.0);
-      hessian.decode(new Buffer([0x6a, 0x00, 0x01]), '2.0').should.equal(1.0);
-      hessian.decode(new Buffer([0x6a, 0x00, 0x80]), '2.0').should.equal(128.0);
-      hessian.decode(new Buffer([0x6a, 0x00, 0x7f]), '2.0').should.equal(127.0);
-      hessian.decode(new Buffer([0x6a, 0x80, 0x00]), '2.0').should.equal(-32768.0);
-      hessian.decode(new Buffer([0x6a, 0x7f, 0xff]), '2.0').should.equal(32767.0);
+      hessian.decode(new Buffer([0x5e, 0x00, 0x00]), '2.0').should.equal(0.0);
+      hessian.decode(new Buffer([0x5e, 0x00, 0x01]), '2.0').should.equal(1.0);
+      hessian.decode(new Buffer([0x5e, 0x00, 0x80]), '2.0').should.equal(128.0);
+      hessian.decode(new Buffer([0x5e, 0x00, 0x7f]), '2.0').should.equal(127.0);
+      hessian.decode(new Buffer([0x5e, 0x80, 0x00]), '2.0').should.equal(-32768.0);
+      hessian.decode(new Buffer([0x5e, 0x7f, 0xff]), '2.0').should.equal(32767.0);
     });
 
     it('should read 32 bits float double', function () {
-      hessian.decode(new Buffer([0x6b, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0.0);
-      hessian.decode(new Buffer([0x6b, 0x41, 0x44, 0x00, 0x00]), '2.0').should.equal(12.25);
+      hessian.decode(new Buffer([0x5f, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0.0);
+      hessian.decode(new Buffer([0x5f, 0x00, 0x00, 0x2f, 0xda]), '2.0').should.equal(12.25);
     });
 
     it('should read normal double', function () {
@@ -134,11 +134,11 @@ describe('double.test.js', function () {
     });
 
     it('should write 0.0 and 1.0', function () {
-      hessian.encode(java.double(0), '2.0').should.eql(new Buffer([0x67]));
-      hessian.encode(java.double(0.0), '2.0').should.eql(new Buffer([0x67]));
+      hessian.encode(java.double(0), '2.0').should.eql(new Buffer([0x5b]));
+      hessian.encode(java.double(0.0), '2.0').should.eql(new Buffer([0x5b]));
 
-      hessian.encode(java.double(1), '2.0').should.eql(new Buffer([0x68]));
-      hessian.encode(java.double(1.0), '2.0').should.eql(new Buffer([0x68]));
+      hessian.encode(java.double(1), '2.0').should.eql(new Buffer([0x5c]));
+      hessian.encode(java.double(1.0), '2.0').should.eql(new Buffer([0x5c]));
     });
 
     it('should write as java impl', function () {
@@ -161,9 +161,9 @@ describe('double.test.js', function () {
       hessian.encode(java.double(32767.99999), '2.0').should.eql(utils.bytes('v2/double/32767.99999'));
 
       // float byte
-      hessian.encode(java.double(-0x800000), '2.0').should.length(5);
+      hessian.encode(java.double(-0x800000), '2.0').should.length(9);
       hessian.encode(java.double(-0x800000), '2.0').should.eql(utils.bytes('v2/double/-0x800000'));
-      hessian.encode(java.double(-0x80000000), '2.0').should.length(5);
+      hessian.encode(java.double(-0x80000000), '2.0').should.length(9);
       hessian.encode(java.double(-0x80000000), '2.0').should.eql(utils.bytes('v2/double/-0x80000000'));
       hessian.encode(java.double(-2147483649), '2.0').should.eql(utils.bytes('v2/double/-2147483649'));
       hessian.encode(java.double(-2147483648), '2.0').should.eql(utils.bytes('v2/double/-2147483648'));
