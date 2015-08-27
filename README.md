@@ -118,6 +118,25 @@ var testObject = {
 encoder.write(testObject);
 ```
 
+### Java Generic Map
+
+```js
+// java code: 
+// Map<Long, Integer> map = new HashMap<Long, Integer>();
+// map.put(123L, 123456);
+// map.put(123456L, 123);
+
+var hessian = require('hessian.js');
+var encoder = new hessian.Encoder();
+
+// using es6 Map
+var map = new Map();
+map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
+map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
+
+encoder.write(map); // or encoder.write({ '$class': 'java.util.HashMap', '$': map })
+```
+
 ## Decoder
 
 ```js
