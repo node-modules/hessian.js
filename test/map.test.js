@@ -162,6 +162,11 @@ describe('map.test.js', function () {
   });
 
   it('should write es6 Map to java.util.Map', function() {
+    if (typeof Map !== 'function') {
+      // pass if not support es6 Map
+      return;
+    }
+    
     var map = new Map();
     map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
     map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
@@ -349,6 +354,11 @@ describe('map.test.js', function () {
   });
 
   it('should write es6 Map to java.util.Map', function() {
+    if (typeof Map !== 'function') {
+      // pass if not support es6 Map
+      return;
+    }
+
     var map = new Map();
     map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
     map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
