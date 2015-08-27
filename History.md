@@ -1,4 +1,11 @@
 
+2.1.0 / 2015-08-27
+==================
+
+ * test(testcase) fix testcase
+ * chore(README) modify README
+ * feat(generic) support generic map
+
 2.0.0 / 2015-07-05
 ==================
 
