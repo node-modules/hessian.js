@@ -60,29 +60,32 @@ describe('object.test.js', function () {
     it('should decode and encode ConnectionRequest', function () {
       var javabuf = utils.bytes('v1/object/ConnectionRequest');
       var connreq = hessian.decode(javabuf, '1.0', true);
-
       var jsconnreq = {
         $class: 'hessian.ConnectionRequest',
         $: {
           ctx: {
             $class: 'hessian.ConnectionRequest$RequestContext',
             $: {
-              id: 101,
-              'this$0': null
+              id: {
+                $class: 'int',
+                $: 101
+              },
+              // 'this$0': null
             }
           }
         }
       };
 
-      jsconnreq.$.ctx.$.this$0 = jsconnreq;
-
+      // jsconnreq.$.ctx.$.this$0 = jsconnreq;
+      connreq.should.eql(jsconnreq);
       var jsbuf = hessian.encode(connreq, '1.0');
       var jsbuf2 = hessian.encode(jsconnreq, '1.0');
-      jsbuf2.should.length(javabuf.length);
-      jsbuf2.should.eql(javabuf);
+      // because of skip field this$0, the length of course not eql.
+      // jsbuf2.should.length(javabuf.length);
+      // jsbuf2.should.eql(javabuf);
 
-      jsbuf.should.length(javabuf.length);
-      jsbuf.should.eql(javabuf);
+      // jsbuf.should.length(javabuf.length);
+      // jsbuf.should.eql(javabuf);
 
       var jsbuf2Again = hessian.encode(jsconnreq, '1.0');
       jsbuf2Again.should.eql(jsbuf2);
@@ -389,7 +392,7 @@ describe('object.test.js', function () {
       var javabuf = utils.bytes('v2/object/ConnectionRequest');
       var connreq1 = hessian.decode(javabuf, '2.0');
       connreq1.should.have.keys('ctx');
-      connreq1.ctx.should.have.keys('id', 'this$0');
+      connreq1.ctx.should.have.keys('id'); // 'this$0'
       connreq1.ctx.id.should.equal(101);
 
       var connreq = hessian.decode(javabuf, '2.0', true);
@@ -400,21 +403,21 @@ describe('object.test.js', function () {
             $class: 'hessian.ConnectionRequest$RequestContext',
             $: {
               id: 101,
-              'this$0': null
+              // 'this$0': null
             }
           }
         }
       };
 
-      jsconnreq.$.ctx.$.this$0 = jsconnreq;
-
+      // jsconnreq.$.ctx.$.this$0 = jsconnreq;
+      jsconnreq.should.eql(connreq);
       var jsbuf = hessian.encode(connreq, '2.0');
       var jsbuf2 = hessian.encode(jsconnreq, '2.0');
-      jsbuf2.should.length(javabuf.length);
-      jsbuf2.should.eql(javabuf);
+      // jsbuf2.should.length(javabuf.length);
+      // jsbuf2.should.eql(javabuf);
 
-      jsbuf.should.length(javabuf.length);
-      jsbuf.should.eql(javabuf);
+      // jsbuf.should.length(javabuf.length);
+      // jsbuf.should.eql(javabuf);
     });
 
     it('should decode hessian 1.0 ConnectionRequest', function () {
