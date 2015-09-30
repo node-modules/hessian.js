@@ -8,7 +8,8 @@
     "lib/"
   ],
   "scripts": {
-    "test": "make test-all"
+    "test": "make test",
+    "test-cov": "make test-cov"
   },
   "repository": {
     "type": "git",
