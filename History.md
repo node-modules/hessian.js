@@ -1,4 +1,11 @@
 
+2.1.3 / 2015-10-01
+==================
+
+ * test: use npm scripts instead of Makefile
+ * test: add undefined test
+ * fix: array encode can be null
+
 2.1.2 / 2015-09-10
 ==================
 
