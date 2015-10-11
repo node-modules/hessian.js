@@ -161,7 +161,30 @@ describe('map.test.js', function () {
     });
   });
 
+  it('should decode successful when key is null', function () {
+    var data = new Buffer([77, 116, 0, 0, 78, 83, 0, 4, 110, 117, 108, 108, 122]);
+    var rv = hessian.decode(data);
+    rv.should.eql({null: 'null'});
+  });
+
   it('should write es6 Map to java.util.Map', function() {
+    if (typeof Map !== 'function') {
+      // pass if not support es6 Map
+      return;
+    }
+    
+    var map = new Map();
+    map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
+    map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
+    var buf = hessian.encode({ '$class': 'java.util.Map', '$': map });
+    // decode auto transfer key to string
+    hessian.decode(buf).should.eql({
+      '123': 123456,
+      '123456': 123
+    });
+  });
+
+  it('should write es6 Map to java.util.HashMap', function() {
     if (typeof Map !== 'function') {
       // pass if not support es6 Map
       return;
@@ -344,37 +367,49 @@ describe('map.test.js', function () {
       });
 
     });
+
+    it('should write es6 Map to java.util.Map', function() {
+      if (typeof Map !== 'function') {
+        // pass if not support es6 Map
+        return;
+      }
+      
+      var map = new Map();
+      map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
+      map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
+      var buf = hessian.encode({ '$class': 'java.util.Map', '$': map }, '2.0');
+      // decode auto transfer key to string
+      hessian.decode(buf, '2.0').should.eql({
+        '123': 123456,
+        '123456': 123
+      });
+    });
+
+    it('should write es6 Map to java.util.HashMap', function() {
+      if (typeof Map !== 'function') {
+        // pass if not support es6 Map
+        return;
+      }
+
+      var map = new Map();
+      map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
+      map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
+      var encoder = new hessian.EncoderV2();
+      var buf = encoder.write(map).get();
+      buf.should.eql(utils.bytes('v2/map/generic'));
+
+      encoder.reset();
+
+      buf = encoder.write({ '$class': 'java.util.HashMap', '$': map }).get();
+      buf.should.eql(utils.bytes('v2/map/generic'));
+
+      // decode auto transfer key to string
+      hessian.decode(utils.bytes('v2/map/generic'), '2.0').should.eql({
+        '123': 123456,
+        '123456': 123
+      });
+    });
     
   });
 
-  it('should decode successful when key is null', function () {
-    var data = new Buffer([77, 116, 0, 0, 78, 83, 0, 4, 110, 117, 108, 108, 122]);
-    var rv = hessian.decode(data);
-    rv.should.eql({null: 'null'});
-  });
-
-  it('should write es6 Map to java.util.Map', function() {
-    if (typeof Map !== 'function') {
-      // pass if not support es6 Map
-      return;
-    }
-
-    var map = new Map();
-    map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
-    map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
-    var encoder = new hessian.EncoderV2();
-    var buf = encoder.write(map).get();
-    buf.should.eql(utils.bytes('v2/map/generic'));
-
-    encoder.reset();
-
-    buf = encoder.write({ '$class': 'java.util.HashMap', '$': map }).get();
-    buf.should.eql(utils.bytes('v2/map/generic'));
-
-    // decode auto transfer key to string
-    hessian.decode(utils.bytes('v2/map/generic'), '2.0').should.eql({
-      '123': 123456,
-      '123456': 123
-    });
-  });
 });
