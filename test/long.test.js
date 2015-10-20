@@ -32,6 +32,7 @@ describe('long.test.js', function () {
 
   it('should read long 300', function () {
     hessian.decode(longBuffer).should.equal(300);
+    hessian.decode(longBuffer, true).should.eql({$class: 'long', $: 300});
   });
 
   it('should write long 300', function () {
@@ -53,14 +54,19 @@ describe('long.test.js', function () {
   it('should write and read equal java impl', function () {
     hessian.encode(java.long(0), '1.0').should.eql(utils.bytes('v1/long/0'));
     hessian.decode(utils.bytes('v1/long/0')).should.equal(0);
+    hessian.decode(utils.bytes('v1/long/0'), true).should.eql({$class: 'long', $: 0});
     hessian.encode(java.long(-8), '1.0').should.eql(utils.bytes('v1/long/-8'));
     hessian.decode(utils.bytes('v1/long/-8')).should.equal(-8);
+    hessian.decode(utils.bytes('v1/long/-8'), true).should.eql({$class: 'long', $: -8});
     hessian.encode(java.long(-7), '1.0').should.eql(utils.bytes('v1/long/-7'));
     hessian.decode(utils.bytes('v1/long/-7')).should.equal(-7);
+    hessian.decode(utils.bytes('v1/long/-7'), true).should.eql({$class: 'long', $: -7});
     hessian.encode(java.long(15), '1.0').should.eql(utils.bytes('v1/long/15'));
     hessian.decode(utils.bytes('v1/long/15')).should.equal(15);
+    hessian.decode(utils.bytes('v1/long/15'), true).should.eql({$class: 'long', $: 15});
     hessian.encode(java.long(14), '1.0').should.eql(utils.bytes('v1/long/14'));
     hessian.decode(utils.bytes('v1/long/14')).should.equal(14);
+    hessian.decode(utils.bytes('v1/long/14'), true).should.eql({$class: 'long', $: 14});
     hessian.encode(java.long(-9), '1.0').should.eql(utils.bytes('v1/long/-9'));
     hessian.decode(utils.bytes('v1/long/-9')).should.equal(-9);
     hessian.encode(java.long(16), '1.0').should.eql(utils.bytes('v1/long/16'));
@@ -81,6 +87,7 @@ describe('long.test.js', function () {
     hessian.decode(utils.bytes('v1/long/-2049')).should.equal(-2049);
     hessian.encode(java.long(-2147483648), '1.0').should.eql(utils.bytes('v1/long/-2147483648'));
     hessian.decode(utils.bytes('v1/long/-2147483648')).should.equal(-2147483648);
+    hessian.decode(utils.bytes('v1/long/-2147483648'), true).should.eql({$class: 'long', $: -2147483648});
     hessian.encode(java.long(-2147483647), '1.0').should.eql(utils.bytes('v1/long/-2147483647'));
     hessian.decode(utils.bytes('v1/long/-2147483647')).should.equal(-2147483647);
     hessian.encode(java.long(2147483647), '1.0').should.eql(utils.bytes('v1/long/2147483647'));
@@ -89,6 +96,7 @@ describe('long.test.js', function () {
     hessian.decode(utils.bytes('v1/long/2147483646')).should.equal(2147483646);
     hessian.encode(java.long(2147483648), '1.0').should.eql(utils.bytes('v1/long/2147483648'));
     hessian.decode(utils.bytes('v1/long/2147483648')).should.equal(2147483648);
+    hessian.decode(utils.bytes('v1/long/2147483648'), true).should.eql({$class: 'long', $: 2147483648});
   });
 
   describe('v2.0', function () {
@@ -96,29 +104,35 @@ describe('long.test.js', function () {
       hessian.decode(new Buffer([0xe0]), '2.0').should.equal(0);
       hessian.decode(new Buffer([0xd8]), '2.0').should.equal(-8);
       hessian.decode(new Buffer([0xef]), '2.0').should.equal(15);
+      hessian.decode(new Buffer([0xef]), '2.0', true).should.eql({$class: 'long', $: 15});
 
       hessian.decode(new Buffer([0xf8, 0x00]), '2.0').should.equal(0);
       hessian.decode(new Buffer([0xf0, 0x00]), '2.0').should.equal(-2048);
+      hessian.decode(new Buffer([0xf0, 0x00]), '2.0', true).should.eql({$class: 'long', $: -2048});
       hessian.decode(new Buffer([0xf7, 0x00]), '2.0').should.equal(-256);
       hessian.decode(new Buffer([0xff, 0xff]), '2.0').should.equal(2047);
 
       hessian.decode(new Buffer([0x3c, 0x00, 0x00]), '2.0').should.equal(0);
       hessian.decode(new Buffer([0x38, 0x00, 0x00]), '2.0').should.equal(-262144);
       hessian.decode(new Buffer([0x3f, 0xff, 0xff]), '2.0').should.equal(262143);
+      hessian.decode(new Buffer([0x3f, 0xff, 0xff]), '2.0', true).should.eql({$class: 'long', $: 262143});
 
       // four octet longs
       hessian.decode(new Buffer([0x59, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
       hessian.decode(new Buffer([0x59, 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
       hessian.decode(new Buffer([0x59, 0x7f, 0xff, 0xff, 0xff]), '2.0').should.equal(2147483647);
       hessian.decode(new Buffer([0x59, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(-2147483648);
+      hessian.decode(new Buffer([0x59, 0x80, 0x00, 0x00, 0x00]), '2.0', true).should.eql({$class: 'long', $: -2147483648});
 
       hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0);
       hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x2c]), '2.0').should.equal(300);
       hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xff, 0xff, 0xff]), '2.0').should.equal(2147483647);
+      hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xff, 0xff, 0xff]), '2.0', true).should.eql({$class: 'long', $: 2147483647});
     });
 
     it('should read normal long', function () {
       hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00]), '2.0').should.equal(2147483648);
+      hessian.decode(new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00]), '2.0', true).should.eql({$class: 'long', $: 2147483648});
     });
 
     it('should write compact long', function () {
@@ -353,45 +367,64 @@ describe('long.test.js', function () {
     it('should write and read equal java impl', function () {
       hessian.encode(java.long(0), '2.0').should.eql(utils.bytes('v2/long/0'));
       hessian.decode(utils.bytes('v2/long/0'), '2.0').should.equal(0);
+      hessian.decode(utils.bytes('v2/long/0'), '2.0', true).should.eql({ $: 0, $class: 'long' });
       hessian.encode(java.long(-8), '2.0').should.eql(utils.bytes('v2/long/-8'));
       hessian.decode(utils.bytes('v2/long/-8'), '2.0').should.equal(-8);
+      hessian.decode(utils.bytes('v2/long/-8'), '2.0', true).should.eql({ $: -8, $class: 'long' });
       hessian.encode(java.long(-7), '2.0').should.eql(utils.bytes('v2/long/-7'));
       hessian.decode(utils.bytes('v2/long/-7'), '2.0').should.equal(-7);
+      hessian.decode(utils.bytes('v2/long/-7'), '2.0', true).should.eql({ $: -7, $class: 'long' });
       hessian.encode(java.long(15), '2.0').should.eql(utils.bytes('v2/long/15'));
       hessian.decode(utils.bytes('v2/long/15'), '2.0').should.equal(15);
+      hessian.decode(utils.bytes('v2/long/15'), '2.0', true).should.eql({ $: 15, $class: 'long' });
       hessian.encode(java.long(14), '2.0').should.eql(utils.bytes('v2/long/14'));
       hessian.decode(utils.bytes('v2/long/14'), '2.0').should.equal(14);
+      hessian.decode(utils.bytes('v2/long/14'), '2.0', true).should.eql({ $: 14, $class: 'long' });
       hessian.encode(java.long(-9), '2.0').should.eql(utils.bytes('v2/long/-9'));
       hessian.decode(utils.bytes('v2/long/-9'), '2.0').should.equal(-9);
+      hessian.decode(utils.bytes('v2/long/-9'), '2.0', true).should.eql({ $: -9, $class: 'long' });
       hessian.encode(java.long(16), '2.0').should.eql(utils.bytes('v2/long/16'));
       hessian.decode(utils.bytes('v2/long/16'), '2.0').should.equal(16);
+      hessian.decode(utils.bytes('v2/long/16'), '2.0', true).should.eql({ $: 16, $class: 'long' });
       hessian.encode(java.long(255), '2.0').should.eql(utils.bytes('v2/long/255'));
       hessian.encode(java.long(Long.fromNumber(255)), '2.0').should.eql(utils.bytes('v2/long/255'));
       hessian.encode(Long.fromNumber(255), '2.0').should.eql(utils.bytes('v2/long/255'));
 
       hessian.decode(utils.bytes('v2/long/255'), '2.0').should.equal(255);
+      hessian.decode(utils.bytes('v2/long/255'), '2.0', true).should.eql({ $: 255, $class: 'long' });
       hessian.encode(java.long(-2048), '2.0').should.eql(utils.bytes('v2/long/-2048'));
       hessian.decode(utils.bytes('v2/long/-2048'), '2.0').should.equal(-2048);
+      hessian.decode(utils.bytes('v2/long/-2048'), '2.0', true).should.eql({ $: -2048, $class: 'long' });
       hessian.encode(java.long(2047), '2.0').should.eql(utils.bytes('v2/long/2047'));
       hessian.decode(utils.bytes('v2/long/2047'), '2.0').should.equal(2047);
+      hessian.decode(utils.bytes('v2/long/2047'), '2.0', true).should.eql({ $: 2047, $class: 'long' });
       hessian.encode(java.long(262143), '2.0').should.eql(utils.bytes('v2/long/262143'));
       hessian.decode(utils.bytes('v2/long/262143'), '2.0').should.equal(262143);
+      hessian.decode(utils.bytes('v2/long/262143'), '2.0', true).should.eql({ $: 262143, $class: 'long' });
       hessian.encode(java.long(-262144), '2.0').should.eql(utils.bytes('v2/long/-262144'));
       hessian.decode(utils.bytes('v2/long/-262144'), '2.0').should.equal(-262144);
+      hessian.decode(utils.bytes('v2/long/-262144'), '2.0', true).should.eql({ $: -262144, $class: 'long' });
       hessian.encode(java.long(2048), '2.0').should.eql(utils.bytes('v2/long/2048'));
       hessian.decode(utils.bytes('v2/long/2048'), '2.0').should.equal(2048);
+      hessian.decode(utils.bytes('v2/long/2048'), '2.0', true).should.eql({ $: 2048, $class: 'long' });
       hessian.encode(java.long(-2049), '2.0').should.eql(utils.bytes('v2/long/-2049'));
       hessian.decode(utils.bytes('v2/long/-2049'), '2.0').should.equal(-2049);
+      hessian.decode(utils.bytes('v2/long/-2049'), '2.0', true).should.eql({ $: -2049, $class: 'long' });
       hessian.encode(java.long(-2147483648), '2.0').should.eql(utils.bytes('v2/long/-2147483648'));
       hessian.decode(utils.bytes('v2/long/-2147483648'), '2.0').should.equal(-2147483648);
+      hessian.decode(utils.bytes('v2/long/-2147483648'), '2.0', true).should.eql({ $: -2147483648, $class: 'long' });
       hessian.encode(java.long(-2147483647), '2.0').should.eql(utils.bytes('v2/long/-2147483647'));
       hessian.decode(utils.bytes('v2/long/-2147483647'), '2.0').should.equal(-2147483647);
+      hessian.decode(utils.bytes('v2/long/-2147483647'), '2.0', true).should.eql({ $: -2147483647, $class: 'long' });
       hessian.encode(java.long(2147483647), '2.0').should.eql(utils.bytes('v2/long/2147483647'));
       hessian.decode(utils.bytes('v2/long/2147483647'), '2.0').should.equal(2147483647);
+      hessian.decode(utils.bytes('v2/long/2147483647'), '2.0', true).should.eql({ $: 2147483647, $class: 'long' });
       hessian.encode(java.long(2147483646), '2.0').should.eql(utils.bytes('v2/long/2147483646'));
       hessian.decode(utils.bytes('v2/long/2147483646'), '2.0').should.equal(2147483646);
+      hessian.decode(utils.bytes('v2/long/2147483646'), '2.0', true).should.eql({ $: 2147483646, $class: 'long' });
       hessian.encode(java.long(2147483648), '2.0').should.eql(utils.bytes('v2/long/2147483648'));
       hessian.decode(utils.bytes('v2/long/2147483648'), '2.0').should.equal(2147483648);
+      hessian.decode(utils.bytes('v2/long/2147483648'), '2.0', true).should.eql({ $: 2147483648, $class: 'long' });
     });
 
     it('should read 1.0 bin as well', function () {

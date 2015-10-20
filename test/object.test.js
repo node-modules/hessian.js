@@ -813,7 +813,10 @@ describe('object.test.js', function () {
         a0.should.eql({
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
-            value: 0
+            value: {
+              $class: 'long',
+              $: 0
+            }
           }
         });
         hessian.encode({
@@ -833,7 +836,10 @@ describe('object.test.js', function () {
         a1.should.eql({
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
-            value: 1
+            value: {
+              $class: 'long',
+              $: 1
+            }
           }
         });
         hessian.encode({
