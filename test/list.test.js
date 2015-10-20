@@ -172,7 +172,7 @@ describe('list.test.js', function () {
       hessian.encode([], '2.0').should.eql(utils.bytes('v2/list/untyped_[]'));
 
       hessian.decode(utils.bytes('v2/list/untyped_list'), '2.0').should.eql([1, 2, 'foo']);
-      hessian.decode(utils.bytes('v2/list/untyped_list'), '2.0', true).should.eql([1, 2, 'foo']);
+      hessian.decode(utils.bytes('v2/list/untyped_list'), '2.0', true).should.eql([{$: 1, $class: 'int'}, {$: 2, $class: 'int'}, 'foo']);
       hessian.decode(utils.bytes('v2/list/untyped_list_8'), '2.0').should.eql(['1', '2', '3', '4', '5', '6', '7', '8']);
       hessian.decode(utils.bytes('v2/list/untyped_list_8'), '2.0', true).should.eql(['1', '2', '3', '4', '5', '6', '7', '8']);
       hessian.decode(utils.bytes('v2/list/untyped_[]'), '2.0').should.eql([]);
@@ -238,7 +238,23 @@ describe('list.test.js', function () {
 
       hessian.decode(utils.bytes('v2/list/[int'), '2.0').should.eql([1, 2, 3]);
       // encode again should use type cache
-      hessian.decode(utils.bytes('v2/list/[int'), '2.0', true).should.eql(list);
+      hessian.decode(utils.bytes('v2/list/[int'), '2.0', true).should.eql({
+        $class: '[int',
+        $: [
+          {
+            $class: 'int',
+            $: 1
+          },
+          {
+            $class: 'int',
+            $: 2
+          },
+          {
+            $class: 'int',
+            $: 3
+          }
+        ]
+      });
 
       var strs = {
         $class: '[string',

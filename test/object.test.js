@@ -402,7 +402,10 @@ describe('object.test.js', function () {
           ctx: {
             $class: 'hessian.ConnectionRequest$RequestContext',
             $: {
-              id: 101,
+              id: {
+                $class: 'int',
+                $: 101
+              },
               // 'this$0': null
             }
           }
@@ -551,7 +554,16 @@ describe('object.test.js', function () {
       var buf = hessian.encode(obj, '2.0');
       buf[0].should.equal(0x43);
       hessian.decode(buf, '2.0').should.eql(obj.$);
-      hessian.decode(buf, '2.0', true).should.eql(obj);
+      hessian.decode(buf, '2.0', true).should.eql({
+        $class: 'hessian.test.demo.Car',
+        $: {
+          a: {
+            $class: 'int',
+            $: 1,
+          },
+          b: 'map',
+        },
+      });
     });
 
     it('should read one car list', function () {
@@ -574,7 +586,11 @@ describe('object.test.js', function () {
             b: 'b',
             model: 'model 1',
             color: 'aquamarine',
-            mileage: 65536 }
+            mileage: {
+              $class: 'int',
+              $: 65536,
+            },
+          }
         }
       ]);
 
@@ -607,7 +623,11 @@ describe('object.test.js', function () {
             b: 'b',
             model: 'model 1',
             color: 'aquamarine',
-            mileage: 65536 }
+            mileage: {
+              $class: 'int',
+              $: 65536,
+            },
+          }
         },
         {
           $class: 'hessian.demo.Car',
@@ -617,7 +637,11 @@ describe('object.test.js', function () {
             b: 'b',
             model: 'model 2',
             color: 'aquamarine',
-            mileage: 65536 }
+            mileage: {
+              $class: 'int',
+              $: 65536,
+            },
+          }
         }
       ]);
 
@@ -661,7 +685,12 @@ describe('object.test.js', function () {
              b: 'b',
              model: 'model 1',
              color: 'aquamarine',
-             mileage: 65536 } },
+             mileage: {
+              $class: 'int',
+              $: 65536,
+             },
+            }
+        },
         { '$class': 'hessian.demo.Car',
           '$':
            { a: 'a',
@@ -669,7 +698,12 @@ describe('object.test.js', function () {
              b: 'b',
              model: 'model 2',
              color: 'aquamarine',
-             mileage: 65536 } },
+             mileage: {
+              $class: 'int',
+              $: 65536,
+            },
+          }
+        },
         { '$class': 'hessian.demo.Car',
           '$':
            { a: 'a',
@@ -677,7 +711,12 @@ describe('object.test.js', function () {
              b: 'b',
              model: 'model 3',
              color: 'aquamarine',
-             mileage: 65536 } }
+             mileage: {
+              $class: 'int',
+              $: 65536,
+             },
+           }
+        }
       ]);
 
       hessian.encode(cars, '2.0').should.eql(utils.bytes('v2/map/car_list'));
