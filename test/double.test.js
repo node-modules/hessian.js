@@ -105,7 +105,9 @@ describe('double.test.js', function () {
   describe('v2.0', function () {
     it('should read 0.0 and 1.0', function () {
       hessian.decode(new Buffer([0x5b]), '2.0').should.equal(0.0);
+      hessian.decode(new Buffer([0x5b]), '2.0', true).should.eql({$class: 'double', $: 0.0});
       hessian.decode(new Buffer([0x5c]), '2.0').should.equal(1.0);
+      hessian.decode(new Buffer([0x5c]), '2.0', true).should.eql({$class: 'double', $: 1.0});
     });
 
     it('should read 8 bits double', function () {
@@ -113,6 +115,7 @@ describe('double.test.js', function () {
       hessian.decode(new Buffer([0x5d, 0x01]), '2.0').should.equal(1.0);
       hessian.decode(new Buffer([0x5d, 0x80]), '2.0').should.equal(-128.0);
       hessian.decode(new Buffer([0x5d, 0x7f]), '2.0').should.equal(127.0);
+      hessian.decode(new Buffer([0x5d, 0x7f]), '2.0', true).should.eql({$class: 'double', $: 127.0});
     });
 
     it('should read 16 bits double', function () {
@@ -121,16 +124,20 @@ describe('double.test.js', function () {
       hessian.decode(new Buffer([0x5e, 0x00, 0x80]), '2.0').should.equal(128.0);
       hessian.decode(new Buffer([0x5e, 0x00, 0x7f]), '2.0').should.equal(127.0);
       hessian.decode(new Buffer([0x5e, 0x80, 0x00]), '2.0').should.equal(-32768.0);
+      hessian.decode(new Buffer([0x5e, 0x80, 0x00]), '2.0', true).should.eql({$class: 'double', $: -32768.0});
       hessian.decode(new Buffer([0x5e, 0x7f, 0xff]), '2.0').should.equal(32767.0);
     });
 
     it('should read 32 bits float double', function () {
       hessian.decode(new Buffer([0x5f, 0x00, 0x00, 0x00, 0x00]), '2.0').should.equal(0.0);
+      hessian.decode(new Buffer([0x5f, 0x00, 0x00, 0x00, 0x00]), '2.0', true).should.eql({$class: 'double', $: 0.0});
       hessian.decode(new Buffer([0x5f, 0x00, 0x00, 0x2f, 0xda]), '2.0').should.equal(12.25);
+      hessian.decode(new Buffer([0x5f, 0x00, 0x00, 0x2f, 0xda]), '2.0', true).should.eql({$class: 'double', $: 12.25});
     });
 
     it('should read normal double', function () {
       hessian.decode(new Buffer([0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0]), '2.0').should.equal(10.0);
+      hessian.decode(new Buffer([0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0]), '2.0', true).should.eql({$class: 'double', $: 10.0});
     });
 
     it('should write 0.0 and 1.0', function () {
@@ -183,6 +190,7 @@ describe('double.test.js', function () {
       hessian.decode(utils.bytes('v2/double/10.1'), '2.0').should.equal(10.1);
       hessian.decode(utils.bytes('v2/double/-128'), '2.0').should.equal(-128);
       hessian.decode(utils.bytes('v2/double/-127.9999'), '2.0').should.equal(-127.9999);
+      hessian.decode(utils.bytes('v2/double/-127.9999'), '2.0', true).should.eql({$class: 'double', $: -127.9999});
       hessian.decode(utils.bytes('v2/double/127'), '2.0').should.equal(127);
       hessian.decode(utils.bytes('v2/double/126.9989'), '2.0').should.equal(126.9989);
       hessian.decode(utils.bytes('v2/double/-32768'), '2.0').should.equal(-32768);
@@ -203,6 +211,7 @@ describe('double.test.js', function () {
       hessian.decode(utils.bytes('v2/double/2147483647'), '2.0').should.equal(2147483647);
       hessian.decode(utils.bytes('v2/double/2147483646'), '2.0').should.equal(2147483646);
       hessian.decode(utils.bytes('v2/double/2147483646.456'), '2.0').should.equal(2147483646.456);
+      hessian.decode(utils.bytes('v2/double/2147483646.456'), '2.0', true).should.eql({$class: 'double', $: 2147483646.456});
     });
 
     it('should read java hessian 1.0 bin format', function () {
@@ -229,6 +238,7 @@ describe('double.test.js', function () {
       hessian.decode(utils.bytes('v1/double/2147483647'), '2.0').should.equal(2147483647);
       hessian.decode(utils.bytes('v1/double/2147483646'), '2.0').should.equal(2147483646);
       hessian.decode(utils.bytes('v1/double/2147483646.456'), '2.0').should.equal(2147483646.456);
+      hessian.decode(utils.bytes('v1/double/2147483646.456'), '2.0', true).should.eql({$class: 'double', $: 2147483646.456});
     });
   });
 });
