@@ -28,14 +28,20 @@ describe('date.test.js', function () {
     d.getTime().should.equal(894621091000);
     d.toUTCString().should.equal('Fri, 08 May 1998 09:51:31 GMT');
     d.toISOString().should.equal('1998-05-08T09:51:31.000Z');
+    hessian.decode(dateBuffer, true).should.eql({
+      $class: 'java.util.Date',
+      $: new Date(894621091000)
+    });
   });
 
   it('should write date 2:51:31 May 8, 1998', function () {
     hessian.encode(new Date(894621091000)).should.eql(dateBuffer);
+    hessian.encode({$class: 'java.util.Date', $:new Date(894621091000)}).should.eql(dateBuffer);
   });
 
   it('should write date 0 and read', function () {
     hessian.encode(new Date(0)).should.eql(new Buffer(['d'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0]));
+    hessian.encode({$class: 'java.util.Date', $: new Date(0)}).should.eql(new Buffer(['d'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0]));
   });
 
   it('should read date 09:51:31 May 8, 1998 UTC', function () {
@@ -45,6 +51,8 @@ describe('date.test.js', function () {
     d.getTime().should.equal(894621091000);
     d.toUTCString().should.equal('Fri, 08 May 1998 09:51:31 GMT');
     d.toISOString().should.equal('1998-05-08T09:51:31.000Z');
+
+    hessian.decode(utils.bytes('v1/date/894621091000'), '1.0', true).should.eql({$class: 'java.util.Date', $: new Date(894621091000)});
   });
 
   it('should read date 09:51:00 May 8, 1998 UTC', function () {
@@ -54,13 +62,17 @@ describe('date.test.js', function () {
     d.getTime().should.equal(894621060000);
     d.toUTCString().should.equal('Fri, 08 May 1998 09:51:00 GMT');
     d.toISOString().should.equal('1998-05-08T09:51:00.000Z');
+
+    hessian.decode(utils.bytes('v1/date/894621060000'), '1.0', true).should.eql({$class: 'java.util.Date', $: new Date(894621060000)});
   });
 
   it('should write date', function () {
     var now = new Date(1398280514000);
     hessian.encode(now, '1.0').should.eql(utils.bytes('v1/date/now'));
+    hessian.encode({$class: 'java.util.Date', $: now}, '1.0').should.eql(utils.bytes('v1/date/now'));
     // read it
     hessian.decode(utils.bytes('v1/date/now'), '1.0').should.eql(now);
+    hessian.decode(utils.bytes('v1/date/now'), '1.0', true).should.eql({$class: 'java.util.Date', $: now});
   });
 
   describe('hessian 2.0', function () {
@@ -71,6 +83,8 @@ describe('date.test.js', function () {
       d.getTime().should.equal(894621091000);
       d.toUTCString().should.equal('Fri, 08 May 1998 09:51:31 GMT');
       d.toISOString().should.equal('1998-05-08T09:51:31.000Z');
+
+      hessian.decode(utils.bytes('v2/date/894621091000'), '2.0', true).should.eql({$class: 'java.util.Date', $: new Date(894621091000)});
     });
 
     it('should read Compact: date in minutes, 09:51:00 May 8, 1998 UTC', function () {
@@ -80,13 +94,17 @@ describe('date.test.js', function () {
       d.getTime().should.equal(894621060000);
       d.toUTCString().should.equal('Fri, 08 May 1998 09:51:00 GMT');
       d.toISOString().should.equal('1998-05-08T09:51:00.000Z');
+
+      hessian.decode(utils.bytes('v2/date/894621060000'), '2.0', true).should.eql({$class: 'java.util.Date', $: new Date(894621060000)});
     });
 
     it('should write and read date', function () {
       var now = new Date(1398280514000);
       hessian.encode(now, '2.0').should.eql(utils.bytes('v2/date/now'));
+      hessian.encode({$class: 'java.util.Date', $: now}, '2.0').should.eql(utils.bytes('v2/date/now'));
       // read it
       hessian.decode(utils.bytes('v2/date/now'), '2.0').should.eql(now);
+      hessian.decode(utils.bytes('v2/date/now'), '2.0', true).should.eql({$class: 'java.util.Date', $: now});
     });
 
     // it('should read 1.0 format', function () {
