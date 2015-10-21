@@ -516,7 +516,10 @@ describe('object.test.js', function () {
       hessian.decode(utils.bytes('v2/enum/green'), '2.0', true).should.eql({
         $class: 'hessian.Main$Color',
         $: {
-          name: 'GREEN'
+          name: {
+            $class: 'java.lang.String',
+            $: 'GREEN',
+          },
         }
       });
 
@@ -531,7 +534,10 @@ describe('object.test.js', function () {
       hessian.decode(utils.bytes('v2/enum/red'), '2.0', true).should.eql({
         $class: 'hessian.Main$Color',
         $: {
-          name: 'RED'
+          name: {
+            $class: 'java.lang.String',
+            $: 'RED',
+          },
         }
       });
 
@@ -540,9 +546,9 @@ describe('object.test.js', function () {
       );
 
       hessian.decode(utils.bytes('v2/enum/lists'), '2.0', true).should.eql([
-        { '$class': 'hessian.Main$Color', '$': { name: 'BLUE' } },
-        { '$class': 'hessian.Main$Color', '$': { name: 'RED' } },
-        { '$class': 'hessian.Main$Color', '$': { name: 'GREEN' } }
+        { '$class': 'hessian.Main$Color', '$': {name: {$class: 'java.lang.String', $: 'BLUE'}} },
+        { '$class': 'hessian.Main$Color', '$': {name: {$class: 'java.lang.String', $: 'RED'}} },
+        { '$class': 'hessian.Main$Color', '$': {name: {$class: 'java.lang.String', $: 'GREEN'}} }
       ]);
     });
 
@@ -561,7 +567,10 @@ describe('object.test.js', function () {
             $class: 'int',
             $: 1,
           },
-          b: 'map',
+          b: {
+            $class: 'java.lang.String',
+            $: 'map',
+          }
         },
       });
     });
@@ -581,11 +590,11 @@ describe('object.test.js', function () {
         {
           $class: 'hessian.demo.Car',
           $: {
-            a: 'a',
-            c: 'c',
-            b: 'b',
-            model: 'model 1',
-            color: 'aquamarine',
+            a: {$class: 'java.lang.String', $: 'a'},
+            c: {$class: 'java.lang.String', $: 'c'},
+            b: {$class: 'java.lang.String', $: 'b'},
+            model: {$class: 'java.lang.String', $: 'model 1'},
+            color: {$class: 'java.lang.String', $: 'aquamarine'},
             mileage: {
               $class: 'int',
               $: 65536,
@@ -618,11 +627,11 @@ describe('object.test.js', function () {
         {
           $class: 'hessian.demo.Car',
           $: {
-            a: 'a',
-            c: 'c',
-            b: 'b',
-            model: 'model 1',
-            color: 'aquamarine',
+            a: {$class: 'java.lang.String', $: 'a'},
+            c: {$class: 'java.lang.String', $: 'c'},
+            b: {$class: 'java.lang.String', $: 'b'},
+            model: {$class: 'java.lang.String', $: 'model 1'},
+            color: {$class: 'java.lang.String', $: 'aquamarine'},
             mileage: {
               $class: 'int',
               $: 65536,
@@ -632,11 +641,11 @@ describe('object.test.js', function () {
         {
           $class: 'hessian.demo.Car',
           $: {
-            a: 'a',
-            c: 'c',
-            b: 'b',
-            model: 'model 2',
-            color: 'aquamarine',
+            a: {$class: 'java.lang.String', $: 'a'},
+            c: {$class: 'java.lang.String', $: 'c'},
+            b: {$class: 'java.lang.String', $: 'b'},
+            model: {$class: 'java.lang.String', $: 'model 2'},
+            color: {$class: 'java.lang.String', $: 'aquamarine'},
             mileage: {
               $class: 'int',
               $: 65536,
@@ -680,11 +689,12 @@ describe('object.test.js', function () {
       cars.should.eql([
         { '$class': 'hessian.demo.Car',
           '$':
-           { a: 'a',
-             c: 'c',
-             b: 'b',
-             model: 'model 1',
-             color: 'aquamarine',
+           { 
+             a: {$class: 'java.lang.String', $: 'a'},
+             c: {$class: 'java.lang.String', $: 'c'},
+             b: {$class: 'java.lang.String', $: 'b'},
+             model: {$class: 'java.lang.String', $: 'model 1'},
+             color: {$class: 'java.lang.String', $: 'aquamarine'},
              mileage: {
               $class: 'int',
               $: 65536,
@@ -693,11 +703,12 @@ describe('object.test.js', function () {
         },
         { '$class': 'hessian.demo.Car',
           '$':
-           { a: 'a',
-             c: 'c',
-             b: 'b',
-             model: 'model 2',
-             color: 'aquamarine',
+           { 
+             a: {$class: 'java.lang.String', $: 'a'},
+             c: {$class: 'java.lang.String', $: 'c'},
+             b: {$class: 'java.lang.String', $: 'b'},
+             model: {$class: 'java.lang.String', $: 'model 2'},
+             color: {$class: 'java.lang.String', $: 'aquamarine'},
              mileage: {
               $class: 'int',
               $: 65536,
@@ -706,11 +717,12 @@ describe('object.test.js', function () {
         },
         { '$class': 'hessian.demo.Car',
           '$':
-           { a: 'a',
-             c: 'c',
-             b: 'b',
-             model: 'model 3',
-             color: 'aquamarine',
+           { 
+             a: {$class: 'java.lang.String', $: 'a'},
+             c: {$class: 'java.lang.String', $: 'c'},
+             b: {$class: 'java.lang.String', $: 'b'},
+             model: {$class: 'java.lang.String', $: 'model 3'},
+             color: {$class: 'java.lang.String', $: 'aquamarine'},
              mileage: {
               $class: 'int',
               $: 65536,
