@@ -161,7 +161,53 @@ describe('map.test.js', function () {
     });
   });
 
+  it('should write es6 Map to java.util.HashMap', function() {
+    if (typeof Map !== 'function') {
+      // pass if not support es6 Map
+      return;
+    }
+    
+    var map = new Map();
+    map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
+    map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
+    var buf = hessian.encode(map);
+    buf.should.eql(utils.bytes('v1/map/generic'));
+
+    buf = hessian.encode({ '$class': 'java.util.HashMap', '$': map });
+    buf.should.eql(utils.bytes('v1/map/generic'));
+
+    // decode auto transfer key to string
+    hessian.decode(utils.bytes('v1/map/generic'), '1.0').should.eql({
+      '123': 123456,
+      '123456': 123
+    });
+  });
+
   describe('v2.0', function () {
+    it('should write es6 Map to java.util.Map', function() {
+      if (typeof Map !== 'function') {
+        // pass if not support es6 Map
+        return;
+      }
+      var generic = new Buffer('48f87bd5e2403de240c87b7a', 'hex');
+      var map = new Map();
+      map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
+      map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
+      var encoder = new hessian.EncoderV2();
+      var buf = encoder.write(map).get();
+      buf.should.eql(generic);
+
+      encoder.reset();
+
+      buf = encoder.write({ '$class': 'java.util.HashMap', '$': map }).get();
+      buf.should.eql(generic);
+
+      // decode auto transfer key to string
+      hessian.decode(generic, '2.0').should.eql({
+        '123': 123456,
+        '123456': 123
+      });
+    });
     // map = new HashMap();
     // map.put(new Integer(1), "fee");
     // map.put(new Integer(16), "fie");
@@ -232,12 +278,14 @@ describe('map.test.js', function () {
 
     it('should write js object to no type hash map', function () {
       var encoder = new hessian.EncoderV2();
+      var fooEmpty = new Buffer('4803666f6f007a', 'hex');
       var buf = encoder.write({ foo: '' }).get();
-      buf.should.eql(utils.bytes('v2/map/foo_empty'));
-      hessian.decode(utils.bytes('v2/map/foo_empty'), '2.0').should.eql({
+      buf.should.eql(fooEmpty);
+      hessian.decode(fooEmpty, '2.0').should.eql({
         foo: ''
       });
 
+      var fooBar = new Buffer('4803313233c9c803666f6f03626172047a65726f9005e4b8ade696876b657909e4b8ade69687e59388e5938876616c75657a', 'hex');
       encoder = new hessian.EncoderV2();
       buf = encoder.write({
         foo: 'bar',
@@ -245,10 +293,10 @@ describe('map.test.js', function () {
         '123': 456,
         zero: 0,
       }).get();
-      buf.should.eql(utils.bytes('v2/map/foo_bar'));
+      buf.should.eql(fooBar);
 
       // read it
-      hessian.decode(utils.bytes('v2/map/foo_bar'), '2.0').should.eql({
+      hessian.decode(fooBar, '2.0').should.eql({
         foo: 'bar',
         '中文key': '中文哈哈value',
         '123': 456,
