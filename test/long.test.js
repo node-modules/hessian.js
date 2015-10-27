@@ -91,6 +91,23 @@ describe('long.test.js', function () {
     hessian.decode(utils.bytes('v1/long/2147483648')).should.equal(2147483648);
   });
 
+  it('should decode with type', function () {
+    hessian.decode(utils.bytes('v1/long/-7'), true).should.eql({
+      $class: 'long',
+      $: -7,
+    });
+
+    hessian.decode(utils.bytes('v1/long/262143'), true).should.eql({
+      $class: 'long',
+      $: 262143,
+    });
+
+    hessian.decode(utils.bytes('v1/long/2147483648'), true).should.eql({
+      $class: 'long',
+      $: 2147483648,
+    });
+  });
+
   describe('v2.0', function () {
     it('should read compact long', function () {
       hessian.decode(new Buffer([0xe0]), '2.0').should.equal(0);
@@ -295,4 +312,22 @@ describe('long.test.js', function () {
       hessian.decode(utils.bytes('v1/long/2147483648'), '2.0').should.equal(2147483648);
     });
   });
+
+  it('should decode with type', function () {
+    hessian.decode(new Buffer([0x38, 0x00, 0x00]), '2.0', true).should.eql({
+      $class: 'long',
+      $: -262144,
+    });
+
+    hessian.decode(utils.bytes('v2/long/-2048'), '2.0', true).should.eql({
+      $class: 'long',
+      $: -2048,
+    });
+
+    hessian.decode(utils.bytes('v2/long/2147483646'), '2.0', true).should.eql({
+      $class: 'long',
+      $: 2147483646,
+    });
+  });
+
 });
