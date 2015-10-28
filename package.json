@@ -43,5 +43,8 @@
     "long": "~2.2.3",
     "mocha": "*",
     "should": "~5.2.0"
+  },
+  "publishConfig": {
+    "tag": "release-1"
   }
 }
