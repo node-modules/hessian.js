@@ -19,6 +19,8 @@ var hessian = require('../');
 var utils = require('./utils');
 
 describe('string.test.js', function () {
+  this.timeout(0);
+  
   var helloBuffer = Buffer.concat([new Buffer(['S'.charCodeAt(0), 0x00, 0x05]),
     new Buffer('hello')]);
 
