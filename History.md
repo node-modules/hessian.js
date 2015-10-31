@@ -1,4 +1,14 @@
 
+1.1.0 / 2015-10-31
+==================
+
+ * test: disable timeout of mocha in string.test because large file processing in node4 takes too long
+ * chore: update .travis.yml
+ * feat: decode map with type
+ * feat: decode double with type
+ * feat: decode long with type
+ * chore: add publish tag
+
 1.0.5 / 2015-10-28
 ==================
 
