@@ -189,7 +189,7 @@ describe('map.test.js', function () {
         // pass if not support es6 Map
         return;
       }
-      var generic = new Buffer('48f87bd5e2403de240c87b7a', 'hex');
+      var generic = new Buffer('4df87bd5e2403de240c87b7a', 'hex');
       var map = new Map();
       map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
       map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
@@ -278,14 +278,14 @@ describe('map.test.js', function () {
 
     it('should write js object to no type hash map', function () {
       var encoder = new hessian.EncoderV2();
-      var fooEmpty = new Buffer('4803666f6f007a', 'hex');
+      var fooEmpty = new Buffer('4d03666f6f007a', 'hex');
       var buf = encoder.write({ foo: '' }).get();
       buf.should.eql(fooEmpty);
       hessian.decode(fooEmpty, '2.0').should.eql({
         foo: ''
       });
 
-      var fooBar = new Buffer('4803313233c9c803666f6f03626172047a65726f9005e4b8ade696876b657909e4b8ade69687e59388e5938876616c75657a', 'hex');
+      var fooBar = new Buffer('4d03313233c9c803666f6f03626172047a65726f9005e4b8ade696876b657909e4b8ade69687e59388e5938876616c75657a', 'hex');
       encoder = new hessian.EncoderV2();
       buf = encoder.write({
         foo: 'bar',
