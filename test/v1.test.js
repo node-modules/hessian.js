@@ -110,7 +110,8 @@ describe('hessian v1', function () {
         [-1, '<Buffer 4c ff ff ff ff ff ff ff ff>'],
         [0, '<Buffer 4c 00 00 00 00 00 00 00 00>'],
         [10000, '<Buffer 4c 00 00 00 00 00 00 27 10>'],
-        [9007199254740992, '<Buffer 4c 00 20 00 00 00 00 00 00>'],
+        [9007199254740991, '<Buffer 4c 00 1f ff ff ff ff ff ff>'],
+        ['9007199254740992', '<Buffer 4c 00 20 00 00 00 00 00 00>'],
         ['9007199254740993', '<Buffer 4c 00 20 00 00 00 00 00 01>'],
         ['9223372036854775807', '<Buffer 4c 7f ff ff ff ff ff ff ff>'],
       ];
