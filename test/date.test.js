@@ -89,6 +89,13 @@ describe('date.test.js', function () {
       hessian.decode(utils.bytes('v2/date/now'), '2.0').should.eql(now);
     });
 
+    it('should write and read Wed Jan 04 1950 00:00:00 GMT+0800 (CST)', function () {
+      var date = new Date('Wed Jan 04 1950 00:00:00 GMT+0800 (CST)');
+      var bin = new Buffer('4bff5f8c60', 'hex');
+      hessian.encode(date, '2.0').should.eql(bin);
+      hessian.decode(bin, '2.0').should.eql(date);
+    });
+
     // it('should read 1.0 format', function () {
     //   hessian.decode(utils.bytes('v1/date/894621091000'), '2.0').getTime()
     //     .should.equal(894621091000);
