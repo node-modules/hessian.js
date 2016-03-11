@@ -25,7 +25,7 @@ Support all kind of types in Java, with [high performance](benchmark/README.md).
 ## Install
 
 ```bash
-$ npm install hessian.js --save
+$ npm install hessian.js
 ```
 
 ## Support Types

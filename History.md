@@ -1,4 +1,11 @@
 
+2.1.6 / 2016-03-10
+==================
+
+  * lint: remove deprecated rule "globastrict", replace with rule "strict:global"
+  * fix: donnot use the api of module long introduced in new version, module byte depends on the old version.
+  * fix: output Number.MAX_SAFE_INTEGER as string rather than number. fix #56
+
 2.1.5 / 2016-02-03
 ==================
 

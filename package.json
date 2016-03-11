@@ -1,6 +1,6 @@
 {
   "name": "hessian.js",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Hessian Serialization written by pure JavaScript, support all kind of types in Java.",
   "main": "index.js",
   "files": [
@@ -9,8 +9,9 @@
   ],
   "scripts": {
     "test": "mocha -R spec -t 15000 -r should test/*.test.js",
-    "test-cov": "istanbul cover node_modules/.bin/_mocha -- -t 15000 -r should test/*.test.js",
+    "test-cov": "istanbul cover _mocha -- -t 15000 -r should test/*.test.js",
     "lint": "jshint .",
+    "ci": "npm run lint && npm run test-cov",
     "autod": "autod -w --prefix '~' -e benchmark",
     "benchmark": "node benchmark/encode.js && node benchmark/decode.js"
   },
