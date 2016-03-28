@@ -1,6 +1,6 @@
 TESTS = test/*.test.js
 REPORTER = spec
-TIMEOUT = 5000
+TIMEOUT = 10000
 MOCHA_OPTS =
 
 install:
@@ -22,17 +22,6 @@ test-cov cov: install
 		./node_modules/.bin/_mocha \
 		-- \
 		--reporter $(REPORTER) \
-		--timeout $(TIMEOUT) \
-		$(MOCHA_OPTS) \
-		$(TESTS)
-
-test-travis: install
-	@NODE_ENV=test node \
-		node_modules/.bin/istanbul cover --preserve-comments \
-		./node_modules/.bin/_mocha \
-		--report lcovonly \
-		-- \
-		--reporter dot \
 		--timeout $(TIMEOUT) \
 		$(MOCHA_OPTS) \
 		$(TESTS)
