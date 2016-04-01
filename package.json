@@ -45,7 +45,7 @@
     "beautify-benchmark": "*",
     "benchmark": "*",
     "istanbul": "*",
-    "js-to-java": "~2.0.6",
+    "js-to-java": "~2.3.5",
     "jshint": "*",
     "mocha": "*",
     "should": "~5.2.0"
