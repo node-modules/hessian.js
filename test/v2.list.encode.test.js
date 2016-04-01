@@ -201,8 +201,8 @@ describe('hessian v2', function () {
       }
     };
 
-    const bytes = hessian.encode(arg, '2.0');
-    const rs = hessian.decode(bytes, '2.0');
+    var bytes = hessian.encode(arg, '2.0');
+    var rs = hessian.decode(bytes, '2.0');
     java.revert(arg).should.eql(rs);
 
   });
