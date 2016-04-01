@@ -1,4 +1,11 @@
 
+2.1.7 / 2016-04-01
+==================
+
+  * fix: remove es6
+  * chore: add examples for test
+  * fix: v2 list encode
+
 2.1.6 / 2016-03-10
 ==================
 
