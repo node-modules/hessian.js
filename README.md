@@ -25,13 +25,13 @@ hessian.js
 [download-url]: https://npmjs.org/package/hessian.js
 
 Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) and
-~~[2.0](http://hessian.caucho.com/doc/hessian-serialization.html)~~ (read the real java codes instead) written by pure JavaScript.
+[2.0](http://hessian.caucho.com/doc/hessian-serialization.html) (base on version [3.1.3](http://mvnrepository.com/artifact/com.caucho/hessian/3.1.3)) written by pure JavaScript.
 Support all kind of types in Java, with [high performance](benchmark/README.md).
 
 ## Install
 
 ```bash
-$ npm install hessian.js --save
+$ npm install hessian.js-1 --save
 ```
 
 ## Support Types
@@ -70,7 +70,7 @@ Tips: you can use with [js-to-java](https://github.com/node-modules/js-to-java) 
 ### Simple javascript type
 
 ```js
-var hessian = require('hessian.js');
+var hessian = require('hessian.js-1');
 var java = require('js-to-java');
 var encoder = new hessian.Encoder();
 
@@ -98,7 +98,7 @@ encoder.write(object); // object
 ### Complex java type
 
 ```js
-var hessian = require('hessian.js');
+var hessian = require('hessian.js-1');
 var encoder = new hessian.Encoder();
 
 var long = {
@@ -121,7 +121,7 @@ encoder.write(testObject);
 ## Decoder
 
 ```js
-var hessian = require('hessian.js');
+var hessian = require('hessian.js-1');
 var decoder = new hessian.Decoder(buf);
 
 decoder.read(); //return what it is
@@ -143,7 +143,7 @@ decoder.readRef();
 hessian 1.0:
 
 ```js
-var hessian = require('hessian.js');
+var hessian = require('hessian.js-1');
 
 var testObject = {
   a: 1,
@@ -174,7 +174,7 @@ try {
 hessian 2.0:
 
 ```js
-var hessian = require('hessian.js');
+var hessian = require('hessian.js-1');
 
 var testObject = {
   a: 1,
