@@ -34,21 +34,21 @@
   },
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
-    "byte": "~1.1.1",
+    "byte": "~1.1.5",
     "debug": "~2.2.0",
-    "is-type-of": "~0.3.1",
-    "utility": "~1.4.0",
-    "long": "~3.0.1"
+    "is-type-of": "~1.0.0",
+    "utility": "~1.6.0",
+    "long": "~3.1.0"
   },
   "devDependencies": {
     "autod": "*",
     "beautify-benchmark": "*",
     "benchmark": "*",
     "istanbul": "*",
-    "js-to-java": "~2.3.5",
+    "js-to-java": "2",
     "jshint": "*",
     "mocha": "*",
-    "should": "~5.2.0"
+    "should": "5"
   },
   "engines": {
     "node": ">= 0.10.0"
