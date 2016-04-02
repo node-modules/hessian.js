@@ -11,7 +11,7 @@ hessian.js
 
 [npm-image]: https://img.shields.io/npm/v/hessian.js.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/hessian.js
-[travis-image]: https://img.shields.io/travis/node-modules/hessian.js.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/node-modules/hessian.js.svg?branch=1.x&style=flat-square
 [travis-url]: https://travis-ci.org/node-modules/hessian.js
 [coveralls-image]: https://img.shields.io/coveralls/node-modules/hessian.js.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/node-modules/hessian.js?branch=master
