@@ -7,20 +7,23 @@ hessian.js-1
 [![David deps][david-image]][david-url]
 [![npm download][download-image]][download-url]
 
-[npm-image]: https://img.shields.io/npm/v/hessian.js.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/hessian.js
+[npm-image]: https://img.shields.io/npm/v/hessian.js-1.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/hessian.js-1
 [travis-image]: https://img.shields.io/travis/node-modules/hessian.js.svg?branch=1.x&style=flat-square
 [travis-url]: https://travis-ci.org/node-modules/hessian.js
 [codecov-image]: https://codecov.io/github/node-modules/hessian.js/coverage.svg?branch=1.x
 [codecov-url]: https://codecov.io/github/node-modules/hessian.js?branch=1.x
 [david-image]: https://img.shields.io/david/node-modules/hessian.js.svg?branch=1.x&style=flat-square
 [david-url]: https://david-dm.org/node-modules/hessian.js
-[download-image]: https://img.shields.io/npm/dm/hessian.js.svg?style=flat-square
-[download-url]: https://npmjs.org/package/hessian.js
+[download-image]: https://img.shields.io/npm/dm/hessian.js-1.svg?style=flat-square
+[download-url]: https://npmjs.org/package/hessian.js-1
 
 Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) and
-[2.0](http://hessian.caucho.com/doc/hessian-serialization.html) (base on version [3.1.3](http://mvnrepository.com/artifact/com.caucho/hessian/3.1.3)) written by pure JavaScript.
+[2.0](http://hessian.caucho.com/doc/hessian-serialization.html) (base on version [com.caucho/hessian/3.1.3](http://mvnrepository.com/artifact/com.caucho/hessian/3.1.3)) written by pure JavaScript.
 Support all kind of types in Java, with [high performance](benchmark/README.md).
+
+- If you want [com.caucho/hessian/4.0.7](http://mvnrepository.com/artifact/com.caucho/hessian/4.0.7),
+Please use [hessian.js](https://github.com/node-modules/hessian.js).
 
 ## Install
 
@@ -361,18 +364,7 @@ xf0 - xff    # two-octet compact long (-x800 to x7ff, xf8 is 0)
 
 ## Authors
 
-```
-$ git summary
-
- project  : hessian.js
- repo age : 4 weeks ago
- commits  : 51
- active   : 18 days
- files    : 33
- authors  :
-    36  dead_horse              70.6%
-    15  fengmk2                 29.4%
-```
+[AUTHORS](AUTHORS)
 
 ## Licences
 
