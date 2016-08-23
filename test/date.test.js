@@ -84,28 +84,30 @@ describe('date.test.js', function () {
       d.toISOString().should.equal('1998-05-08T09:51:00.000Z');
     });
 
-    it('should write Compact: date in minutes, Thu, 23 Jan 6053 02:08:00 GMT', function () {
+    it('should write and read date, Thu, 23 Jan 6053 02:08:00 GMT', function () {
       // Maximum of 32-bit integer
       var overflow32BitInt = Math.pow(2, 31);
       var milliseconds = overflow32BitInt * 60000;
-      var d = hessian.decode(utils.bytes('v2/date/' + milliseconds.toString()), '2.0');
-      d.should.be.a.Date;
-      d.getFullYear().should.equal(6053);
-      d.getTime().should.equal(milliseconds);
-      d.toUTCString().should.equal('Thu, 23 Jan 6053 02:08:00 GMT');
-      d.toISOString().should.equal('6053-01-23T02:08:00.000Z');
+      var date = new Date();
+      date.setTime(milliseconds);
+
+      var bytes = utils.bytes('v2/date/' + milliseconds.toString());
+
+      hessian.encode(date, '2.0').should.eql(bytes);
+      hessian.decode(bytes, '2.0').should.eql(date);
     });
 
-    it('should write Compact: date in minutes, Wed, 08 Dec -2114 21:53:00 GMT (2115 B.C.)', function () {
+    it('should write and read date, Wed, 08 Dec -2114 21:53:00 GMT (2115 B.C.)', function () {
       // Minimum of 32-bit integer
       var overflow32BitInt = -1 * (Math.pow(2, 31) + 1);
       var milliseconds = overflow32BitInt * 60000;
-      var d = hessian.decode(utils.bytes('v2/date/' + milliseconds.toString()), '2.0');
-      d.should.be.a.Date;
-      d.getFullYear().should.equal(-2114);
-      d.getTime().should.equal(milliseconds);
-      d.toUTCString().should.equal('Wed, 08 Dec -2114 21:53:00 GMT');
-      d.toISOString().should.equal('-002114-12-08T21:53:00.000Z');
+      var date = new Date();
+      date.setTime(milliseconds);
+
+      var bytes = utils.bytes('v2/date/' + milliseconds.toString());
+
+      hessian.encode(date, '2.0').should.eql(bytes);
+      hessian.decode(bytes, '2.0').should.eql(date);
     });
 
 
