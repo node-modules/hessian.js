@@ -8,7 +8,9 @@
  *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
  */
 
-"use strict";
+/* global describe, it */
+
+'use strict';
 
 /**
  * Module dependencies.
@@ -23,7 +25,7 @@ describe('date.test.js', function () {
 
   it('should read date 2:51:31 May 8, 1998', function () {
     var d = hessian.decode(dateBuffer);
-    d.should.be.an.Date;
+    d.should.be.a.Date;
     d.getFullYear().should.equal(1998);
     d.getTime().should.equal(894621091000);
     d.toUTCString().should.equal('Fri, 08 May 1998 09:51:31 GMT');
@@ -81,6 +83,31 @@ describe('date.test.js', function () {
       d.toUTCString().should.equal('Fri, 08 May 1998 09:51:00 GMT');
       d.toISOString().should.equal('1998-05-08T09:51:00.000Z');
     });
+
+    it('should write Compact: date in minutes, Thu, 23 Jan 6053 02:08:00 GMT', function () {
+      // Maximum of 32-bit integer
+      var overflow32BitInt = Math.pow(2, 31);
+      var milliseconds = overflow32BitInt * 60000;
+      var d = hessian.decode(utils.bytes('v2/date/' + milliseconds.toString()), '2.0');
+      d.should.be.a.Date;
+      d.getFullYear().should.equal(6053);
+      d.getTime().should.equal(milliseconds);
+      d.toUTCString().should.equal('Thu, 23 Jan 6053 02:08:00 GMT');
+      d.toISOString().should.equal('6053-01-23T02:08:00.000Z');
+    });
+
+    it('should write Compact: date in minutes, Wed, 08 Dec -2114 21:53:00 GMT (2115 B.C.)', function () {
+      // Minimum of 32-bit integer
+      var overflow32BitInt = -1 * (Math.pow(2, 31) + 1);
+      var milliseconds = overflow32BitInt * 60000;
+      var d = hessian.decode(utils.bytes('v2/date/' + milliseconds.toString()), '2.0');
+      d.should.be.a.Date;
+      d.getFullYear().should.equal(-2114);
+      d.getTime().should.equal(milliseconds);
+      d.toUTCString().should.equal('Wed, 08 Dec -2114 21:53:00 GMT');
+      d.toISOString().should.equal('-002114-12-08T21:53:00.000Z');
+    });
+
 
     it('should write and read date', function () {
       var now = new Date(1398280514000);
