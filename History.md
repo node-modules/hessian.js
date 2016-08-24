@@ -1,4 +1,9 @@
 
+2.1.9 / 2016-08-24
+==================
+
+  * fix(writeDate): overflow 32-bit signed integer issue
+
 2.1.8 / 2016-04-03
 ==================
 
@@ -40,7 +45,7 @@
 
  * fix: skip innerClass ref field like this$\d
 
-2.1.1 / 2015-09-06 
+2.1.1 / 2015-09-06
 ==================
 
   * fix(writeLong) hessian2.0 write long bug
@@ -77,7 +82,7 @@
 
  * feat(null): writeNull when obj.$ is null
 
-1.0.1 / 2014-08-27 
+1.0.1 / 2014-08-27
 ==================
 
   * Merge pull request #30 from node-modules/java.lang.Error
