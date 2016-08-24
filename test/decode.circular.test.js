@@ -1,7 +1,7 @@
-/**!
+/**
  * hessian.js - test/decode.circular.test.js
  *
- * Copyright(c) 2015
+ * Copyright(c)
  *
  * Authors:
  *   tangyao <tangyao@alipay.com> (http://tangyao.me/)

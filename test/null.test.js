@@ -1,7 +1,7 @@
-/**!
+/**
  * hessian.js - test/null.test.js
  *
- * Copyright(c) 2014
+ * Copyright(c)
  * MIT Licensed
  *
  * Authors:
