@@ -48,9 +48,9 @@
     "js-to-java": "2",
     "jshint": "*",
     "mocha": "*",
-    "should": "5"
+    "should": "10"
   },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 0.12.0"
   }
 }
