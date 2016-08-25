@@ -165,7 +165,7 @@ describe('map.test.js', function() {
   it('should decode successful when key is null', function() {
     var data = new Buffer([77, 116, 0, 0, 78, 83, 0, 4, 110, 117, 108, 108, 122]);
     var rv = hessian.decode(data);
-    rv.should.eql({});
+    rv.should.eql({ null: 'null' });
 
     if (!supportES6Map) {
       // pass if not support es6 Map
@@ -477,7 +477,7 @@ describe('map.test.js', function() {
       values[1].should.eql(166239);
 
       var plainObject = JSON.parse(JSON.stringify(res.data));
-      plainObject.should.eql({});
+      plainObject.should.eql({ '[object Object]': 166239 });
     });
 
   });
