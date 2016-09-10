@@ -14,6 +14,7 @@
  * Module dependencies.
  */
 
+var vm = require('vm');
 var should = require('should');
 var hessian = require('../');
 var utils = require('./utils');
@@ -210,6 +211,36 @@ describe('map.test.js', function() {
     }
 
     var map = new Map();
+    map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
+    map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
+    var buf = hessian.encode(map);
+    buf.should.eql(utils.bytes('v1/map/generic'));
+
+    buf = hessian.encode({ '$class': 'java.util.HashMap', '$': map });
+    buf.should.eql(utils.bytes('v1/map/generic'));
+
+    // decode auto transfer key to string
+    var result = hessian.decode(utils.bytes('v1/map/generic'), '1.0');
+    result.should.eql({
+      '123': 123456,
+      '123456': 123
+    });
+
+    should.exist(result.$map);
+    result.$map.should.be.instanceof(Map);
+    result.$map.size.should.eql(2);
+
+    result.$map.get(123).should.eql(123456);
+    result.$map.get(123456).should.eql(123);
+  });
+
+  it('should write es6 Map to java.util.HashMap, runInNewContext', function() {
+    if (!supportES6Map) {
+      // pass if not support es6 Map
+      return;
+    }
+
+    var map = vm.runInNewContext('(function() { return new Map() })()', {});
     map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
     map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
     var buf = hessian.encode(map);
