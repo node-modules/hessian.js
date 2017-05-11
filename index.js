@@ -18,6 +18,9 @@ var DecoderV2 = exports.DecoderV2 = require('./lib/v2/decoder');
 exports.encoderV1 = new EncoderV1({size: 1024 * 1024});
 exports.encoderV2 = new EncoderV2({size: 1024 * 1024});
 
+var decoderV1 = new DecoderV1();
+var decoderV2 = new DecoderV2();
+
 exports.decode = function decode(buf, version, withType) {
   if (typeof version === 'boolean') {
     // buf, withType, version
@@ -29,9 +32,9 @@ exports.decode = function decode(buf, version, withType) {
   withType = !!withType;
 
   if (version === '2.0') {
-    return new DecoderV2(buf).read(withType);
+    return decoderV2.init(buf).read(withType);
   }
-  return new DecoderV1(buf).read(withType);
+  return decoderV1.init(buf).read(withType);
 };
 
 exports.encode = function encode(obj, version) {
