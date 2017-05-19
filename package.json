@@ -35,7 +35,7 @@
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
     "byte": "~1.1.5",
-    "debug": "~2.2.0",
+    "debug": "~2.6.7",
     "is-type-of": "~1.0.0",
     "utility": "~1.6.0",
     "long": "~3.1.0"
