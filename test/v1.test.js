@@ -10,9 +10,9 @@
 
 'use strict';
 
+var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
-var should = require('should');
 var hessian = require('../');
 var Encoder = hessian.Encoder;
 var Decoder = hessian.Decoder;
@@ -33,26 +33,26 @@ describe('hessian v1', function () {
   describe('null', function () {
     it('should write and read null ok', function () {
       var buf = encoder.writeNull().get();
-      buf.should.eql(new Buffer('N'));
+      assert.deepEqual(buf, new Buffer('N'));
 
       decoder.init(buf);
-      (decoder.readNull() === null).should.be.ok;
+      assert(decoder.readNull() === null);
     });
   });
 
   describe('bool', function () {
     it('should write and read true ok', function () {
       var buf = encoder.writeBool(true).get();
-      buf.should.eql(new Buffer('T'));
+      assert.deepEqual(buf, new Buffer('T'));
 
-      decoder.init(buf).readBool().should.eql(true);
+      assert(decoder.init(buf).readBool() === true);
     });
 
     it('should write and read false ok', function () {
       var buf = encoder.writeBool(false).get();
-      buf.should.eql(new Buffer('F'));
+      assert.deepEqual(buf, new Buffer('F'));
 
-      decoder.init(buf).readBool().should.eql(false);
+      assert(decoder.init(buf).readBool() === false);
     });
   });
 
@@ -68,9 +68,9 @@ describe('hessian v1', function () {
 
       tests.forEach(function (t) {
         var buf = encoder.writeInt(t[0]).get();
-        buf.inspect().should.equal(t[1]);
+        assert(buf.inspect() === t[1]);
         decoder.init(buf);
-        decoder.readInt().should.equal(t[0]);
+        assert(decoder.readInt() === t[0]);
         encoder.clean();
         decoder.clean();
       });
@@ -84,9 +84,9 @@ describe('hessian v1', function () {
       ];
 
       tests.forEach(function (t, idx) {
-        (function () {
+        assert.throws(function () {
           var buf = encoder.writeInt(t);
-        }).should.throw('hessian writeInt expect input type is `int32`, but got `number` : ' + tests[idx] + ' ');
+        }, 'hessian writeInt expect input type is `int32`, but got `number` : ' + tests[idx] + ' ');
       });
     });
 
@@ -95,9 +95,9 @@ describe('hessian v1', function () {
         [new Buffer([0x48, 0x00, 0x00, 0x00, 0x00]), 'hessian readInt only accept label `I` but got unexpect label `H`'],
       ];
       tests.forEach(function (t) {
-        (function () {
+        assert.throws(function () {
           decoder.init(t[0]).readInt();
-        }).should.throw(t[1]);
+        }, t[1]);
       });
     });
   });
@@ -118,8 +118,8 @@ describe('hessian v1', function () {
 
       tests.forEach(function (t) {
         var buf = encoder.writeLong(t[0]).get();
-        buf.inspect().should.equal(t[1]);
-        decoder.init(buf).readLong().should.eql(t[0]);
+        assert(buf.inspect() === t[1]);
+        assert.deepEqual(decoder.init(buf).readLong(), t[0]);
         encoder.clean();
         decoder.clean();
       });
@@ -133,7 +133,7 @@ describe('hessian v1', function () {
 
       tests.forEach(function (t) {
         var buf = encoder.writeLong(t).get();
-        decoder.init(buf).readLong().should.not.eql(t);
+        assert.notStrictEqual(decoder.init(buf).readLong(), t);
       });
     });
 
@@ -143,9 +143,9 @@ describe('hessian v1', function () {
         'hessian readLong only accept label `L` but got unexpect label `K`']
       ];
       tests.forEach(function (t) {
-        (function () {
+        assert.throws(function () {
           decoder.init(t[0]).readLong();
-        }).should.throw(t[1]);
+        }, t[1]);
       });
     });
   });
@@ -165,8 +165,8 @@ describe('hessian v1', function () {
 
       tests.forEach(function (t) {
         var buf = encoder.writeDouble(t[0]).get();
-        buf.inspect().should.equal(t[1]);
-        decoder.init(buf).readDouble().should.equal(t[0]);
+        assert(buf.inspect() === t[1]);
+        assert(decoder.init(buf).readDouble() === t[0]);
         encoder.clean();
         decoder.clean();
       });
@@ -178,9 +178,9 @@ describe('hessian v1', function () {
         'hessian readDouble only accept label `D` but got unexpect label `E`']
       ];
       tests.forEach(function (t) {
-        (function () {
+        assert.throws(function () {
           decoder.init(t[0]).readDouble();
-        }).should.throw(t[1]);
+        }, t[1]);
       });
     });
   });
@@ -194,8 +194,8 @@ describe('hessian v1', function () {
 
       tests.forEach(function (t) {
         var buf = encoder.writeDate(t[0]).get();
-        buf.inspect().should.equal(t[1]);
-        decoder.init(buf).readDate().should.eql(t[0]);
+        assert(buf.inspect() === t[1]);
+        assert.deepEqual(decoder.init(buf).readDate(), t[0]);
         encoder.clean();
         decoder.clean();
       });
@@ -207,9 +207,9 @@ describe('hessian v1', function () {
         'hessian readDate only accept label `d` but got unexpect label `e`']
       ];
       tests.forEach(function (t) {
-        (function () {
+        assert.throws(function () {
           decoder.init(t[0]).readDate();
-        }).should.throw(t[1]);
+        }, t[1]);
       });
     });
   });
@@ -218,17 +218,17 @@ describe('hessian v1', function () {
     it('should write and read small bytes ok', function () {
       var inputBuffer = new Buffer([1, 2, 3, 4, 5]);
       var buf = encoder.writeBytes(inputBuffer).get();
-      buf.inspect().should.equal('<Buffer 42 00 05 01 02 03 04 05>');
-      decoder.init(buf).readBytes().should.eql(inputBuffer);
+      assert(buf.inspect() === '<Buffer 42 00 05 01 02 03 04 05>');
+      assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
 
     it('should write and read big bytes ok', function () {
       var inputBuffer = fixtureBytes;
       var inputLength = inputBuffer.length;
       var buf = encoder.writeBytes(inputBuffer).get();
-      buf.length.should.equal(inputLength +
+      assert(buf.length === inputLength +
         Math.ceil(inputLength / utils.MAX_BYTE_TRUNK_SIZE) * 3);
-      decoder.init(buf).readBytes().should.eql(inputBuffer);
+      assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
 
     it('should read bytes error', function () {
@@ -238,41 +238,41 @@ describe('hessian v1', function () {
       ];
 
       tests.forEach(function (t) {
-        (function () {
+        assert.throws(function () {
           var buf = decoder.init(t[0]).readBytes();
-        }).should.throw(t[1]);
+        }, t[1]);
       });
     });
 
     it('should bytes length equal MAX_BYTE_TRUNK_SIZE work', function () {
       var oneTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE);
       var buf = encoder.writeBytes(oneTrunkBuf).get();
-      decoder.init(buf).readBytes().should.eql(oneTrunkBuf);
+      assert.deepEqual(decoder.init(buf).readBytes(), oneTrunkBuf);
 
       encoder.clean();
       var twoTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE * 2);
       buf = encoder.writeBytes(twoTrunkBuf).get();
-      decoder.init(buf).readBytes().should.eql(twoTrunkBuf);
+      assert.deepEqual(decoder.init(buf).readBytes(), twoTrunkBuf);
     });
 
     it('should write type error', function () {
-      (function () {
+      assert.throws(function () {
         encoder.writeBytes();
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `undefined` : undefined ');
-      (function () {
+      }, 'hessian writeBytes expect input type is `buffer`, but got `undefined` : undefined ');
+      assert.throws(function () {
         encoder.writeBytes('');
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `string` : "" ');
-      (function () {
+      }, 'hessian writeBytes expect input type is `buffer`, but got `string` : "" ');
+      assert.throws(function () {
         encoder.writeBytes(null);
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `object` : null ');
-      (function () {
+      }, 'hessian writeBytes expect input type is `buffer`, but got `object` : null ');
+      assert.throws(function () {
         encoder.writeBytes(100);
-      }).should.throw('hessian writeBytes expect input type is `buffer`, but got `number` : 100 ');
+      }, 'hessian writeBytes expect input type is `buffer`, but got `number` : 100 ');
     });
 
     it('should write and read empty bytes', function () {
       var buf = encoder.writeBytes(new Buffer('')).get();
-      decoder.init(buf).readBytes().should.eql(new Buffer(''));
+      assert.deepEqual(decoder.init(buf).readBytes(), new Buffer(''));
     });
   });
 
@@ -280,17 +280,19 @@ describe('hessian v1', function () {
     it('should write and read small string ok', function () {
       var inputStr = '你好，hessian.∆∆˚œø∂πß∂µ';
       var buf = encoder.writeString(inputStr).get();
-      buf.inspect().should.equal('<Buffer 53 00 15 e4 bd a0 e5 a5 bd ef bc 8c 68 65 73 73 69 61 6e 2e e2 88 86 e2 88 86 cb 9a c5 93 c3 b8 e2 88 82 cf 80 c3 9f e2 88 82 c2 b5>');
-      decoder.init(buf).readString().should.equal(inputStr);
+      assert(
+        buf.inspect() === '<Buffer 53 00 15 e4 bd a0 e5 a5 bd ef bc 8c 68 65 73 73 69 61 6e 2e e2 88 86 e2 88 86 cb 9a c5 93 c3 b8 e2 88 82 cf 80 c3 9f e2 88 82 c2 b5>'
+      );
+      assert(decoder.init(buf).readString() === inputStr);
     });
 
     it('should write and read big string ok', function () {
       var inputStr = fixtureString;
       var inputStrLength = inputStr.length;
       var buf = encoder.writeString(inputStr).get();
-      buf.length.should.equal(new Buffer(inputStr).length +
+      assert(buf.length === new Buffer(inputStr).length +
         Math.ceil(inputStrLength / utils.MAX_CHAR_TRUNK_SIZE) * 3);
-      decoder.init(buf).readString().should.equal(inputStr);
+      assert(decoder.init(buf).readString() === inputStr);
     });
 
     it('should read string error', function () {
@@ -301,26 +303,26 @@ describe('hessian v1', function () {
       ];
 
       tests.forEach(function (t) {
-        (function () {
+        assert.throws(function () {
           var buf = decoder.init(t[0]).readString();
-        }).should.throw(t[1]);
+        }, t[1]);
       });
     });
 
     it('should write type error', function () {
-      (function () {
+      assert.throws(function () {
         encoder.writeString();
-      }).should.throw('hessian writeString expect input type is `string`, but got `undefined` : undefined ');
+      }, 'hessian writeString expect input type is `string`, but got `undefined` : undefined ');
       // v0.10.28 return [1,2,3,4,5]
       // (function () {
       //   encoder.writeString(new Buffer([1,2,3,4,5]));
       // }).should.throw('hessian writeString expect input type is `string`, but got `object` : {"type":"Buffer","data":[1,2,3,4,5]} ');
-      (function () {
+      assert.throws(function () {
         encoder.writeString(null);
-      }).should.throw('hessian writeString expect input type is `string`, but got `object` : null ');
-      (function () {
+      }, 'hessian writeString expect input type is `string`, but got `object` : null ');
+      assert.throws(function () {
         encoder.writeString(100);
-      }).should.throw('hessian writeString expect input type is `string`, but got `number` : 100 ');
+      }, 'hessian writeString expect input type is `string`, but got `number` : 100 ');
     });
 
     it('should string length equal MAX_CHAR_TRUNK_SIZE work', function () {
@@ -328,19 +330,19 @@ describe('hessian v1', function () {
       oneTrunkString.fill(0x41);
       oneTrunkString = oneTrunkString.toString();
       var buf = encoder.writeString(oneTrunkString).get();
-      decoder.init(buf).readString().should.eql(oneTrunkString);
+      assert.deepEqual(decoder.init(buf).readString(), oneTrunkString);
       encoder.clean();
 
       var twoTrunkString = new Buffer(utils.MAX_CHAR_TRUNK_SIZE * 2);
       twoTrunkString.fill(0x41);
       twoTrunkString = twoTrunkString.toString();
       buf = encoder.writeString(twoTrunkString).get();
-      decoder.init(buf).read().should.eql(twoTrunkString);
+      assert.deepEqual(decoder.init(buf).read(), twoTrunkString);
     });
 
     it('should write and read empty string', function () {
       var buf = encoder.writeString('').get();
-      decoder.init(buf).read().should.eql('');
+      assert(decoder.init(buf).read() === '');
     });
   });
 
@@ -356,13 +358,13 @@ describe('hessian v1', function () {
         g: {a: 1, b: true, c: 'string'}
       };
       var buf = encoder.writeObject(testObject).get();
-      decoder.init(buf).readObject().should.eql(testObject);
+      assert.deepEqual(decoder.init(buf).readObject(), testObject);
     });
 
     it('should write null obejct ok', function () {
       var nullObject = null;
       var nullBuf = encoder.writeObject(nullObject).get();
-      (decoder.init(nullBuf).read() === null).should.be.ok;
+      assert(decoder.init(nullBuf).read() === null);
     });
 
     it('should write and read object with circular ok', function () {
@@ -377,12 +379,12 @@ describe('hessian v1', function () {
 
       var buf = encoder.writeObject(testObject).get();
       var res = decoder.init(buf).readObject();
-      res.a.should.equal(testObject.a);
-      res.b.should.equal(testObject.b);
-      res.c.a.a.should.equal(testObject.a);
-      res.c.a.b.should.equal(testObject.b);
-      res.d[2].a.a.should.equal(testObject.a);
-      res.d[2].a.b.should.equal(testObject.b);
+      assert(res.a === testObject.a);
+      assert(res.b === testObject.b);
+      assert(res.c.a.a === testObject.a);
+      assert(res.c.a.b === testObject.b);
+      assert(res.d[2].a.a === testObject.a);
+      assert(res.d[2].a.b === testObject.b);
     });
 
     it('should write and read complex object ok', function () {
@@ -396,9 +398,9 @@ describe('hessian v1', function () {
 
       var buf = encoder.writeObject(testObject).get();
       var res = decoder.init(buf).readObject();
-      res.should.eql({a:1, b:[1, 2, 3]});
+      assert.deepEqual(res, {a:1, b:[1, 2, 3]});
       var resWithType = decoder.init(buf).readObject(true);
-      resWithType.should.eql( {
+      assert.deepEqual(resWithType, {
         '$class': 'com.hessian.TestObject',
         '$': {
           a: { '$class': 'int', '$': 1 },
@@ -425,11 +427,11 @@ describe('hessian v1', function () {
 
       var buf = encoder.writeObject(testObject).get();
       decoder.init(buf);
-      decoder.position().should.equal(0);
+      assert(decoder.position() === 0);
       decoder.position(1); //skip 'M'
-      decoder.readType().should.equal('com.hessian.TestObject');
-      decoder.position().should.equal(26);
-      decoder.position(0).readObject(true).should.eql({
+      assert(decoder.readType() === 'com.hessian.TestObject');
+      assert(decoder.position() === 26);
+      assert.deepEqual(decoder.position(0).readObject(true), {
         '$class': 'com.hessian.TestObject',
         '$': {
           a: { '$class': 'int', '$': 1 },
@@ -453,9 +455,9 @@ describe('hessian v1', function () {
       var buf = encoder.writeObject(testObject).get();
       encoder.clean();
 
-      buf.should.eql(encoder.writeObject({foo: 'bar'}).get());
-      decoder.init(buf).read().should.eql({foo: 'bar'});
-      decoder.init(buf).read(true).should.eql({
+      assert.deepEqual(buf, encoder.writeObject({foo: 'bar'}).get());
+      assert.deepEqual(decoder.init(buf).read(), {foo: 'bar'});
+      assert.deepEqual(decoder.init(buf).read(true), {
         '$class': 'java.util.HashMap',
         '$': {
           foo: { '$class': 'java.lang.String', '$': 'bar' }
@@ -464,15 +466,15 @@ describe('hessian v1', function () {
     });
 
     it('should write type error', function () {
-      (function () {
+      assert.throws(function () {
         encoder.writeObject('123');
-      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `string` : "123" ');
-      (function () {
+      }, 'hessian writeObject / writeMap expect input type is `object`, but got `string` : "123" ');
+      assert.throws(function () {
         encoder.writeObject(1.111);
-      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number` : 1.111 ');
-      (function () {
+      }, 'hessian writeObject / writeMap expect input type is `object`, but got `number` : 1.111 ');
+      assert.throws(function () {
         encoder.writeObject(100);
-      }).should.throw('hessian writeObject / writeMap expect input type is `object`, but got `number` : 100 ');
+      }, 'hessian writeObject / writeMap expect input type is `object`, but got `number` : 100 ');
     });
   });
 
@@ -480,7 +482,7 @@ describe('hessian v1', function () {
     it('should write and read simple array ok', function () {
       var testArray = [1, true, 'string', 1.1, new Date()];
       var buf = encoder.writeArray(testArray).get();
-      decoder.init(buf).readArray().should.eql(testArray);
+      assert.deepEqual(decoder.init(buf).readArray(), testArray);
     });
 
     it('should write circular array ok', function () {
@@ -488,8 +490,8 @@ describe('hessian v1', function () {
       testArray.push(testArray);
       var buf = encoder.writeArray(testArray).get();
       var res = decoder.init(buf).readArray();
-      res[0].should.equal(testArray[0]);
-      res[1][1][1][0].should.equal(testArray[0]);
+      assert(res[0] === testArray[0]);
+      assert(res[1][1][1][0] === testArray[0]);
     });
 
     it('should write and read complex array ok', function () {
@@ -501,8 +503,8 @@ describe('hessian v1', function () {
         }]
       };
       var buf = encoder.writeArray(testArray).get();
-      decoder.init(buf).readArray().should.eql([[1, 2, 3]]);
-      decoder.init(buf).readArray(true).should.eql({
+      assert.deepEqual(decoder.init(buf).readArray(), [[1, 2, 3]]);
+      assert.deepEqual(decoder.init(buf).readArray(true), {
         '$class': 'java.util.Set',
         '$': [
           {
@@ -525,9 +527,9 @@ describe('hessian v1', function () {
       var buf = encoder.writeArray(testArray).get();
       encoder.clean();
 
-      buf.should.eql(encoder.writeArray([1, 2, 3]).get());
-      decoder.init(buf).read().should.eql([1, 2, 3]);
-      decoder.init(buf).read(true).should.eql({
+      assert.deepEqual(buf, encoder.writeArray([1, 2, 3]).get());
+      assert.deepEqual(decoder.init(buf).read(), [1, 2, 3]);
+      assert.deepEqual(decoder.init(buf).read(true), {
         $class: 'java.util.ArrayList',
         $: [
           { '$class': 'int', '$': 1 },
@@ -540,24 +542,24 @@ describe('hessian v1', function () {
     it('should read unexpect end label', function () {
       var buf = encoder.writeArray([1, 2, 3]).get();
       buf[buf.length - 1] = 40;
-      (function () {
+      assert.throws(function () {
         decoder.init(buf).read('hessian readArray error, unexpect end label: (');
-      }).should.throw();
+      });
     });
 
     it('should write type error', function () {
-      (function () {
+      assert.throws(function () {
         encoder.writeArray();
-      }).should.throw('hessian writeArray input type invalid');
-      (function () {
+      }, 'hessian writeArray input type invalid');
+      assert.throws(function () {
         encoder.writeArray('123');
-      }).should.throw('hessian writeArray input type invalid');
-      (function () {
+      }, 'hessian writeArray input type invalid');
+      assert.throws(function () {
         encoder.writeArray(1.111);
-      }).should.throw('hessian writeArray input type invalid');
-      (function () {
+      }, 'hessian writeArray input type invalid');
+      assert.throws(function () {
         encoder.writeArray(100);
-      }).should.throw('hessian writeArray input type invalid');
+      }, 'hessian writeArray input type invalid');
     });
   });
 
@@ -573,7 +575,7 @@ describe('hessian v1', function () {
       ].forEach(function(val) {
         var buf = encoder.write({$class:'java.lang.Object', $: val}).get();
         encoder.clean();
-        decoder.init(buf).read().should.eql(val);
+        assert.deepEqual(decoder.init(buf).read(), val);
       });
     });
   });
@@ -612,19 +614,19 @@ describe('hessian v1', function () {
         var buf = hessian.encode(t[0]);
         var res = hessian.decode(buf, true);
         if (res) {
-          res.should.eql(t[1] || t[0]);
+          assert.deepEqual(res, t[1] || t[0]);
         } else {
           /* jshint eqeqeq: false */
-          should.ok(res == t[0]);
+          assert(res == t[0]);
         }
       });
     });
 
     it('should decode error', function () {
       var buf = new Buffer([0x50, 0x11]);
-      (function() {
+      assert.throws(function() {
         hessian.decode(buf);
-      }).should.throw('hessian read got an unexpect code: 0x50');
+      }, 'hessian read got an unexpect code: 0x50');
     });
   });
 });

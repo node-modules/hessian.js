@@ -2,8 +2,8 @@
 
 var fs = require('fs');
 var path = require('path');
-var should = require('should');
 var hessian = require('../');
+var assert = require('assert');
 var utils = require('../lib/utils');
 var java = require('js-to-java');
 
@@ -203,7 +203,7 @@ describe('hessian v2', function () {
 
     var bytes = hessian.encode(arg, '2.0');
     var rs = hessian.decode(bytes, '2.0');
-    java.revert(arg).should.eql(rs);
+    assert.deepEqual(java.revert(arg), rs);
 
   });
 

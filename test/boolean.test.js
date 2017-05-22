@@ -10,30 +10,26 @@
 
 "use strict";
 
-/**
- * Module dependencies.
- */
-
-var should = require('should');
+var assert = require('assert');
 var hessian = require('../');
 
 describe('boolean.test.js', function () {
   it('should read true and false', function () {
-    hessian.decode(new Buffer('T')).should.equal(true);
-    hessian.decode(new Buffer('F')).should.equal(false);
+    assert(hessian.decode(new Buffer('T')) === true);
+    assert(hessian.decode(new Buffer('F')) === false);
   });
 
   it('should write true and false', function () {
-    hessian.encode(true).should.eql(new Buffer('T'));
-    hessian.encode(false).should.eql(new Buffer('F'));
+    assert.deepEqual(hessian.encode(true), new Buffer('T'));
+    assert.deepEqual(hessian.encode(false), new Buffer('F'));
   });
 
   describe('v2.0', function () {
     it('should read write as 1.0', function () {
-      hessian.encode(true, '2.0').should.eql(new Buffer('T'));
-      hessian.encode(false, '2.0').should.eql(new Buffer('F'));
-      hessian.decode(new Buffer('T'), '2.0').should.equal(true);
-      hessian.decode(new Buffer('F'), '2.0').should.equal(false);
+      assert.deepEqual(hessian.encode(true, '2.0'), new Buffer('T'));
+      assert.deepEqual(hessian.encode(false, '2.0'), new Buffer('F'));
+      assert(hessian.decode(new Buffer('T'), '2.0') === true);
+      assert(hessian.decode(new Buffer('F'), '2.0') === false);
     });
   });
 });
