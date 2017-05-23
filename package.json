@@ -41,7 +41,6 @@
     "js-to-java": "2",
     "jshint": "*",
     "long": "2",
-    "mocha": "*",
-    "should": "5"
+    "mocha": "*"
   }
 }

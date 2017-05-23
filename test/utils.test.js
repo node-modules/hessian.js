@@ -10,21 +10,17 @@
 
 "use strict";
 
-/**
- * Module dependencies.
- */
-
-var should = require('should');
+var assert = require('assert');
 var utils = require('../lib/utils');
 
 describe('utils.test.js', function () {
   describe('getSerializer()', function () {
     it('should [int get writeArray', function () {
-      utils.getSerializer('[int').should.equal('writeArray');
+      assert(utils.getSerializer('[int') === 'writeArray');
     });
 
     it('should [string get writeArray', function () {
-      utils.getSerializer('[string').should.equal('writeArray');
+      assert(utils.getSerializer('[string') === 'writeArray');
     });
   });
 });
