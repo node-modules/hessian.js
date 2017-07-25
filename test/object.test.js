@@ -13,6 +13,7 @@
 var assert = require('assert');
 var hessian = require('../');
 var utils = require('./utils');
+var supportES6Map = require('../lib/utils').supportES6Map;
 
 describe('object.test.js', function () {
   describe('v1.0', function () {
@@ -857,4 +858,42 @@ describe('object.test.js', function () {
       });
     });
   });
+
+
+  if (supportES6Map) {
+    describe('map key object', function() {
+
+      it('enum should use name v1', function() {
+        var key = {
+          $class: 'com.hessian.enums.TestEnum',
+          $: {
+            name: 'KEY',
+          },
+        };
+        var obj = new Map();
+        obj.set(key, 'hello');
+        var buf = hessian.encode(obj);
+        var rs = hessian.decode(buf);
+        rs.should.eql({ 'KEY': 'hello' });
+      });
+
+      it('enum should use name v2', function() {
+        var key = {
+          $class: 'com.hessian.enums.TestEnum',
+          $: {
+            name: 'KEY',
+          },
+        };
+        var obj = new Map();
+        obj.set(key, 'hello');
+        var buf = hessian.encode(obj, '2.0');
+        var rs = hessian.decode(buf, '2.0');
+        rs.should.eql({ 'KEY': 'hello' });
+      });
+
+    });
+  }
+
+
+
 });

@@ -31,7 +31,8 @@
   "dependencies": {
     "byte": "~1.1.5",
     "debug": "~2.2.0",
-    "is-type-of": "~1.0.0"
+    "is-type-of": "~1.0.0",
+    "long": "~2.4.0"
   },
   "devDependencies": {
     "autod": "*",
@@ -40,7 +41,10 @@
     "istanbul": "*",
     "js-to-java": "2",
     "jshint": "*",
-    "long": "2",
-    "mocha": "*"
+    "mocha": "*",
+    "should": "10"
+  },
+  "engines": {
+    "node": ">= 0.12.0"
   }
 }

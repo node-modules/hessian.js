@@ -6,10 +6,10 @@ MOCHA_OPTS =
 install:
 	@npm install
 
-jshint: install
+jshint:
 	@./node_modules/.bin/jshint .
 
-test: install
+test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
