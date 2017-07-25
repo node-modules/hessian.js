@@ -736,7 +736,7 @@ describe('object.test.js', function () {
         obj.set(key, 'hello');
         var buf = hessian.encode(obj);
         var rs = hessian.decode(buf);
-        rs.should.eql({ 'KEY': 'hello' });
+        assert.deepEqual(rs, { 'KEY': 'hello' });
       });
 
       it('use obj when name property missing', function() {
@@ -750,7 +750,7 @@ describe('object.test.js', function () {
         obj.set(key, 'hello');
         var buf = hessian.encode(obj);
         var rs = hessian.decode(buf);
-        rs.should.eql({ '[object Object]': 'hello' });
+        assert.deepEqual(rs, { '[object Object]': 'hello' });
       });
 
       it('enum should use name v2', function() {
@@ -764,7 +764,7 @@ describe('object.test.js', function () {
         obj.set(key, 'hello');
         var buf = hessian.encode(obj, '2.0');
         var rs = hessian.decode(buf, '2.0');
-        rs.should.eql({ 'KEY': 'hello' });
+        assert.deepEqual(rs, { 'KEY': 'hello' });
       });
 
     });
