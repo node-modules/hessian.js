@@ -868,6 +868,20 @@ describe('object.test.js', function () {
         rs.should.eql({ 'KEY': 'hello' });
       });
 
+      it('use obj when name property missing', function() {
+        var key = {
+          $class: 'com.hessian.enums.TestEnum',
+          $: {
+            name1: 'KEY',
+          },
+        };
+        var obj = new Map();
+        obj.set(key, 'hello');
+        var buf = hessian.encode(obj);
+        var rs = hessian.decode(buf);
+        rs.should.eql({ '[object Object]': 'hello' });
+      });
+
       it('enum should use name v2', function() {
         var key = {
           $class: 'com.hessian.enums.TestEnum',

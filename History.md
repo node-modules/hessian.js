@@ -1,4 +1,9 @@
 
+2.3.0 / 2017-07-25
+==================
+
+  * feat: map key is object should try to use `name` propery (#78)
+
 2.2.2 / 2017-07-13
 ==================
 
