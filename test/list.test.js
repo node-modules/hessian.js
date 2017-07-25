@@ -10,11 +10,7 @@
 
 "use strict";
 
-/**
- * Module dependencies.
- */
-
-var should = require('should');
+var assert = require('assert');
 var java = require('js-to-java');
 var hessian = require('../');
 var utils = require('./utils');
@@ -35,8 +31,8 @@ describe('list.test.js', function () {
   ]);
 
   it('should read int[] = {0, 1}', function () {
-    hessian.decode(intListBuffer).should.eql([0, 1]);
-    hessian.decode(intListBuffer, true).should.eql({
+    assert.deepEqual(hessian.decode(intListBuffer), [0, 1]);
+    assert.deepEqual(hessian.decode(intListBuffer, true), {
       '$class': '[int',
       '$': [ { '$class': 'int', '$': 0 }, { '$class': 'int', '$': 1 } ]
     });
@@ -44,14 +40,14 @@ describe('list.test.js', function () {
 
   it('should write int[] = {0, 1}', function () {
     var buf = hessian.encode(java.array.int([0, 1]));
-    buf.should.be.a.Buffer;
-    buf.should.length(intListBuffer.length);
-    buf.should.eql(intListBuffer);
+    assert(Buffer.isBuffer(buf));
+    assert(buf.length === intListBuffer.length);
+    assert.deepEqual(buf, intListBuffer);
 
-    hessian.encode({
+    assert.deepEqual(hessian.encode({
       $class: '[int',
       $: [0, 1]
-    }).should.eql(intListBuffer);
+    }), intListBuffer);
 
     // empty list
     var empty = Buffer.concat([
@@ -65,7 +61,7 @@ describe('list.test.js', function () {
         'z'.charCodeAt(0)
       ])
     ]);
-    hessian.decode(empty).should.eql([]);
+    assert.deepEqual(hessian.decode(empty), []);
   });
 
   it('should read write anonymous variable-length list = {0, null, "foobar"}', function () {
@@ -80,22 +76,22 @@ describe('list.test.js', function () {
       new Buffer('z'),
     ]);
 
-    hessian.decode(anonymousList).should.eql([0, null, 'foobar']);
+    assert.deepEqual(hessian.decode(anonymousList), [0, null, 'foobar']);
 
     // empty
     var emptyList = Buffer.concat([
       new Buffer('V'),
       new Buffer('z'),
     ]);
-    hessian.decode(emptyList).should.eql([]);
+    assert.deepEqual(hessian.decode(emptyList), []);
   });
 
   it('should write and read untyped list', function () {
-    hessian.encode([1, 2, 'foo'], '1.0').should.eql(utils.bytes('v1/list/untyped_list'));
-    hessian.encode([], '1.0').should.eql(utils.bytes('v1/list/untyped_[]'));
+    assert.deepEqual(hessian.encode([1, 2, 'foo'], '1.0'), utils.bytes('v1/list/untyped_list'));
+    assert.deepEqual(hessian.encode([], '1.0'), utils.bytes('v1/list/untyped_[]'));
 
-    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0').should.eql([1, 2, 'foo']);
-    hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0', true).should.eql({
+    assert.deepEqual(hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0'), [1, 2, 'foo']);
+    assert.deepEqual(hessian.decode(utils.bytes('v1/list/untyped_list'), '1.0', true), {
       $class: 'java.util.ArrayList',
       $: [
         { '$class': 'int', '$': 1 },
@@ -103,29 +99,31 @@ describe('list.test.js', function () {
         { '$class': 'java.lang.String', '$': 'foo' }
       ]
     });
-    hessian.decode(utils.bytes('v1/list/untyped_[]'), '1.0').should.eql([]);
-    hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '1.0', true).should.eql( {
-      $class: 'java.util.ArrayList',
-      $: [
-        { '$class': 'java.lang.String', '$': 'foo' },
-        { '$class': 'java.lang.String', '$': 'bar' }
-      ]
-    });
+    assert.deepEqual(hessian.decode(utils.bytes('v1/list/untyped_[]'), '1.0'), []);
+    assert.deepEqual(
+      hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '1.0', true),
+      {
+        $class: 'java.util.ArrayList',
+        $: [
+          { '$class': 'java.lang.String', '$': 'foo' },
+          { '$class': 'java.lang.String', '$': 'bar' }
+        ]
+      }
+    );
 
     // java.util.ArrayList as simple
-    hessian.encode({
+    assert.deepEqual(hessian.encode({
       $class: 'java.util.ArrayList',
       $: [1, 2, 'foo']
-    }, '1.0').should.eql(utils.bytes('v1/list/untyped_list'));
+    }, '1.0'), utils.bytes('v1/list/untyped_list'));
   });
 
   it('should write and read typed fixed-length list', function () {
-    hessian.encode({
+    assert.deepEqual(hessian.encode({
       $class: 'hessian.demo.SomeArrayList',
       $: ['ok', 'some list']
-    }, '1.0').should.eql(utils.bytes('v1/list/typed_list'));
-    hessian.decode(utils.bytes('v1/list/typed_list'), '1.0', true)
-      .should.eql({
+    }, '1.0'), utils.bytes('v1/list/typed_list'));
+    assert.deepEqual(hessian.decode(utils.bytes('v1/list/typed_list'), '1.0', true), {
         '$class': 'hessian.demo.SomeArrayList',
         '$': [
           { '$class': 'java.lang.String', '$': 'ok' },
@@ -133,16 +131,18 @@ describe('list.test.js', function () {
         ]
       });
 
-    hessian.decode(utils.bytes('v1/list/typed_list'), '1.0')
-      .should.eql([ 'ok', 'some list' ]);
+    assert.deepEqual(
+      hessian.decode(utils.bytes('v1/list/typed_list'), '1.0'),
+      [ 'ok', 'some list' ]
+    );
 
     var list = {
       $class: '[int',
       $: [1, 2, 3]
     };
-    hessian.encode(list, '1.0').should.eql(utils.bytes('v1/list/[int'));
-    hessian.decode(utils.bytes('v1/list/[int'), '1.0').should.eql([1, 2, 3]);
-    hessian.decode(utils.bytes('v1/list/[int'), '1.0', true).should.eql({
+    assert.deepEqual(hessian.encode(list, '1.0'), utils.bytes('v1/list/[int'));
+    assert.deepEqual(hessian.decode(utils.bytes('v1/list/[int'), '1.0'), [1, 2, 3]);
+    assert.deepEqual(hessian.decode(utils.bytes('v1/list/[int'), '1.0', true), {
       '$class': '[int',
       '$': [
         { '$class': 'int', '$': 1 },
@@ -155,8 +155,8 @@ describe('list.test.js', function () {
       $class: '[string',
       $: ['1', '@', '3']
     };
-    hessian.encode(strs, '1.0').should.eql(utils.bytes('v1/list/[string'));
-    hessian.decode(utils.bytes('v1/list/[string'), '1.0', true).should.eql({
+    assert.deepEqual(hessian.encode(strs, '1.0'), utils.bytes('v1/list/[string'));
+    assert.deepEqual(hessian.decode(utils.bytes('v1/list/[string'), '1.0', true), {
       '$class': '[string',
       '$': [
         { '$class': 'java.lang.String', '$': '1' },
@@ -168,91 +168,81 @@ describe('list.test.js', function () {
 
   describe('v2.0', function () {
     it('should write and read untyped list', function () {
-      hessian.encode([1, 2, 'foo'], '2.0').should.eql(utils.bytes('v2/list/untyped_list'));
-      hessian.encode([], '2.0').should.eql(utils.bytes('v2/list/untyped_[]'));
+      assert.deepEqual(hessian.encode([1, 2, 'foo'], '2.0'), utils.bytes('v2/list/untyped_list'));
+      assert.deepEqual(hessian.encode([], '2.0'), utils.bytes('v2/list/untyped_[]'));
 
-      hessian.decode(utils.bytes('v2/list/untyped_list'), '2.0').should.eql([1, 2, 'foo']);
-      hessian.decode(utils.bytes('v2/list/untyped_list'), '2.0', true).should.eql([1, 2, 'foo']);
-      hessian.decode(utils.bytes('v2/list/untyped_list_8'), '2.0').should.eql(['1', '2', '3', '4', '5', '6', '7', '8']);
-      hessian.decode(utils.bytes('v2/list/untyped_list_8'), '2.0', true).should.eql(['1', '2', '3', '4', '5', '6', '7', '8']);
-      hessian.decode(utils.bytes('v2/list/untyped_[]'), '2.0').should.eql([]);
-      hessian.decode(utils.bytes('v2/list/untyped_<String>[foo,bar]'), '2.0', true).should.eql(['foo', 'bar']);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/untyped_list'), '2.0'), [1, 2, 'foo']);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/untyped_list'), '2.0', true), [1, 2, 'foo']);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/untyped_list_8'), '2.0'), ['1', '2', '3', '4', '5', '6', '7', '8']);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/untyped_list_8'), '2.0', true), ['1', '2', '3', '4', '5', '6', '7', '8']);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/untyped_[]'), '2.0'), []);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/untyped_<String>[foo,bar]'), '2.0', true), ['foo', 'bar']);
 
       // java.util.ArrayList as simple
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'java.util.ArrayList',
         $: [1, 2, 'foo']
-      }, '2.0').should.eql(utils.bytes('v2/list/untyped_list'));
+      }, '2.0'), utils.bytes('v2/list/untyped_list'));
       // encode again should cache class
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'java.util.ArrayList',
         $: [1, 2, 'foo']
-      }, '2.0').should.eql(utils.bytes('v2/list/untyped_list'));
+      }, '2.0'), utils.bytes('v2/list/untyped_list'));
 
       // java.util.ArrayList length larger than 7
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'java.util.ArrayList',
         $: ['1', '2', '3', '4', '5', '6', '7', '8']
-      }, '2.0').should.eql(utils.bytes('v2/list/untyped_list_8'));
-      hessian.encode({
+      }, '2.0'), utils.bytes('v2/list/untyped_list_8'));
+      assert.deepEqual(hessian.encode({
         $class: 'java.util.ArrayList',
         $: ['1', '2', '3', '4', '5', '6', '7', '8']
-      }, '2.0').should.eql(utils.bytes('v2/list/untyped_list_8'));
+      }, '2.0'), utils.bytes('v2/list/untyped_list_8'));
     });
 
     it('should write and read typed fixed-length list', function () {
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.demo.SomeArrayList',
         $: ['ok', 'some list']
-      }, '2.0').should.eql(utils.bytes('v2/list/typed_list'));
+      }, '2.0'), utils.bytes('v2/list/typed_list'));
       // encode again should use type cache
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.demo.SomeArrayList',
         $: ['ok', 'some list']
-      }, '2.0').should.eql(utils.bytes('v2/list/typed_list'));
-      hessian.encode({
+      }, '2.0'), utils.bytes('v2/list/typed_list'));
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.demo.SomeArrayList',
         $: ['1', '2', '3', '4', '5', '6', '7', '8']
-      }, '2.0').should.eql(utils.bytes('v2/list/typed_list_8'));
+      }, '2.0'), utils.bytes('v2/list/typed_list_8'));
 
-      hessian.decode(utils.bytes('v2/list/typed_list'), '2.0', true)
-        .should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/typed_list'), '2.0', true), {
           '$class': 'hessian.demo.SomeArrayList',
           '$': [ 'ok', 'some list' ]
         });
-      hessian.decode(utils.bytes('v2/list/typed_list_8'), '2.0', true)
-        .should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/typed_list_8'), '2.0', true), {
           '$class': 'hessian.demo.SomeArrayList',
           '$': ['1', '2', '3', '4', '5', '6', '7', '8']
         });
 
-      hessian.decode(utils.bytes('v2/list/typed_list_8'), '2.0')
-        .should.eql(['1', '2', '3', '4', '5', '6', '7', '8']);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/typed_list_8'), '2.0'), ['1', '2', '3', '4', '5', '6', '7', '8']);
 
       var list = {
         $class: '[int',
         $: [1, 2, 3]
       };
-      hessian.encode(list, '2.0').should.eql(utils.bytes('v2/list/[int'));
-      hessian.encode(list, '2.0').should.eql(utils.bytes('v2/list/[int'));
+      assert.deepEqual(hessian.encode(list, '2.0'), utils.bytes('v2/list/[int'));
+      assert.deepEqual(hessian.encode(list, '2.0'), utils.bytes('v2/list/[int'));
 
-      hessian.decode(utils.bytes('v2/list/[int'), '2.0').should.eql([1, 2, 3]);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/[int'), '2.0'), [1, 2, 3]);
       // encode again should use type cache
-      hessian.decode(utils.bytes('v2/list/[int'), '2.0', true).should.eql(list);
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/[int'), '2.0', true), list);
 
       var strs = {
         $class: '[string',
         $: ['1', '@', '3']
       };
-      hessian.encode(strs, '2.0').should.eql(utils.bytes('v2/list/[string'));
-      hessian.decode(utils.bytes('v2/list/[string'), '2.0', true).should.eql(strs);
+      assert.deepEqual(hessian.encode(strs, '2.0'), utils.bytes('v2/list/[string'));
+      assert.deepEqual(hessian.decode(utils.bytes('v2/list/[string'), '2.0', true), strs);
     });
-
-    // it('should read hessian 1.0 untyped list', function () {
-    //   hessian.decode(utils.bytes('v1/list/untyped_list'), '2.0').should.eql([1, 2, 'foo']);
-    //   hessian.decode(utils.bytes('v1/list/untyped_list'), '2.0', true).should.eql([1, 2, 'foo']);
-    //   hessian.decode(utils.bytes('v1/list/untyped_[]'), '2.0').should.eql([]);
-    //   hessian.decode(utils.bytes('v1/list/untyped_<String>[foo,bar]'), '2.0', true).should.eql(['foo', 'bar']);
-    // });
   });
 });

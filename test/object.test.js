@@ -10,10 +10,7 @@
 
 "use strict";
 
-/**
- * Module dependencies.
- */
-var should = require('should');
+var assert = require('assert');
 var hessian = require('../');
 var utils = require('./utils');
 var supportES6Map = require('../lib/utils').supportES6Map;
@@ -21,14 +18,21 @@ var supportES6Map = require('../lib/utils').supportES6Map;
 describe('object.test.js', function () {
   describe('v1.0', function () {
 
+    it('should skip function', function() {
+      var o = { foo: 'bar', fn: function() {} };
+      var buf = hessian.encode(o, '1.0');
+      var output = hessian.decode(buf, '1.0');
+      assert.deepEqual(output, { foo: 'bar', fn: null });
+    });
+
     it('should write null for property like: { a: { "$class": "yyy.yyy", "$": null } }', function () {
       var o = { '$class': 'xxx.xxx',
                 '$': { a: { '$class': 'yyy.yyy', '$': null } } };
       var rightBuf = new Buffer('4d7400077878782e787878530001614e7a', 'hex');
 
       var buf = hessian.encode(o, '1.0');
-      buf.should.length(rightBuf.length);
-      buf.should.eql(rightBuf);
+      assert(buf.length === rightBuf.length);
+      assert.deepEqual(buf, rightBuf);
     });
 
     it('should write object for property like: { a: { "$class": "yyy.yyy", "$": {} } }', function () {
@@ -37,8 +41,8 @@ describe('object.test.js', function () {
       var rightBuf = new Buffer('4d7400077878782e787878530001614d7400077979792e7979797a7a', 'hex');
 
       var buf = hessian.encode(o, '1.0');
-      buf.should.length(rightBuf.length);
-      buf.should.eql(rightBuf);
+      assert(buf.length === rightBuf.length);
+      assert.deepEqual(buf, rightBuf);
     });
 
     it('should _assertType error when encode wrong object', function () {
@@ -53,9 +57,9 @@ describe('object.test.js', function () {
       } catch (err) {
         rs = err;
       }
-      should.exist(rs);
-      rs.message.should.containEql('com.alipay.x.biz.User');
-      should.not.exist(buf);
+      assert(rs);
+      assert(rs.message.indexOf('com.alipay.x.biz.User') >= 0);
+      assert(!buf);
     });
 
     it('should decode and encode ConnectionRequest', function () {
@@ -78,7 +82,7 @@ describe('object.test.js', function () {
       };
 
       // jsconnreq.$.ctx.$.this$0 = jsconnreq;
-      connreq.should.eql(jsconnreq);
+      assert.deepEqual(connreq, jsconnreq);
       var jsbuf = hessian.encode(connreq, '1.0');
       var jsbuf2 = hessian.encode(jsconnreq, '1.0');
       // because of skip field this$0, the length of course not eql.
@@ -89,30 +93,30 @@ describe('object.test.js', function () {
       // jsbuf.should.eql(javabuf);
 
       var jsbuf2Again = hessian.encode(jsconnreq, '1.0');
-      jsbuf2Again.should.eql(jsbuf2);
+      assert.deepEqual(jsbuf2Again, jsbuf2);
     });
 
     it('should write enum Color', function () {
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.Main$Color',
         $: {
           name: 'RED'
         }
-      }, '1.0').should.eql(utils.bytes('v1/enum/red'));
+      }, '1.0'), utils.bytes('v1/enum/red'));
 
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.Main$Color',
         $: {
           name: 'GREEN'
         }
-      }, '1.0').should.eql(utils.bytes('v1/enum/green'));
+      }, '1.0'), utils.bytes('v1/enum/green'));
 
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.Main$Color',
         $: {
           name: 'BLUE'
         }
-      }, '1.0').should.eql(utils.bytes('v1/enum/blue'));
+      }, '1.0'), utils.bytes('v1/enum/blue'));
     });
 
     it('should write enum with ref', function () {
@@ -120,7 +124,7 @@ describe('object.test.js', function () {
       // list.add(Color.BLUE);
       // list.add(Color.RED);
       // list.add(Color.GREEN);
-      hessian.encode([
+      assert.deepEqual(hessian.encode([
         {
           $class: 'hessian.Main$Color',
           $: {
@@ -139,7 +143,7 @@ describe('object.test.js', function () {
             name: 'GREEN'
           }
         },
-      ], '1.0').should.eql(utils.bytes('v1/enum/lists'));
+      ], '1.0'), utils.bytes('v1/enum/lists'));
     });
 
     it('should read enum Color', function () {
@@ -149,37 +153,38 @@ describe('object.test.js', function () {
       //   BLUE,
       // }
 
-      hessian.decode(utils.bytes('v1/enum/red'), '1.0').should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v1/enum/red'), '1.0'), {
         name: 'RED'
       });
 
-      hessian.decode(utils.bytes('v1/enum/green'), '1.0', true).should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v1/enum/green'), '1.0', true), {
         '$class': 'hessian.Main$Color',
         '$': {
           name: { '$class': 'java.lang.String', '$': 'GREEN' }
         }
       });
 
-      hessian.decode(utils.bytes('v1/enum/blue'), '1.0').should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v1/enum/blue'), '1.0'), {
         name: 'BLUE'
       });
 
-      hessian.decode(utils.bytes('v1/enum/green'), '1.0').should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v1/enum/green'), '1.0'), {
         name: 'GREEN'
       });
 
-      hessian.decode(utils.bytes('v1/enum/red'), '1.0', true).should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v1/enum/red'), '1.0', true), {
         '$class': 'hessian.Main$Color',
         '$': {
           name: { '$class': 'java.lang.String', '$': 'RED' }
         }
       });
 
-      hessian.decode(utils.bytes('v1/enum/lists'), '1.0').should.eql(
+      assert.deepEqual(
+        hessian.decode(utils.bytes('v1/enum/lists'), '1.0'),
         [ { name: 'BLUE' }, { name: 'RED' }, { name: 'GREEN' } ]
       );
 
-      hessian.decode(utils.bytes('v1/enum/lists'), '1.0', true).should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v1/enum/lists'), '1.0', true), {
         $class: 'java.util.ArrayList',
         $: [
           { '$class': 'hessian.Main$Color', '$': { name: { '$class': 'java.lang.String', '$': 'BLUE' } } },
@@ -195,9 +200,9 @@ describe('object.test.js', function () {
         $: {a: 1, b: 'map'}
       };
       var buf = hessian.encode(obj, '1.0');
-      buf[0].should.equal(0x4d); // 'M'
-      hessian.decode(buf, '1.0').should.eql(obj.$);
-      hessian.decode(buf, '1.0', true).should.eql( {
+      assert(buf[0] === 0x4d); // 'M'
+      assert.deepEqual(hessian.decode(buf, '1.0'), obj.$);
+      assert.deepEqual(hessian.decode(buf, '1.0', true), {
         '$class': 'hessian.test.demo.Car',
         '$': {
           a: { '$class': 'int', '$': 1 },
@@ -207,7 +212,7 @@ describe('object.test.js', function () {
     });
 
     it('should read and write one car list', function () {
-      hessian.decode(utils.bytes('v1/map/one_car_list'), '1.0').should.eql([
+      assert.deepEqual(hessian.decode(utils.bytes('v1/map/one_car_list'), '1.0'), [
         { a: 'a',
           c: 'c',
           b: 'b',
@@ -217,7 +222,7 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v1/map/one_car_list'), '1.0', true);
-      cars.should.eql({
+      assert.deepEqual(cars, {
         $class: 'java.util.ArrayList',
         $: [
           {
@@ -234,11 +239,11 @@ describe('object.test.js', function () {
         ]
       });
 
-      hessian.encode(cars, '1.0').should.eql(utils.bytes('v1/map/one_car_list'));
+      assert.deepEqual(hessian.encode(cars, '1.0'), utils.bytes('v1/map/one_car_list'));
     });
 
     it('should read and write two car list', function () {
-      hessian.decode(utils.bytes('v1/map/two_car_list'), '1.0').should.eql([
+      assert.deepEqual(hessian.decode(utils.bytes('v1/map/two_car_list'), '1.0'), [
         { a: 'a',
           c: 'c',
           b: 'b',
@@ -254,7 +259,7 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v1/map/two_car_list'), '1.0', true);
-      cars.should.eql({
+      assert.deepEqual(cars, {
         $class: 'java.util.ArrayList',
         $: [
           {
@@ -282,8 +287,8 @@ describe('object.test.js', function () {
       });
 
       var buf = hessian.encode(cars, '1.0');
-      buf.should.length(utils.bytes('v1/map/two_car_list').length);
-      buf.should.eql(utils.bytes('v1/map/two_car_list'));
+      assert(buf.length === utils.bytes('v1/map/two_car_list').length);
+      assert.deepEqual(buf, utils.bytes('v1/map/two_car_list'));
     });
 
     it('should read and write many cars', function () {
@@ -291,7 +296,7 @@ describe('object.test.js', function () {
       // list.add(new Car("model 1"));
       // list.add(new Car("model 2"));
       // list.add(new Car("model 3"));
-      hessian.decode(utils.bytes('v1/map/car_list'), '1.0').should.eql([
+      assert.deepEqual(hessian.decode(utils.bytes('v1/map/car_list'), '1.0'), [
         { a: 'a',
           c: 'c',
           b: 'b',
@@ -313,7 +318,7 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v1/map/car_list'), '1.0', true);
-      cars.should.eql({
+      assert.deepEqual(cars, {
         $class: 'java.util.ArrayList',
         $: [
           {
@@ -350,16 +355,16 @@ describe('object.test.js', function () {
         ]
       });
 
-      hessian.encode(cars, '1.0').should.eql(utils.bytes('v1/map/car_list'));
+      assert.deepEqual(hessian.encode(cars, '1.0'), utils.bytes('v1/map/car_list'));
     });
 
     describe('java.util.concurrent.atomic.AtomicLong', function () {
       it('should read and write', function () {
         var javabuf = utils.bytes('v1/object/AtomicLong0');
         var a0 = hessian.decode(javabuf);
-        a0.should.eql({value: 0});
+        assert.deepEqual(a0, {value: 0});
         var a0 = hessian.decode(javabuf, true);
-        a0.should.eql({
+        assert.deepEqual(a0, {
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
             value: {
@@ -368,13 +373,13 @@ describe('object.test.js', function () {
             }
           }
         });
-        hessian.encode(a0).should.eql(javabuf);
+        assert.deepEqual(hessian.encode(a0), javabuf);
 
         javabuf = utils.bytes('v1/object/AtomicLong1');
         var a1 = hessian.decode(javabuf);
-        a1.should.eql({value: 1});
+        assert.deepEqual(a1, {value: 1});
         var a1 = hessian.decode(javabuf, true);
-        a1.should.eql({
+        assert.deepEqual(a1, {
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
             value: {
@@ -383,18 +388,24 @@ describe('object.test.js', function () {
             }
           }
         });
-        hessian.encode(a1).should.eql(javabuf);
+        assert.deepEqual(hessian.encode(a1), javabuf);
       });
     });
   });
 
   describe('v2.0', function () {
+    it('should skip function', function() {
+      var o = { foo: 'bar', fn: function() {} };
+      var buf = hessian.encode(o, '2.0');
+      var output = hessian.decode(buf, '2.0');
+      assert.deepEqual(output, { foo: 'bar', fn: null });
+    });
+
     it('should decode and encode ConnectionRequest', function () {
       var javabuf = utils.bytes('v2/object/ConnectionRequest');
       var connreq1 = hessian.decode(javabuf, '2.0');
-      connreq1.should.have.keys('ctx');
-      connreq1.ctx.should.have.keys('id'); // 'this$0'
-      connreq1.ctx.id.should.equal(101);
+      assert(connreq1.ctx);
+      assert(connreq1.ctx.id === 101); // 'this$0'
 
       var connreq = hessian.decode(javabuf, '2.0', true);
       var jsconnreq = {
@@ -411,7 +422,7 @@ describe('object.test.js', function () {
       };
 
       // jsconnreq.$.ctx.$.this$0 = jsconnreq;
-      jsconnreq.should.eql(connreq);
+      assert.deepEqual(jsconnreq, connreq);
       var jsbuf = hessian.encode(connreq, '2.0');
       var jsbuf2 = hessian.encode(jsconnreq, '2.0');
       // jsbuf2.should.length(javabuf.length);
@@ -424,59 +435,39 @@ describe('object.test.js', function () {
     it('should decode hessian 1.0 ConnectionRequest', function () {
       var javabuf = utils.bytes('v1/object/ConnectionRequest');
       var connreq = hessian.decode(javabuf, '1.0', true);
-      connreq.$class.should.equal('hessian.ConnectionRequest');
-      connreq.$.ctx.$class.should.equal('hessian.ConnectionRequest$RequestContext');
+      assert(connreq.$class === 'hessian.ConnectionRequest');
+      assert(connreq.$.ctx.$class === 'hessian.ConnectionRequest$RequestContext');
     });
 
     it('should write enum Color', function () {
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.Main$Color',
         $: {
           name: 'RED'
         }
-      }, '2.0').should.eql(utils.bytes('v2/enum/red'));
+      }, '2.0'), utils.bytes('v2/enum/red'));
 
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.Main$Color',
         $: {
           name: 'GREEN'
         }
-      }, '2.0').should.eql(utils.bytes('v2/enum/green'));
+      }, '2.0'), utils.bytes('v2/enum/green'));
 
-      hessian.encode({
+      assert.deepEqual(hessian.encode({
         $class: 'hessian.Main$Color',
         $: {
           name: 'BLUE'
         }
-      }, '2.0').should.eql(utils.bytes('v2/enum/blue'));
+      }, '2.0'), utils.bytes('v2/enum/blue'));
     });
-
-    // it('should read hessian 1.0 enum Color', function () {
-    //   hessian.decode(utils.bytes('v1/enum/red'), '2.0', true).should.eql({
-    //     $class: 'hessian.Main$Color',
-    //     $: {
-    //       name: 'RED'
-    //     }
-    //   });
-
-    //   hessian.decode(utils.bytes('v1/enum/green'), '2.0', false).should.eql({
-    //     name: 'GREEN'
-    //   });
-
-    //   hessian.decode(utils.bytes('v1/enum/blue'), '2.0', true).should.eql({
-    //     $class: 'hessian.Main$Color',
-    //     $: {
-    //       name: 'BLUE'
-    //     }
-    //   });
-    // });
 
     it('should write enum with ref', function () {
       // list = new ArrayList();
       // list.add(Color.BLUE);
       // list.add(Color.RED);
       // list.add(Color.GREEN);
-      hessian.encode([
+      assert.deepEqual(hessian.encode([
         {
           $class: 'hessian.Main$Color',
           $: {
@@ -495,7 +486,7 @@ describe('object.test.js', function () {
             name: 'GREEN'
           }
         },
-      ], '2.0').should.eql(utils.bytes('v2/enum/lists'));
+      ], '2.0'), utils.bytes('v2/enum/lists'));
     });
 
     it('should read enum Color', function () {
@@ -507,37 +498,38 @@ describe('object.test.js', function () {
 
       // enum format:
       // O type 1 "name" o ref name-value
-      hessian.decode(utils.bytes('v2/enum/red'), '2.0').should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v2/enum/red'), '2.0'), {
         name: 'RED'
       });
 
-      hessian.decode(utils.bytes('v2/enum/green'), '2.0', true).should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v2/enum/green'), '2.0', true), {
         $class: 'hessian.Main$Color',
         $: {
           name: 'GREEN'
         }
       });
 
-      hessian.decode(utils.bytes('v2/enum/blue'), '2.0').should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v2/enum/blue'), '2.0'), {
         name: 'BLUE'
       });
 
-      hessian.decode(utils.bytes('v2/enum/green'), '2.0').should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v2/enum/green'), '2.0'), {
         name: 'GREEN'
       });
 
-      hessian.decode(utils.bytes('v2/enum/red'), '2.0', true).should.eql({
+      assert.deepEqual(hessian.decode(utils.bytes('v2/enum/red'), '2.0', true), {
         $class: 'hessian.Main$Color',
         $: {
           name: 'RED'
         }
       });
 
-      hessian.decode(utils.bytes('v2/enum/lists'), '2.0').should.eql(
+      assert.deepEqual(
+        hessian.decode(utils.bytes('v2/enum/lists'), '2.0'),
         [ { name: 'BLUE' }, { name: 'RED' }, { name: 'GREEN' } ]
       );
 
-      hessian.decode(utils.bytes('v2/enum/lists'), '2.0', true).should.eql([
+      assert.deepEqual(hessian.decode(utils.bytes('v2/enum/lists'), '2.0', true), [
         { '$class': 'hessian.Main$Color', '$': { name: 'BLUE' } },
         { '$class': 'hessian.Main$Color', '$': { name: 'RED' } },
         { '$class': 'hessian.Main$Color', '$': { name: 'GREEN' } }
@@ -550,13 +542,13 @@ describe('object.test.js', function () {
         $: {a: 1, b: 'map'}
       };
       var buf = hessian.encode(obj, '2.0');
-      buf[0].should.equal(0x43);
-      hessian.decode(buf, '2.0').should.eql(obj.$);
-      hessian.decode(buf, '2.0', true).should.eql(obj);
+      assert(buf[0] === 0x43);
+      assert.deepEqual(hessian.decode(buf, '2.0'), obj.$);
+      assert.deepEqual(hessian.decode(buf, '2.0', true), obj);
     });
 
     it('should read one car list', function () {
-      hessian.decode(utils.bytes('v2/map/one_car_list'), '2.0').should.eql([
+      assert.deepEqual(hessian.decode(utils.bytes('v2/map/one_car_list'), '2.0'), [
         { a: 'a',
           c: 'c',
           b: 'b',
@@ -566,7 +558,7 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v2/map/one_car_list'), '2.0', true);
-      cars.should.eql([
+      assert.deepEqual(cars, [
         {
           $class: 'hessian.demo.Car',
           $: {
@@ -579,11 +571,11 @@ describe('object.test.js', function () {
         }
       ]);
 
-      hessian.encode(cars, '2.0').should.eql(utils.bytes('v2/map/one_car_list'));
+      assert.deepEqual(hessian.encode(cars, '2.0'), utils.bytes('v2/map/one_car_list'));
     });
 
     it('should read two car list', function () {
-      hessian.decode(utils.bytes('v2/map/two_car_list'), '2.0').should.eql([
+      assert.deepEqual(hessian.decode(utils.bytes('v2/map/two_car_list'), '2.0'), [
         { a: 'a',
           c: 'c',
           b: 'b',
@@ -599,7 +591,7 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v2/map/two_car_list'), '2.0', true);
-      cars.should.eql([
+      assert.deepEqual(cars, [
         {
           $class: 'hessian.demo.Car',
           $: {
@@ -623,8 +615,8 @@ describe('object.test.js', function () {
       ]);
 
       var buf = hessian.encode(cars, '2.0');
-      buf.should.length(utils.bytes('v2/map/two_car_list').length);
-      buf.should.eql(utils.bytes('v2/map/two_car_list'));
+      assert(buf.length === utils.bytes('v2/map/two_car_list').length);
+      assert.deepEqual(buf, utils.bytes('v2/map/two_car_list'));
     });
 
     it('should read many cars', function () {
@@ -632,7 +624,7 @@ describe('object.test.js', function () {
       // list.add(new Car("model 1"));
       // list.add(new Car("model 2"));
       // list.add(new Car("model 3"));
-      hessian.decode(utils.bytes('v2/map/car_list'), '2.0').should.eql([
+      assert.deepEqual(hessian.decode(utils.bytes('v2/map/car_list'), '2.0'), [
         { a: 'a',
           c: 'c',
           b: 'b',
@@ -654,7 +646,7 @@ describe('object.test.js', function () {
       ]);
 
       var cars = hessian.decode(utils.bytes('v2/map/car_list'), '2.0', true);
-      cars.should.eql([
+      assert.deepEqual(cars, [
         { '$class': 'hessian.demo.Car',
           '$':
            { a: 'a',
@@ -681,143 +673,22 @@ describe('object.test.js', function () {
              mileage: 65536 } }
       ]);
 
-      hessian.encode(cars, '2.0').should.eql(utils.bytes('v2/map/car_list'));
+      assert.deepEqual(hessian.encode(cars, '2.0'), utils.bytes('v2/map/car_list'));
     });
-
-    // it('should read hessian 1.0 one car list', function () {
-    //   hessian.decode(utils.bytes('v1/map/one_car_list'), '2.0').should.eql([
-    //     { a: 'a',
-    //       c: 'c',
-    //       b: 'b',
-    //       model: 'model 1',
-    //       color: 'aquamarine',
-    //       mileage: 65536 }
-    //   ]);
-
-    //   var cars = hessian.decode(utils.bytes('v1/map/one_car_list'), '2.0', true);
-    //   cars.should.eql([
-    //     {
-    //       $class: 'hessian.demo.Car',
-    //       $: {
-    //         a: 'a',
-    //         c: 'c',
-    //         b: 'b',
-    //         model: 'model 1',
-    //         color: 'aquamarine',
-    //         mileage: 65536 }
-    //     }
-    //   ]);
-    // });
-
-    // it('should read hessian 1.0 two car list', function () {
-    //   hessian.decode(utils.bytes('v1/map/two_car_list'), '2.0').should.eql([
-    //     { a: 'a',
-    //       c: 'c',
-    //       b: 'b',
-    //       model: 'model 1',
-    //       color: 'aquamarine',
-    //       mileage: 65536 },
-    //     { a: 'a',
-    //       c: 'c',
-    //       b: 'b',
-    //       model: 'model 2',
-    //       color: 'aquamarine',
-    //       mileage: 65536 }
-    //   ]);
-
-    //   var cars = hessian.decode(utils.bytes('v1/map/two_car_list'), '2.0', true);
-    //   cars.should.eql([
-    //     {
-    //       $class: 'hessian.demo.Car',
-    //       $: {
-    //         a: 'a',
-    //         c: 'c',
-    //         b: 'b',
-    //         model: 'model 1',
-    //         color: 'aquamarine',
-    //         mileage: 65536 }
-    //     },
-    //     {
-    //       $class: 'hessian.demo.Car',
-    //       $: {
-    //         a: 'a',
-    //         c: 'c',
-    //         b: 'b',
-    //         model: 'model 2',
-    //         color: 'aquamarine',
-    //         mileage: 65536 }
-    //     }
-    //   ]);
-    // });
-
-    // it('should read hessian 1.0 many cars', function () {
-    //   // list = new ArrayList();
-    //   // list.add(new Car("model 1"));
-    //   // list.add(new Car("model 2"));
-    //   // list.add(new Car("model 3"));
-    //   hessian.decode(utils.bytes('v1/map/car_list'), '2.0').should.eql([
-    //     { a: 'a',
-    //       c: 'c',
-    //       b: 'b',
-    //       model: 'model 1',
-    //       color: 'aquamarine',
-    //       mileage: 65536 },
-    //     { a: 'a',
-    //       c: 'c',
-    //       b: 'b',
-    //       model: 'model 2',
-    //       color: 'aquamarine',
-    //       mileage: 65536 },
-    //     { a: 'a',
-    //       c: 'c',
-    //       b: 'b',
-    //       model: 'model 3',
-    //       color: 'aquamarine',
-    //       mileage: 65536 }
-    //   ]);
-
-    //   var cars = hessian.decode(utils.bytes('v1/map/car_list'), '2.0', true);
-    //   cars.should.eql([
-    //     { '$class': 'hessian.demo.Car',
-    //       '$':
-    //        { a: 'a',
-    //          c: 'c',
-    //          b: 'b',
-    //          model: 'model 1',
-    //          color: 'aquamarine',
-    //          mileage: 65536 } },
-    //     { '$class': 'hessian.demo.Car',
-    //       '$':
-    //        { a: 'a',
-    //          c: 'c',
-    //          b: 'b',
-    //          model: 'model 2',
-    //          color: 'aquamarine',
-    //          mileage: 65536 } },
-    //     { '$class': 'hessian.demo.Car',
-    //       '$':
-    //        { a: 'a',
-    //          c: 'c',
-    //          b: 'b',
-    //          model: 'model 3',
-    //          color: 'aquamarine',
-    //          mileage: 65536 } }
-    //   ]);
-    // });
 
     describe('java.util.concurrent.atomic.AtomicLong', function () {
       it('should read and write', function () {
         var javabuf = utils.bytes('v2/object/AtomicLong0');
         var a0 = hessian.decode(javabuf, '2.0');
-        a0.should.eql({value: 0});
+        assert.deepEqual(a0, {value: 0});
         var a0 = hessian.decode(javabuf, '2.0', true);
-        a0.should.eql({
+        assert.deepEqual(a0, {
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
             value: 0
           }
         });
-        hessian.encode({
+        assert.deepEqual(hessian.encode({
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
             value: {
@@ -825,19 +696,19 @@ describe('object.test.js', function () {
               $: 0
             }
           }
-        }, '2.0').should.eql(javabuf);
+        }, '2.0'), javabuf);
 
         javabuf = utils.bytes('v2/object/AtomicLong1');
         var a1 = hessian.decode(javabuf, '2.0');
-        a1.should.eql({value: 1});
+        assert.deepEqual(a1, {value: 1});
         var a1 = hessian.decode(javabuf, '2.0', true);
-        a1.should.eql({
+        assert.deepEqual(a1, {
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
             value: 1
           }
         });
-        hessian.encode({
+        assert.deepEqual(hessian.encode({
           $class: 'java.util.concurrent.atomic.AtomicLong',
           $: {
             value: {
@@ -845,7 +716,7 @@ describe('object.test.js', function () {
               $: 1
             }
           }
-        }, '2.0').should.eql(javabuf);
+        }, '2.0'), javabuf);
       });
     });
   });

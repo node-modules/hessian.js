@@ -8,11 +8,7 @@
 
 "use strict";
 
-/**
- * Module dependencies.
- */
-
-var should = require('should');
+var assert = require('assert');
 var hessian = require('../');
 
 describe('array.test.js', function () {
@@ -28,7 +24,7 @@ describe('array.test.js', function () {
       }
     ]);
     var a = hessian.decode(b);
-    a.should.eql([null, [1]]);
+    assert.deepEqual(a, [null, [1]]);
   });
 
   it('should write undefined v1', function () {
@@ -43,7 +39,7 @@ describe('array.test.js', function () {
       }
     ]);
     var a = hessian.decode(b);
-    a.should.eql([null, [1]]);
+    assert.deepEqual(a, [null, [1]]);
   });
 
   it('should write null v2', function () {
@@ -58,7 +54,7 @@ describe('array.test.js', function () {
       }
     ], '2.0');
     var a = hessian.decode(b, '2.0');
-    a.should.eql([null, [1]]);
+    assert.deepEqual(a, [null, [1]]);
   });
 
   it('should write undefined v2', function () {
@@ -73,6 +69,6 @@ describe('array.test.js', function () {
       }
     ], '2.0');
     var a = hessian.decode(b, '2.0');
-    a.should.eql([null, [1]]);
+    assert.deepEqual(a, [null, [1]]);
   });
 });
