@@ -1,4 +1,11 @@
 
+1.3.0 / 2017-07-25
+==================
+
+  * feat: map key enum object should try to use `name` property (#79)
+  * fix: skip regExp & Function property (#76)
+  * chore: fix npm download image
+
 1.2.1 / 2016-04-03
 ==================
 
