@@ -1,18 +1,4 @@
-/**!
- * hessian.js - benchmark/encode.js
- *
- * Copyright(c) fengmk2 and other contributors.
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
- */
-
 'use strict';
-
-/**
- * Module dependencies.
- */
 
 var ByteBuffer = require('byte');
 var Benchmark = require('benchmark');
@@ -100,6 +86,20 @@ suite
   hessian.encode(complexObject, '1.0');
 })
 .add('hessian2 encode: complex object', function() {
+  var complexObject = {
+    $class: 'com.hessiantest.org.MockRequest',
+    $: {
+      id: 123,
+      name: 'getData',
+      args: [1, makeStr('name', 1), makeStr('a', 200)],
+      conn: {
+        $class: 'com.hessiantest.org.MockRequestConnection',
+        $: {
+          ctx: java.long(1024)
+        }
+      }
+    }
+  };
   hessian.encode(complexObject, '2.0');
 })
 
@@ -177,3 +177,11 @@ suite
 // hessian2 encode: simple object  x   155,580 ops/sec ±0.82% (98 runs sampled)
 // hessian1 encode: complex object x   103,974 ops/sec ±1.34% (96 runs sampled)
 // hessian2 encode: complex object x   100,160 ops/sec ±1.18% (101 runs sampled)
+
+function makeStr(str, concats) {
+  var s = ''
+  while (concats--) {
+    s += str
+  }
+  return s
+}
