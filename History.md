@@ -1,4 +1,10 @@
 
+2.4.0 / 2017-08-02
+==================
+
+**features**
+  * [[`ab45730`](http://github.com/node-modules/hessian.js/commit/ab457306e0ab6ac28eaa0e93b3478bcb1fbf5108)] - feat: upgrade is-type-of to 1.1.0 (#81) (fengmk2 <<fengmk2@gmail.com>>)
+
 2.3.1 / 2017-07-25
 ==================
 
