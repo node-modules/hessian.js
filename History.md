@@ -1,4 +1,9 @@
 
+1.4.1 / 2017-08-16
+==================
+
+  * fix(writeLong) hessian2.0 write long bug (#84)
+
 1.4.0 / 2017-08-02
 ==================
 
@@ -72,7 +77,7 @@
 
  * feat(null): writeNull when obj.$ is null
 
-1.0.1 / 2014-08-27 
+1.0.1 / 2014-08-27
 ==================
 
   * Merge pull request #30 from node-modules/java.lang.Error
