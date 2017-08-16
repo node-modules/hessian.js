@@ -265,6 +265,118 @@ describe('long.test.js', function () {
       assert.deepEqual(buf, new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00]));
     });
 
+    it('should write string long', function () {
+      // -8 ~ 15
+      var buf = hessian.encode(java.long('0'), '2.0');
+      assert(buf.length === 1);
+      assert(buf[0] === 0xe0);
+      assert.deepEqual(buf, new Buffer([0xe0]));
+
+      buf = hessian.encode(java.long('-8'), '2.0');
+      assert(buf.length === 1);
+      assert(buf[0] === 0xd8);
+      assert.deepEqual(buf, new Buffer([0xd8]));
+
+      buf = hessian.encode(java.long('-7'), '2.0');
+      assert(buf.length === 1);
+      assert(buf[0] === 0xd9);
+      assert.deepEqual(buf, new Buffer([0xd9]));
+
+      buf = hessian.encode(java.long('15'), '2.0');
+      assert(buf.length === 1);
+      assert(buf[0] === 0xef);
+      assert.deepEqual(buf, new Buffer([0xef]));
+
+      buf = hessian.encode(java.long('14'), '2.0');
+      assert(buf.length === 1);
+      assert(buf[0] === 0xee);
+      assert.deepEqual(buf, new Buffer([0xee]));
+
+      // -2048 ~ 2047
+      buf = hessian.encode(java.long('-9'), '2.0');
+      assert(buf.length === 2);
+      assert(buf[0] === 0xf7);
+      assert(buf[1] === 0xf7);
+      assert.deepEqual(buf, new Buffer([0xf7, 0xf7]));
+
+      buf = hessian.encode(java.long('16'), '2.0');
+      assert(buf.length === 2);
+      assert(buf[0] === 0xf8);
+      assert(buf[1] === 0x10);
+      assert.deepEqual(buf, new Buffer([0xf8, 0x10]));
+
+      buf = hessian.encode(java.long('255'), '2.0');
+      assert(buf.length === 2);
+      assert(buf[0] === 0xf8);
+      assert(buf[1] === 0xff);
+      assert.deepEqual(buf, new Buffer([0xf8, 0xff]));
+
+      buf = hessian.encode(java.long('-2048'), '2.0');
+      assert(buf.length === 2);
+      assert(buf[0] === 0xf0);
+      assert(buf[1] === 0);
+      assert.deepEqual(buf, new Buffer([0xf0, 0x00]));
+
+      buf = hessian.encode(java.long('2047'), '2.0');
+      assert(buf.length === 2);
+      assert(buf[0] === 0xff);
+      assert(buf[1] === 0xff);
+      assert.deepEqual(buf, new Buffer([0xff, 0xff]));
+
+      // -262144 ~ 262143
+      buf = hessian.encode(java.long('262143'), '2.0');
+      assert(buf.length === 3);
+      assert(buf[0] === 0x3f);
+      assert(buf[1] === 0xff);
+      assert(buf[2] === 0xff);
+      assert.deepEqual(buf, new Buffer([0x3f, 0xff, 0xff]));
+
+      buf = hessian.encode(java.long('-262144'), '2.0');
+      assert(buf.length === 3);
+      assert(buf[0] === 0x38);
+      assert(buf[1] === 0);
+      assert(buf[2] === 0);
+      assert.deepEqual(buf, new Buffer([0x38, 0x00, 0x00]));
+
+      buf = hessian.encode(java.long('2048'), '2.0');
+      assert(buf.length === 3);
+      assert(buf[0] === 0x3c);
+      assert(buf[1] === 0x08);
+      assert(buf[2] === 0x00);
+      assert.deepEqual(buf, new Buffer([0x3c, 0x08, 0x00]));
+
+      buf = hessian.encode(java.long('-2049'), '2.0');
+      assert(buf.length === 3);
+      assert(buf[0] === 0x3b);
+      assert(buf[1] === 0xf7);
+      assert(buf[2] === 0xff);
+      assert.deepEqual(buf, new Buffer([0x3b, 0xf7, 0xff]));
+
+      // -2147483648 ~ 2147483647
+      buf = hessian.encode(java.long('-2147483648'), '2.0');
+      assert(buf.length === 5);
+      assert(buf[0] === 0x77);
+      assert(buf[1] === 0x80);
+      assert(buf[2] === 0x00);
+      assert(buf[3] === 0x00);
+      assert(buf[4] === 0x00);
+      assert.deepEqual(buf, new Buffer([0x77, 0x80, 0x00, 0x00, 0x00]));
+
+      buf = hessian.encode(java.long('2147483647'), '2.0');
+      assert(buf.length === 5);
+      assert(buf[0] === 0x77);
+      assert(buf[1] === 0x7f);
+      assert(buf[2] === 0xff);
+      assert(buf[3] === 0xff);
+      assert(buf[4] === 0xff);
+      assert.deepEqual(buf, new Buffer([0x77, 0x7f, 0xff, 0xff, 0xff]));
+
+      // L
+      buf = hessian.encode(java.long('2147483648'), '2.0');
+      assert(buf.length === 9);
+      assert.deepEqual(buf, new Buffer([0x4c, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00]));
+    });
+
     it('should write and read equal java impl', function () {
       assert.deepEqual(hessian.encode(java.long(0), '2.0'), utils.bytes('v2/long/0'));
       assert(hessian.decode(utils.bytes('v2/long/0'), '2.0') === 0);
