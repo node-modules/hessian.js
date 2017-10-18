@@ -1,11 +1,11 @@
 {
   "name": "hessian.js-1",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Hessian Serialization written by pure JavaScript, support all kind of types in Java.",
   "main": "index.js",
   "files": [
     "index.js",
-    "lib/"
+    "lib"
   ],
   "scripts": {
     "test": "make jshint && make test"

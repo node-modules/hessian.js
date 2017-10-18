@@ -1,4 +1,13 @@
 
+1.4.2 / 2017-10-18
+==================
+
+**fixes**
+  * [[`c64f4d9`](http://github.com/node-modules/hessian.js/commit/c64f4d9e9f4fa994fa26bc2d5f4bda8e3c9e542b)] - fix: keep same class fields sort (#86) (fengmk2 <<fengmk2@gmail.com>>)
+
+**others**
+  * [[`5b384e2`](http://github.com/node-modules/hessian.js/commit/5b384e2d3a54ea72ae35dba3ea6a1a7090c72fd6)] - test: fix long test case (#88) (Yiyu He <<dead_horse@qq.com>>)
+
 1.4.1 / 2017-08-16
 ==================
 
