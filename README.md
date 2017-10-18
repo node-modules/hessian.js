@@ -115,6 +115,26 @@ var testObject = {
 encoder.write(testObject);
 ```
 
+### Consistent Java type
+
+If a type of Class contains a plurality of data, you must ensure that the number of attributes,
+and each instance of the order is the same!
+
+```js
+// Wrong
+[
+  {$class: 'com.X', $: {a: 1, b: 2}},
+  {$class: 'com.X', $: {b: 22, a: 11}},
+  {$class: 'com.X', $: {a: 1, b: 2, c: 3}}]
+
+// Right
+[
+  {$class: 'com.X', $: {a: 1, b: 2, c: 0}},
+  {$class: 'com.X', $: {a: 11, b: 22, c: 0}},
+  {$class: 'com.X', $: {a: 1, b: 2, c: 3}},
+]
+```
+
 ## Decoder
 
 ```js
