@@ -46,6 +46,10 @@ describe('long.test.js', function () {
       hessian.encode(java.long(0)),
       new Buffer(['L'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0])
     );
+    assert.deepEqual(
+      hessian.encode(Long.fromNumber(0)),
+      new Buffer(['L'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0])
+    );
   });
 
   it('should write and read equal java impl', function () {
