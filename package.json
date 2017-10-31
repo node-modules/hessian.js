@@ -47,7 +47,7 @@
     "istanbul": "*",
     "js-to-java": "2",
     "jshint": "*",
-    "mocha": "*"
+    "mocha": "2"
   },
   "engines": {
     "node": ">= 0.12.0"
