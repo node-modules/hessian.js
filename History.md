@@ -1,4 +1,10 @@
 
+2.5.0 / 2017-11-01
+==================
+
+**features**
+  * [[`4d3b48e`](http://github.com/dead-horse/hessian.js/commit/4d3b48e6e5ed06dca54f2c1dffeb092628b80fbd)] - feat: support cache class for v2/decode (#90) (Yiyu He <<dead_horse@qq.com>>)
+
 2.4.0 / 2017-08-02
 ==================
 
