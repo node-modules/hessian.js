@@ -1,4 +1,13 @@
 
+2.6.0 / 2017-11-16
+==================
+
+**features**
+  * [[`1403a44`](http://github.com/dead-horse/hessian.js/commit/1403a445db7982f35c2b557f13411a9ced4b83e1)] - feat: use byte.getRawStringByStringLength to read utf8 string (#94) (Yiyu He <<dead_horse@qq.com>>)
+
+**fixes**
+  * [[`a7a3f92`](http://github.com/dead-horse/hessian.js/commit/a7a3f9276bc2d5f2bd48006850694b494285c3a4)] - fix: support writeLong parameter is a Long object (#96) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 2.5.0 / 2017-11-01
 ==================
 
