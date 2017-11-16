@@ -36,10 +36,10 @@ suite
 })
 .run({ 'async': false });
 
-  // Cache Benchmark
-  // node version: v8.5.0, date: Mon Oct 30 2017 12:22:20 GMT+0800 (CST)
-  // Starting...
-  // 2 tests completed.
-  //
-  // with cache    x 16,065 ops/sec ±1.46% (83 runs sampled)
-  // without cache x  5,845 ops/sec ±1.69% (86 runs sampled)
+// Cache Benchmark
+// node version: v8.9.0, date: Thu Nov 16 2017 13:26:18 GMT+0800 (CST)
+// Starting...
+// 2 tests completed.
+//
+// with cache    x 21,724 ops/sec ±2.01% (82 runs sampled)
+// without cache x  8,523 ops/sec ±1.17% (89 runs sampled)
