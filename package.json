@@ -1,6 +1,6 @@
 {
   "name": "hessian.js",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Hessian Serialization written by pure JavaScript, support all kind of types in Java.",
   "main": "index.js",
   "files": [
@@ -52,5 +52,8 @@
     "jshint": "^2.9.5",
     "mm": "^2.2.0",
     "mocha": "^3.5.3"
+  },
+  "engines": {
+    "node": ">= 0.12.0"
   }
 }
