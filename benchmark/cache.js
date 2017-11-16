@@ -37,9 +37,9 @@ suite
 .run({ 'async': false });
 
 // Cache Benchmark
-// node version: v8.5.0, date: Tue Oct 31 2017 17:17:54 GMT+0800 (CST)
+// node version: v8.9.0, date: Thu Nov 16 2017 13:30:47 GMT+0800 (CST)
 // Starting...
 // 2 tests completed.
 //
-// with cache    x 14,006 ops/sec ±2.21% (83 runs sampled)
-// without cache x  5,506 ops/sec ±1.94% (83 runs sampled)
+// with cache    x 19,947 ops/sec ±3.81% (80 runs sampled)
+// without cache x  8,360 ops/sec ±1.38% (87 runs sampled)
