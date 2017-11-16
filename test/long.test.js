@@ -366,6 +366,15 @@ describe('long.test.js', function () {
     });
 
     it('should write and read equal java impl', function () {
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(15)), '2.0'), utils.bytes('v2/long/15'));
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(-8)), '2.0'), utils.bytes('v2/long/-8'));
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(-2048)), '2.0'), utils.bytes('v2/long/-2048'));
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(2047)), '2.0'), utils.bytes('v2/long/2047'));
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(-262144)), '2.0'), utils.bytes('v2/long/-262144'));
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(262143)), '2.0'), utils.bytes('v2/long/262143'));
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(-2147483648)), '2.0'), utils.bytes('v2/long/-2147483648'));
+      assert.deepEqual(hessian.encode(java.long(Long.fromNumber(2147483647)), '2.0'), utils.bytes('v2/long/2147483647'));
+
       assert.deepEqual(hessian.encode(java.long(0), '2.0'), utils.bytes('v2/long/0'));
       assert(hessian.decode(utils.bytes('v2/long/0'), '2.0') === 0);
       assert.deepEqual(hessian.encode(java.long(-8), '2.0'), utils.bytes('v2/long/-8'));
