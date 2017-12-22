@@ -51,5 +51,28 @@ describe('v2.optimize.endecode.test.js', function () {
       assert.deepEqual(hessian.decode(buf), obj.$);
       assert.deepEqual(hessian.decode(buf, '2.0', true), obj);
     });
+
+    it('should reset encoder ok', function () {
+      encoder.byteBuffer.putChar('o');
+      encoder.objects.ok = true;
+      encoder._typeRefs.push('ok');
+      encoder.reset();
+      assert.equal(encoder.byteBuffer._offset, 0);
+      assert.equal(Object.keys(encoder.objects).length, 0);
+      assert.equal(encoder._typeRefs.length, 0);
+    });
+
+    it('should clean decoder ok', function () {
+      var decoder = new DecoderV2([], []);
+      var byteBuffer = decoder.byteBuffer;
+      decoder.refId = 1;
+      decoder.refMap = {a: 1};
+      decoder.types.push(1);
+      decoder.clean();
+      assert.notEqual(byteBuffer, decoder.byteBuffer);
+      assert.equal(decoder.refId, 0);
+      assert.equal(Object.keys(decoder.refMap).length, 0);
+      assert.equal(decoder.types.length, 0);
+    });
   });
 });
