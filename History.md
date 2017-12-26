@@ -1,4 +1,10 @@
 
+2.7.0 / 2017-12-26
+==================
+
+**features**
+  * [[`ceaef7b`](http://github.com/dead-horse/hessian.js/commit/ceaef7b169772ad8edb07a5839d830c4789eee1e)] - feat: hessian2 optimize codec (#97) (Hongcai Deng <<admin@dhchouse.com>>)
+
 2.6.0 / 2017-11-16
 ==================
 
