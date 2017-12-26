@@ -401,6 +401,9 @@ xd8 - xef    # one-octet compact long (-x8 to xf, xe0 is 0)
 xf0 - xff    # two-octet compact long (-x800 to x7ff, xf8 is 0)
 ```
 
+## About Hessian 2.0 Optimized Decoder
+Hessian 2.0 introduced [ref](http://hessian.caucho.com/doc/hessian-serialization.html##ref) to avoid sending duplicated class definition in the same context. Actully, the `context` can promote to `connection` level in some RPC framework. For example, [EADS](https://www.aliyun.com/product/edas), Requests using the same connection will not change their class definition.
+
 ## Licences
 
 [MIT](LICENSE)
