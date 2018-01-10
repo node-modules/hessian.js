@@ -1,4 +1,10 @@
 
+2.8.0 / 2018-01-10
+==================
+
+**features**
+  * [[`ce5a7f8`](http://github.com/node-modules/hessian.js/commit/ce5a7f81fb65285f04619d3131872b2325dd92b0)] - feat: support convert java.util.Locale to com.caucho.hessian.io.LocaleHandle (#99) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 2.7.0 / 2017-12-26
 ==================
 
