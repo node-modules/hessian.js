@@ -17,6 +17,12 @@ describe('test/convert.test.js', function() {
         }, version);
         assert.deepEqual(buf1, buf2);
       });
+
+      it('should convert [java.util.Locale to [com.caucho.hessian.io.LocaleHandle', function() {
+        var buf1 = hessian.encode(java.array.Locale(['zh_CN', 'en_US']), version);
+        var buf2 = hessian.encode(java.array('java.util.Locale', ['zh_CN', 'en_US']), version);
+        assert.deepEqual(buf1, buf2);
+      });
     });
   });
 });
