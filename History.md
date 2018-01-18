@@ -1,4 +1,10 @@
 
+2.8.1 / 2018-01-18
+==================
+
+**fixes**
+  * [[`b231db0`](http://github.com/dead-horse/hessian.js/commit/b231db01af9379936bd810762a1a0bb1f37cd59c)] - fix: compose cache key with class and fields length (#102) (Yiyu He <<dead_horse@qq.com>>)
+
 2.8.0 / 2018-01-10
 ==================
 
