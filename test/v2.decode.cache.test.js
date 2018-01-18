@@ -117,10 +117,21 @@ describe('v2.decode.cache.test.js', function () {
         ]);
       });
 
-      it('should write "{$class: "hessian.test.demo.Car", $: {a: 1}}"', function () {
+      it('should write "{$class: "hessian.test.demo.Car", $: {a: 1, b: "map"}}"', function () {
         var obj = {
           $class: 'hessian.test.demo.Car',
           $: {a: 1, b: 'map'}
+        };
+        var buf = hessian.encode(obj, '2.0');
+        assert(buf[0] === 0x43);
+        assert.deepEqual(hessian.decode(buf, '2.0'), obj.$);
+        assert.deepEqual(hessian.decode(buf, '2.0', true), obj);
+      });
+
+      it('should write "{$class: "hessian.test.demo.Car", $: {a: 1, b: "map", c: 2}}"', function () {
+        var obj = {
+          $class: 'hessian.test.demo.Car',
+          $: {a: 1, b: 'map', c: 2}
         };
         var buf = hessian.encode(obj, '2.0');
         assert(buf[0] === 0x43);
