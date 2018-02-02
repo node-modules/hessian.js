@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
+    "@protobufjs/codegen": "^2.0.4",
     "byte": "^1.2.0",
     "debug": "^3.1.0",
     "is-type-of": "^1.2.0",
