@@ -1,4 +1,10 @@
 
+1.8.0 / 2018-02-02
+==================
+
+**others**
+  * [[`e17d20f`](http://github.com/node-modules/hessian.js/commit/e17d20f1727b196247b55efc668d3ccd50aa033e)] - refactor: enhance decode class performance with pre-compile + cache (#103) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.7.1 / 2018-01-18
 ==================
 
