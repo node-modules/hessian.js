@@ -1,4 +1,10 @@
 
+1.8.1 / 2018-03-16
+==================
+
+**fixes**
+  * [[`f93916c`](http://github.com/node-modules/hessian.js/commit/f93916c96ba65125cc070b776fbbe599ab844476)] - fix: decode inner class issue (#104) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.8.0 / 2018-02-02
 ==================
 
