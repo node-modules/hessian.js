@@ -14,5 +14,6 @@ module.exports = {
   ],
   semver: [
     'mocha@3',
+    'byte@1',
   ],
 };
