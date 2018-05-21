@@ -1,4 +1,10 @@
 
+1.8.2 / 2018-05-21
+==================
+
+**fixes**
+  * [[`2a67803`](http://github.com/node-modules/hessian.js/commit/2a678034c1509a43b5a6fee5a3e81b8dfe1bd200)] - fix: change the way to check a type whether a exception (#106) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.8.1 / 2018-03-16
 ==================
 
