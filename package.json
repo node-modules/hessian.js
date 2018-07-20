@@ -35,16 +35,16 @@
     "debug": "^3.1.0",
     "is-type-of": "^1.2.0",
     "long": "^4.0.0",
-    "utility": "^1.13.1"
+    "utility": "^1.14.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
     "istanbul": "^0.4.5",
-    "js-to-java": "^2.5.0",
+    "js-to-java": "^2.6.0",
     "jshint": "^2.9.5",
-    "mm": "^2.2.0",
+    "mm": "^2.2.2",
     "mocha": "^3.5.3",
     "should": "^13.2.1"
   },

@@ -13,6 +13,7 @@
 var assert = require('assert');
 var hessian = require('../');
 var utils = require('./utils');
+var java = require('js-to-java');
 
 describe('exception.test.js', function () {
   describe('v1.0', function () {
@@ -140,6 +141,24 @@ describe('exception.test.js', function () {
       assert(e.name === 'com.alipay.sofa.rpc.quickstart.Test$Error');
       assert(e.message === 'message');
       assert(e.stack === 'com.alipay.sofa.rpc.quickstart.Test$Error: message\n    at com.alipay.sofa.rpc.quickstart.Test.main (Test.java:30)');
+    });
+
+    it('should detect exception without cause', function () {
+      var e = java.exception(new Error('mock error'));
+      delete e.$.cause;
+      var buf = hessian.encode(e, '2.0');
+      assert(Buffer.isBuffer(buf));
+
+      var err = hessian.decode(buf, '2.0');
+      assert(err instanceof Error);
+      assert(err.message === 'Error: mock error');
+
+      buf = hessian.encode(e, '1.0');
+      assert(Buffer.isBuffer(buf));
+
+      err = hessian.decode(buf, '1.0');
+      assert(err instanceof Error);
+      assert(err.message === 'Error: mock error');
     });
   });
 });
