@@ -1,4 +1,10 @@
 
+1.8.3 / 2018-07-20
+==================
+
+**fixes**
+  * [[`954ae4a`](http://github.com/node-modules/hessian.js/commit/954ae4af214fbadbd13feb5ae6dab7637ec87fd4)] - fix: change exception detect logic (#107) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.8.2 / 2018-05-21
 ==================
 
