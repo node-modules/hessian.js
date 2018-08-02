@@ -86,13 +86,13 @@ describe('hessian v1', function () {
       tests.forEach(function (t, idx) {
         assert.throws(function () {
           var buf = encoder.writeInt(t);
-        }, 'hessian writeInt expect input type is `int32`, but got `number` : ' + tests[idx] + ' ');
+        }, new RegExp('hessian writeInt expect input type is `int32`, but got `number` : ' + tests[idx] + ' '));
       });
     });
 
     it('should read int error', function () {
       var tests = [
-        [new Buffer([0x48, 0x00, 0x00, 0x00, 0x00]), 'hessian readInt only accept label `I` but got unexpect label `H`'],
+        [new Buffer([0x48, 0x00, 0x00, 0x00, 0x00]), /hessian readInt only accept label `I` but got unexpect label `H`/],
       ];
       tests.forEach(function (t) {
         assert.throws(function () {
@@ -140,7 +140,7 @@ describe('hessian v1', function () {
     it('should read long error', function () {
       var tests = [
         [new Buffer([0x4b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readLong only accept label `L` but got unexpect label `K`']
+        /hessian readLong only accept label `L` but got unexpect label `K`/]
       ];
       tests.forEach(function (t) {
         assert.throws(function () {
@@ -175,7 +175,7 @@ describe('hessian v1', function () {
     it('should read double error', function () {
       var tests = [
         [new Buffer([0x45, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDouble only accept label `D` but got unexpect label `E`']
+        /hessian readDouble only accept label `D` but got unexpect label `E`/]
       ];
       tests.forEach(function (t) {
         assert.throws(function () {
@@ -204,7 +204,7 @@ describe('hessian v1', function () {
     it('should read date error', function () {
       var tests = [
         [new Buffer([0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        'hessian readDate only accept label `d` but got unexpect label `e`']
+        /hessian readDate only accept label `d` but got unexpect label `e`/]
       ];
       tests.forEach(function (t) {
         assert.throws(function () {
@@ -233,8 +233,8 @@ describe('hessian v1', function () {
 
     it('should read bytes error', function () {
       var tests = [
-        [new Buffer([0x41, 0x00, 0x02, 0x00]), 'hessian readBytes only accept label `b,B` but got unexpect label `A`'],
-        [new Buffer([0x62, 0x00, 0x01, 0x00, 0x01]), 'hessian readBytes only accept label `b,B` but got unexpect label `\u0001`'],
+        [new Buffer([0x41, 0x00, 0x02, 0x00]), /hessian readBytes only accept label `b,B` but got unexpect label `A`/],
+        [new Buffer([0x62, 0x00, 0x01, 0x00, 0x01]), /hessian readBytes only accept label `b,B` but got unexpect label `\u0001`/],
       ];
 
       tests.forEach(function (t) {
@@ -258,16 +258,16 @@ describe('hessian v1', function () {
     it('should write type error', function () {
       assert.throws(function () {
         encoder.writeBytes();
-      }, 'hessian writeBytes expect input type is `buffer`, but got `undefined` : undefined ');
+      }, /hessian writeBytes expect input type is `buffer`, but got `undefined` : undefined /);
       assert.throws(function () {
         encoder.writeBytes('');
-      }, 'hessian writeBytes expect input type is `buffer`, but got `string` : "" ');
+      }, /hessian writeBytes expect input type is `buffer`, but got `string` : "" /);
       assert.throws(function () {
         encoder.writeBytes(null);
-      }, 'hessian writeBytes expect input type is `buffer`, but got `object` : null ');
+      }, /hessian writeBytes expect input type is `buffer`, but got `object` : null /);
       assert.throws(function () {
         encoder.writeBytes(100);
-      }, 'hessian writeBytes expect input type is `buffer`, but got `number` : 100 ');
+      }, /hessian writeBytes expect input type is `buffer`, but got `number` : 100 /);
     });
 
     it('should write and read empty bytes', function () {
@@ -297,9 +297,9 @@ describe('hessian v1', function () {
 
     it('should read string error', function () {
       var tests = [
-        [new Buffer([0x72, 0x00, 0x02, 0x00]), 'hessian readString error, unexpect string code: 0x72'],
-        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), 'hessian readString error, unexpect string code: 0x1'],
-        [new Buffer([0x73, 0x00, 0x01, 0xf0, 0x20]), 'string is not valid UTF-8 encode'],
+        [new Buffer([0x72, 0x00, 0x02, 0x00]), /hessian readString error, unexpect string code: 0x72/],
+        [new Buffer([0x73, 0x00, 0x01, 0x00, 0x01]), /hessian readString error, unexpect string code: 0x1/],
+        [new Buffer([0x73, 0x00, 0x01, 0xf0, 0x20]), /string is not valid UTF-8 encode/],
       ];
 
       tests.forEach(function (t) {
@@ -312,17 +312,17 @@ describe('hessian v1', function () {
     it('should write type error', function () {
       assert.throws(function () {
         encoder.writeString();
-      }, 'hessian writeString expect input type is `string`, but got `undefined` : undefined ');
+      }, /hessian writeString expect input type is `string`, but got `undefined` : undefined /);
       // v0.10.28 return [1,2,3,4,5]
       // (function () {
       //   encoder.writeString(new Buffer([1,2,3,4,5]));
       // }).should.throw('hessian writeString expect input type is `string`, but got `object` : {"type":"Buffer","data":[1,2,3,4,5]} ');
       assert.throws(function () {
         encoder.writeString(null);
-      }, 'hessian writeString expect input type is `string`, but got `object` : null ');
+      }, /hessian writeString expect input type is `string`, but got `object` : null /);
       assert.throws(function () {
         encoder.writeString(100);
-      }, 'hessian writeString expect input type is `string`, but got `number` : 100 ');
+      }, /hessian writeString expect input type is `string`, but got `number` : 100 /);
     });
 
     it('should string length equal MAX_CHAR_TRUNK_SIZE work', function () {
@@ -468,13 +468,13 @@ describe('hessian v1', function () {
     it('should write type error', function () {
       assert.throws(function () {
         encoder.writeObject('123');
-      }, 'hessian writeObject / writeMap expect input type is `object`, but got `string` : "123" ');
+      }, /hessian writeObject \/ writeMap expect input type is `object`, but got `string` : "123" /);
       assert.throws(function () {
         encoder.writeObject(1.111);
-      }, 'hessian writeObject / writeMap expect input type is `object`, but got `number` : 1.111 ');
+      }, /hessian writeObject \/ writeMap expect input type is `object`, but got `number` : 1.111 /);
       assert.throws(function () {
         encoder.writeObject(100);
-      }, 'hessian writeObject / writeMap expect input type is `object`, but got `number` : 100 ');
+      }, /hessian writeObject \/ writeMap expect input type is `object`, but got `number` : 100 /);
     });
   });
 
@@ -550,16 +550,16 @@ describe('hessian v1', function () {
     it('should write type error', function () {
       assert.throws(function () {
         encoder.writeArray();
-      }, 'hessian writeArray input type invalid');
+      }, /hessian writeArray input type invalid/);
       assert.throws(function () {
         encoder.writeArray('123');
-      }, 'hessian writeArray input type invalid');
+      }, /hessian writeArray input type invalid/);
       assert.throws(function () {
         encoder.writeArray(1.111);
-      }, 'hessian writeArray input type invalid');
+      }, /hessian writeArray input type invalid/);
       assert.throws(function () {
         encoder.writeArray(100);
-      }, 'hessian writeArray input type invalid');
+      }, /hessian writeArray input type invalid/);
     });
   });
 
@@ -626,7 +626,7 @@ describe('hessian v1', function () {
       var buf = new Buffer([0x50, 0x11]);
       assert.throws(function() {
         hessian.decode(buf);
-      }, 'hessian read got an unexpect code: 0x50');
+      }, /hessian read got an unexpect code: 0x50/);
     });
   });
 });

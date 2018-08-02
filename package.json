@@ -5,7 +5,7 @@
   "main": "index.js",
   "files": [
     "index.js",
-    "lib/"
+    "lib"
   ],
   "scripts": {
     "test": "mocha -R spec -t 15000 test/*.test.js",

@@ -1,12 +1,3 @@
-/**
- * Copyright(c) node-modules and other contributors.
- * MIT Licensed
- *
- * Authors:
- *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.com)
- */
-
 'use strict';
 
 var EncoderV1 = exports.EncoderV1 = exports.Encoder = require('./lib/v1/encoder');
