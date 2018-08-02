@@ -1,15 +1,3 @@
-/**
- * hessian.js - test/date.test.js
- *
- * Copyright(c)
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
- */
-
-/* global describe, it */
-
 'use strict';
 
 var assert = require('assert');

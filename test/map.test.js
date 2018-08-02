@@ -1,14 +1,4 @@
-/**
- * hessian.js - test/map.test.js
- *
- * Copyright(c)
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
- */
-
-"use strict";
+'use strict';
 
 var assert = require('assert');
 var hessian = require('../');

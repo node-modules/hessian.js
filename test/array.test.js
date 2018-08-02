@@ -1,12 +1,4 @@
-/**
- * Copyright(c) node-modules and other contributors.
- * MIT Licensed
- *
- * Authors:
- *   汤尧 <tangyao@gmail.com> (http://tangyao.me)
- */
-
-"use strict";
+'use strict';
 
 var assert = require('assert');
 var hessian = require('../');

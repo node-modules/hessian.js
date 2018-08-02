@@ -1,14 +1,4 @@
-/**
- * hessian.js - test/string.test.js
- *
- * Copyright(c)
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
- */
-
-"use strict";
+'use strict';
 
 var assert = require('assert');
 var hessian = require('../');
@@ -167,7 +157,7 @@ describe('string.test.js', function () {
     );
 
   });
-  
+
   it.skip('should write string same as java write exclude', function () {
     var largeString = new Array(65535);
     for (var i = 0; i < largeString.length; i += 2) {
@@ -345,7 +335,7 @@ describe('string.test.js', function () {
       );
 
     });
-  
+
     it.skip('should write string same as java write exclude', function () {
       var largeString = new Array(65535);
       for (var i = 0; i < largeString.length; i += 2) {
