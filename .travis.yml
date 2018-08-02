@@ -1,10 +1,12 @@
 sudo: false
 language: node_js
 node_js:
+  - '10'
+  - '8'
   - '6'
   - '4'
   - '0.12'
 script:
-  - "npm run ci"
+  - 'npm run ci'
 after_script:
-  - "npm i codecov && codecov"
+  - 'npm i codecov && codecov'

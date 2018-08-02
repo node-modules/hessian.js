@@ -1,12 +1,3 @@
-/**
- * hessian.js - test/decode.circular.test.js
- *
- * Copyright(c)
- *
- * Authors:
- *   tangyao <tangyao@alipay.com> (http://tangyao.me/)
- */
-
 'use strict';
 
 var assert = require('assert');
@@ -22,7 +13,7 @@ describe('test/decode.circular.test.js', function () {
       JSON.stringify(rs) === '{"module":"a","desc":"b","versions":[{"version":"c","assets":["i"]}]}'
     );
   });
-  
+
 
   it('v2 decode()', function () {
     var javabuf = utils.bytes('v2/object/ConnectionRequest');

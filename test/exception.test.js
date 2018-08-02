@@ -1,14 +1,4 @@
-/**
- * hessian.js - test/exception.test.js
- *
- * Copyright(c)
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
- */
-
-"use strict";
+'use strict';
 
 var assert = require('assert');
 var hessian = require('../');
@@ -99,7 +89,7 @@ describe('exception.test.js', function () {
       assert(e.name === 'java.io.IOException');
       assert(e.message === '模拟测试异常; this is a java IOException instance');
       assert(e.stack === 'java.io.IOException: 模拟测试异常; this is a java IOException instance\n    at hessian.Main.main (Main.java:1303)');
-      
+
       var e = hessian.decode(utils.bytes('v2/exception/UndeclaredThrowableException3'), '2.0');
       assert(e instanceof Error);
       assert(e.name === 'com.taobao.hsf.exception.HSFServiceAddressNotFoundException');
