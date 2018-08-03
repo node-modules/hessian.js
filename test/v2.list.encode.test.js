@@ -8,9 +8,7 @@ var utils = require('../lib/utils');
 var java = require('js-to-java');
 
 describe('hessian v2', function () {
-
-  it('v2 list encode should ok', function() {
-
+  it('v2 list encode should ok', function () {
     var arg = {
       "$class": "com.x.Site",
       "$": {
@@ -205,6 +203,9 @@ describe('hessian v2', function () {
     var rs = hessian.decode(bytes, '2.0');
     assert.deepEqual(java.revert(arg), rs);
 
+    hessian.encoderV2.reset();
+    assert(hessian.encoderV2._classRefs.length === 0);
+    assert(hessian.encoderV2._typeRefs.length === 0);
+    assert(Object.keys(hessian.encoderV2._classRefFields).length === 0);
   });
-
 });
