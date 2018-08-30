@@ -42,6 +42,7 @@ describe('exception.test.js', function () {
       assert(
         e.stack === 'java.io.IOException: this is a java IOException instance\n    at hessian.Main.main (Main.java:1283)'
       );
+      assert(Object.keys(e).indexOf('cause') === -1);
       assert(e.cause);
       assert(e.cause.detailMessage === 'this is a java IOException instance');
 
