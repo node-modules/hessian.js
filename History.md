@@ -1,4 +1,10 @@
 
+1.8.4 / 2018-08-30
+==================
+
+**fixes**
+  * [[`a529d50`](http://github.com/node-modules/hessian.js/commit/a529d50ae86adf94cc2a5b557c6c9caa79ec8fe5)] - fix: make cause unenumerable (#111) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.8.3 / 2018-07-20
 ==================
 
