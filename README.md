@@ -135,6 +135,35 @@ and each instance of the order is the same!
 ]
 ```
 
+### Declare a custom Map type
+
+You need to declare a custom Map type with isMap property
+
+[Java example](https://github.com/mongodb/mongo-java-driver/blob/master/bson/src/main/org/bson/Document.java)
+
+```js
+var hessian = require('hessian.js-1');
+var encoder = new hessian.Encoder();
+
+var document = {
+  $class: 'org.bson.Document',
+  $: {
+    _id: {
+      $class: 'org.bson.Document',
+      $: {
+        $in: [
+          '5bd6a201c816e527d97cb1ad',
+        ],
+      },
+      isMap: true, // mark it as a Map
+    },
+  },
+  isMap: true, // mark it as a Map
+};
+
+encoder.write(document);
+```
+
 ## Decoder
 
 ```js
