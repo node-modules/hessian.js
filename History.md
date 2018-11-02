@@ -1,4 +1,10 @@
 
+1.9.0 / 2018-11-02
+==================
+
+**features**
+  * [[`9f32aee`](http://github.com/node-modules/hessian.js/commit/9f32aeebb6fe7da47bcab4335a2c6f463fdc5527)] - feat: support custom map type (#113) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.8.4 / 2018-08-30
 ==================
 
