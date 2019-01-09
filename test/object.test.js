@@ -808,6 +808,24 @@ describe('object.test.js', function () {
       ]);
     });
 
+    it.only('should have same result when key is same', function () {
+      var obj1 = {};
+      obj1.t = 1;
+      obj1.v = 2;
+      var obj2 = {};
+      obj2.v = 2;
+      obj2.t = 1;
+      var buf1 = hessian.encode({
+        $class: 'foo.Clazz1',
+        $: obj1,
+      }, '2.0');
+      var buf2 = hessian.encode({
+        $class: 'foo.Clazz1',
+        $: obj2,
+      }, '2.0');
+      assert(Buffer.compare(buf1, buf2) === 0);
+    });
+
     describe('java.util.concurrent.atomic.AtomicLong', function () {
       it('should read and write', function () {
         var javabuf = utils.bytes('v2/object/AtomicLong0');
@@ -859,7 +877,6 @@ describe('object.test.js', function () {
     });
   });
 
-
   if (supportES6Map) {
     describe('map key object', function() {
 
@@ -893,7 +910,4 @@ describe('object.test.js', function () {
 
     });
   }
-
-
-
 });
