@@ -407,3 +407,14 @@ Hessian 2.0 introduced [ref](http://hessian.caucho.com/doc/hessian-serialization
 ## Licences
 
 [MIT](LICENSE)
+<!-- GITCONTRIBUTOR_START -->
+
+## Contributors
+
+|[<img src="https://avatars3.githubusercontent.com/u/985607?v=4" width="100px;"/><br/><sub><b>dead-horse</b></sub>](https://github.com/dead-horse)<br/>|[<img src="https://avatars0.githubusercontent.com/u/156269?v=4" width="100px;"/><br/><sub><b>fengmk2</b></sub>](https://github.com/fengmk2)<br/>|[<img src="https://avatars2.githubusercontent.com/u/1207064?v=4" width="100px;"/><br/><sub><b>gxcsoccer</b></sub>](https://github.com/gxcsoccer)<br/>|[<img src="https://avatars0.githubusercontent.com/u/340282?v=4" width="100px;"/><br/><sub><b>fool2fish</b></sub>](https://github.com/fool2fish)<br/>|[<img src="https://avatars0.githubusercontent.com/u/1400114?v=4" width="100px;"/><br/><sub><b>coolme200</b></sub>](https://github.com/coolme200)<br/>|[<img src="https://avatars0.githubusercontent.com/u/1433247?v=4" width="100px;"/><br/><sub><b>denghongcai</b></sub>](https://github.com/denghongcai)<br/>|
+| :---: | :---: | :---: | :---: | :---: | :---: |
+[<img src="https://avatars3.githubusercontent.com/u/1681459?v=4" width="100px;"/><br/><sub><b>xusiyuan841028</b></sub>](https://github.com/xusiyuan841028)<br/>|[<img src="https://avatars2.githubusercontent.com/u/19733683?v=4" width="100px;"/><br/><sub><b>snyk-bot</b></sub>](https://github.com/snyk-bot)<br/>
+
+This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Sat Mar 23 2019 12:13:10 GMT+0800`.
+
+<!-- GITCONTRIBUTOR_END -->

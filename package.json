@@ -13,7 +13,8 @@
     "lint": "jshint .",
     "ci": "npm run lint && npm run test-cov",
     "autod": "autod",
-    "benchmark": "node benchmark/encode.js && node benchmark/decode.js"
+    "benchmark": "node benchmark/encode.js && node benchmark/decode.js",
+    "contributor": "git-contributor"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "autod": "^3.1.0",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
+    "git-contributor": "^1.0.10",
     "istanbul": "^0.4.5",
     "js-to-java": "^2.6.1",
     "jshint": "^2.10.2",
