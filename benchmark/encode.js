@@ -14,106 +14,106 @@
  * Module dependencies.
  */
 
-var ByteBuffer = require('byte');
-var Benchmark = require('benchmark');
-var benchmarks = require('beautify-benchmark');
-var java = require('js-to-java');
-var hessian = require('../');
+const ByteBuffer = require('byte');
+const Benchmark = require('benchmark');
+const benchmarks = require('beautify-benchmark');
+const java = require('js-to-java');
+const hessian = require('../');
 
-var suite = new Benchmark.Suite();
+const suite = new Benchmark.Suite();
 
-var simpleObject = {
+const simpleObject = {
   $class: 'com.hessiantest.org.MockRequest',
   $: {
     id: 123,
     name: 'getData',
-    args: [1, "name", "xxx1231231231231xxx123"]
-  }
+    args: [ 1, 'name', 'xxx1231231231231xxx123' ],
+  },
 };
 
-var complexObject = {
+const complexObject = {
   $class: 'com.hessiantest.org.MockRequest',
   $: {
     id: 123,
     name: 'getData',
-    args: [1, "name", "xxx1231231231231xxx123"],
+    args: [ 1, 'name', 'xxx1231231231231xxx123' ],
     conn: {
       $class: 'com.hessiantest.org.MockRequestConnection',
       $: {
-        ctx: java.long(1024)
-      }
-    }
-  }
+        ctx: java.long(1024),
+      },
+    },
+  },
 };
 
 suite
 
-.add('hessian1 encode: number', function() {
-  hessian.encode(1, '1.0');
-})
-.add('hessian2 encode: number', function() {
-  hessian.encode(1, '2.0');
-})
+  .add('hessian1 encode: number', function() {
+    hessian.encode(1, '1.0');
+  })
+  .add('hessian2 encode: number', function() {
+    hessian.encode(1, '2.0');
+  })
 
-.add('hessian1 encode: date', function() {
-  hessian.encode(new Date(), '1.0');
-})
-.add('hessian2 encode: date', function() {
-  hessian.encode(new Date(), '2.0');
-})
+  .add('hessian1 encode: date', function() {
+    hessian.encode(new Date(), '1.0');
+  })
+  .add('hessian2 encode: date', function() {
+    hessian.encode(new Date(), '2.0');
+  })
 
-.add('hessian1 encode: long', function() {
-  hessian.encode(java.long(300), '1.0');
-})
-.add('hessian2 encode: long', function() {
-  hessian.encode(java.long(300), '2.0');
-})
+  .add('hessian1 encode: long', function() {
+    hessian.encode(java.long(300), '1.0');
+  })
+  .add('hessian2 encode: long', function() {
+    hessian.encode(java.long(300), '2.0');
+  })
 
-.add('hessian1 encode: string', function() {
-  hessian.encode('xxx1231231231231xxx123', '1.0');
-})
-.add('hessian2 encode: string', function() {
-  hessian.encode('xxx1231231231231xxx123', '2.0');
-})
+  .add('hessian1 encode: string', function() {
+    hessian.encode('xxx1231231231231xxx123', '1.0');
+  })
+  .add('hessian2 encode: string', function() {
+    hessian.encode('xxx1231231231231xxx123', '2.0');
+  })
 
-.add('hessian1 encode: [1, 2, 3]', function() {
-  hessian.encode([1, 2, 3], '1.0');
-})
-.add('hessian2 encode: [1, 2, 3]', function() {
-  hessian.encode([1, 2, 3], '2.0');
-})
-.add('hessian1 encode array', function() {
-  hessian.encode([1, "name", "xxx1231231231231xxx123"], '1.0');
-})
-.add('hessian2 encode array', function() {
-  hessian.encode([1, "name", "xxx1231231231231xxx123"], '2.0');
-})
+  .add('hessian1 encode: [1, 2, 3]', function() {
+    hessian.encode([ 1, 2, 3 ], '1.0');
+  })
+  .add('hessian2 encode: [1, 2, 3]', function() {
+    hessian.encode([ 1, 2, 3 ], '2.0');
+  })
+  .add('hessian1 encode array', function() {
+    hessian.encode([ 1, 'name', 'xxx1231231231231xxx123' ], '1.0');
+  })
+  .add('hessian2 encode array', function() {
+    hessian.encode([ 1, 'name', 'xxx1231231231231xxx123' ], '2.0');
+  })
 
-.add('hessian1 encode: simple object', function() {
-  hessian.encode(simpleObject, '1.0');
-})
-.add('hessian2 encode: simple object', function() {
-  hessian.encode(simpleObject, '2.0');
-})
+  .add('hessian1 encode: simple object', function() {
+    hessian.encode(simpleObject, '1.0');
+  })
+  .add('hessian2 encode: simple object', function() {
+    hessian.encode(simpleObject, '2.0');
+  })
 
-.add('hessian1 encode: complex object', function() {
-  hessian.encode(complexObject, '1.0');
-})
-.add('hessian2 encode: complex object', function() {
-  hessian.encode(complexObject, '2.0');
-})
+  .add('hessian1 encode: complex object', function() {
+    hessian.encode(complexObject, '1.0');
+  })
+  .add('hessian2 encode: complex object', function() {
+    hessian.encode(complexObject, '2.0');
+  })
 
-.on('cycle', function(event) {
-  benchmarks.add(event.target);
-})
-.on('start', function(event) {
-  console.log('\n  Hessian Encode Benchmark\n  node version: %s, date: %s\n  Starting...',
-    process.version, Date());
-})
-.on('complete', function done() {
-  benchmarks.log();
-})
-.run({ 'async': false });
+  .on('cycle', function(event) {
+    benchmarks.add(event.target);
+  })
+  .on('start', function(event) {
+    console.log('\n  Hessian Encode Benchmark\n  node version: %s, date: %s\n  Starting...',
+      process.version, Date());
+  })
+  .on('complete', function done() {
+    benchmarks.log();
+  })
+  .run({ async: false });
 
 // node version: v0.11.12, date: Tue May 13 2014 10:30:18 GMT+0800 (CST)
 // Starting...

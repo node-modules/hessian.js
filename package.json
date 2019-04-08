@@ -9,7 +9,13 @@
   ],
   "scripts": {
     "autod": "autod",
-    "test": "make jshint && make test"
+    "lint": "eslint . --ext .js",
+    "cov": "TEST_TIMEOUT=10000 egg-bin cov",
+    "test": "npm run lint && npm run test-local",
+    "test-local": "egg-bin test",
+    "pkgfiles": "egg-bin pkgfiles --check",
+    "ci": "npm run autod -- --check && npm run pkgfiles && npm run lint && npm run cov",
+    "contributors": "contributors -f plain -o AUTHORS"
   },
   "repository": {
     "type": "git",
@@ -31,24 +37,26 @@
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
     "@protobufjs/codegen": "^2.0.4",
-    "byte": "^1.4.1",
-    "debug": "^3.2.6",
-    "is-type-of": "^1.2.1",
-    "long": "^4.0.0",
-    "utility": "^1.15.0"
+    "byte": "^2.0.0",
+    "debug": "^4.1.1",
+    "import-lazy": "^3.1.0",
+    "long": "^4.0.0"
   },
   "devDependencies": {
-    "autod": "^3.0.1",
+    "autod": "^3.1.0",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
-    "istanbul": "^0.4.5",
-    "js-to-java": "^2.6.0",
-    "jshint": "^2.9.6",
-    "mm": "^2.4.1",
-    "mocha": "^3.5.3",
-    "should": "^13.2.3"
+    "contributors": "^0.5.1",
+    "egg-bin": "^4.12.2",
+    "egg-ci": "^1.11.0",
+    "eslint": "^5.16.0",
+    "eslint-config-egg": "^7.3.1",
+    "js-to-java": "^2.6.1"
   },
   "engines": {
-    "node": ">= 0.12.0"
+    "node": ">=8"
+  },
+  "ci": {
+    "version": "8, 10, 11"
   }
 }

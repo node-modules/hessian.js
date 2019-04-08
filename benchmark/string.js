@@ -47,7 +47,7 @@ assert(getUTF(buf) === buf.toString());
 function getUTF2(buf) {
   const length = buf.length;
   const data = [];
-  let start = 0;
+  const start = 0;
   const numInts = length >> 2;
   for (let i = 0; i < numInts; i++) {
     const num = buf.readInt32BE(i * 4);
@@ -106,7 +106,7 @@ suite
   .on('complete', function done() {
     benchmarks.log();
   })
-  .run({ 'async': false });
+  .run({ async: false });
 
 // Cache Benchmark
 // node version: v8.9.0, date: Thu Nov 16 2017 13:26:18 GMT+0800 (CST)

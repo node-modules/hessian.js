@@ -1,0 +1,8 @@
+{
+  "extends": "eslint-config-egg",
+  "rules": {
+    "no-bitwise": 0,
+    "jsdoc/require-returns-description": 0,
+    "jsdoc/require-param": 0
+  }
+}

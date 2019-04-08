@@ -1,35 +1,25 @@
-/**!
- * hessian.js - test/boolean.test.js
- *
- * Copyright(c) 2014
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
- */
+'use strict';
 
-"use strict";
+const assert = require('assert');
+const hessian = require('../');
 
-var assert = require('assert');
-var hessian = require('../');
-
-describe('boolean.test.js', function () {
-  it('should read true and false', function () {
-    assert(hessian.decode(new Buffer('T')) === true);
-    assert(hessian.decode(new Buffer('F')) === false);
+describe('boolean.test.js', function() {
+  it('should read true and false', function() {
+    assert(hessian.decode(Buffer.from('T')) === true);
+    assert(hessian.decode(Buffer.from('F')) === false);
   });
 
-  it('should write true and false', function () {
-    assert.deepEqual(hessian.encode(true), new Buffer('T'));
-    assert.deepEqual(hessian.encode(false), new Buffer('F'));
+  it('should write true and false', function() {
+    assert.deepEqual(hessian.encode(true), Buffer.from('T'));
+    assert.deepEqual(hessian.encode(false), Buffer.from('F'));
   });
 
-  describe('v2.0', function () {
-    it('should read write as 1.0', function () {
-      assert.deepEqual(hessian.encode(true, '2.0'), new Buffer('T'));
-      assert.deepEqual(hessian.encode(false, '2.0'), new Buffer('F'));
-      assert(hessian.decode(new Buffer('T'), '2.0') === true);
-      assert(hessian.decode(new Buffer('F'), '2.0') === false);
+  describe('v2.0', function() {
+    it('should read write as 1.0', function() {
+      assert.deepEqual(hessian.encode(true, '2.0'), Buffer.from('T'));
+      assert.deepEqual(hessian.encode(false, '2.0'), Buffer.from('F'));
+      assert(hessian.decode(Buffer.from('T'), '2.0') === true);
+      assert(hessian.decode(Buffer.from('F'), '2.0') === false);
     });
   });
 });

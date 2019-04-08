@@ -1,20 +1,23 @@
-'use strict';
+'ues strict';
 
 module.exports = {
   write: true,
   prefix: '^',
   devprefix: '^',
-  exclude: [],
+  exclude: [
+    'test/fixtures',
+  ],
+  dep: [
+    'long',
+  ],
   devdep: [
     'autod',
-    'mm',
-    'jshint',
-    'mocha',
-    'istanbul',
+    'egg-bin',
+    'egg-ci',
+    'eslint',
+    'eslint-config-egg',
+    'contributors',
   ],
-  semver: [
-    'mocha@3',
-    'byte@1',
-    'debug@3',
-  ],
+  keep: [],
+  semver: [],
 };

@@ -1,4 +1,4 @@
-/*!
+/* !
  * hessian.js - test/double.test.js
  *
  * Copyright(c) 2014
@@ -8,45 +8,46 @@
  *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
  */
 
-"use strict";
+'use strict';
 
-var assert = require('assert');
-var java = require('js-to-java');
-var hessian = require('../');
-var utils = require('./utils');
+const assert = require('assert');
+const java = require('js-to-java');
+const hessian = require('../');
+const utils = require('./utils');
 
-describe('double.test.js', function () {
-  var doubleBuffer = new Buffer(['D'.charCodeAt(0),
-    0x40, 0x28, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00]);
+describe('double.test.js', function() {
+  const doubleBuffer = Buffer.from([ 'D'.charCodeAt(0),
+    0x40, 0x28, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+  ]);
 
-  it('should read double 12.25', function () {
+  it('should read double 12.25', function() {
     assert(hessian.decode(doubleBuffer) === 12.25);
   });
 
-  it('should write double 12.25', function () {
+  it('should write double 12.25', function() {
     assert.deepEqual(hessian.encode(12.25), doubleBuffer);
     assert.deepEqual(hessian.encode(java.double(12.25)), doubleBuffer);
     assert.deepEqual(hessian.encode({
       $class: 'double',
-      $: 12.25
+      $: 12.25,
     }), doubleBuffer);
   });
 
-  it('should write double 100', function () {
+  it('should write double 100', function() {
     assert.deepEqual(
       hessian.encode(java.double(100)),
-      new Buffer(['D'.charCodeAt(0), 0x40, 0x59, 0, 0, 0, 0, 0, 0])
+      Buffer.from([ 'D'.charCodeAt(0), 0x40, 0x59, 0, 0, 0, 0, 0, 0 ])
     );
   });
 
-  it('should write double 0', function () {
+  it('should write double 0', function() {
     assert.deepEqual(
       hessian.encode(java.double(0)),
-      new Buffer(['D'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0])
+      Buffer.from([ 'D'.charCodeAt(0), 0, 0, 0, 0, 0, 0, 0, 0 ])
     );
   });
 
-  it('should write as java impl', function () {
+  it('should write as java impl', function() {
     assert.deepEqual(hessian.encode(java.double(0), '1.0'), utils.bytes('v1/double/0'));
     assert.deepEqual(hessian.encode(java.double(0.0), '1.0'), utils.bytes('v1/double/0'));
     assert.deepEqual(hessian.encode(java.double(1), '1.0'), utils.bytes('v1/double/1'));
@@ -121,7 +122,7 @@ describe('double.test.js', function () {
     );
   });
 
-  it('should read java bin format', function () {
+  it('should read java bin format', function() {
     assert(hessian.decode(utils.bytes('v1/double/0'), '1.0') === 0);
     assert(hessian.decode(utils.bytes('v1/double/1'), '1.0') === 1);
     assert(hessian.decode(utils.bytes('v1/double/10'), '1.0') === 10);
@@ -161,7 +162,7 @@ describe('double.test.js', function () {
     );
   });
 
-  it('should decode with type', function () {
+  it('should decode with type', function() {
     assert.deepEqual(hessian.decode(utils.bytes('v1/double/0'), '1.0', true), {
       $class: 'double',
       $: 0,
@@ -178,70 +179,69 @@ describe('double.test.js', function () {
     });
   });
 
-  describe('v2.0', function () {
-    it('should read 0.0 and 1.0', function () {
-      assert(hessian.decode(new Buffer([0x67]), '2.0') === 0.0);
-      assert(hessian.decode(new Buffer([0x68]), '2.0') === 1.0);
+  describe('v2.0', function() {
+    it('should read 0.0 and 1.0', function() {
+      assert(hessian.decode(Buffer.from([ 0x67 ]), '2.0') === 0.0);
+      assert(hessian.decode(Buffer.from([ 0x68 ]), '2.0') === 1.0);
     });
 
-    it('should read 8 bits double', function () {
-      assert(hessian.decode(new Buffer([0x69, 0x00]), '2.0') === 0.0);
-      assert(hessian.decode(new Buffer([0x69, 0x01]), '2.0') === 1.0);
-      assert(hessian.decode(new Buffer([0x69, 0x80]), '2.0') === -128.0);
-      assert(hessian.decode(new Buffer([0x69, 0x7f]), '2.0') === 127.0);
+    it('should read 8 bits double', function() {
+      assert(hessian.decode(Buffer.from([ 0x69, 0x00 ]), '2.0') === 0.0);
+      assert(hessian.decode(Buffer.from([ 0x69, 0x01 ]), '2.0') === 1.0);
+      assert(hessian.decode(Buffer.from([ 0x69, 0x80 ]), '2.0') === -128.0);
+      assert(hessian.decode(Buffer.from([ 0x69, 0x7f ]), '2.0') === 127.0);
     });
 
-    it('should read 16 bits double', function () {
-      assert(hessian.decode(new Buffer([0x6a, 0x00, 0x00]), '2.0') === 0.0);
-      assert(hessian.decode(new Buffer([0x6a, 0x00, 0x01]), '2.0') === 1.0);
-      assert(hessian.decode(new Buffer([0x6a, 0x00, 0x80]), '2.0') === 128.0);
-      assert(hessian.decode(new Buffer([0x6a, 0x00, 0x7f]), '2.0') === 127.0);
-      assert(hessian.decode(new Buffer([0x6a, 0x80, 0x00]), '2.0') === -32768.0);
-      assert(hessian.decode(new Buffer([0x6a, 0x7f, 0xff]), '2.0') === 32767.0);
+    it('should read 16 bits double', function() {
+      assert(hessian.decode(Buffer.from([ 0x6a, 0x00, 0x00 ]), '2.0') === 0.0);
+      assert(hessian.decode(Buffer.from([ 0x6a, 0x00, 0x01 ]), '2.0') === 1.0);
+      assert(hessian.decode(Buffer.from([ 0x6a, 0x00, 0x80 ]), '2.0') === 128.0);
+      assert(hessian.decode(Buffer.from([ 0x6a, 0x00, 0x7f ]), '2.0') === 127.0);
+      assert(hessian.decode(Buffer.from([ 0x6a, 0x80, 0x00 ]), '2.0') === -32768.0);
+      assert(hessian.decode(Buffer.from([ 0x6a, 0x7f, 0xff ]), '2.0') === 32767.0);
     });
 
-    it('should read 32 bits float double', function () {
-      assert(hessian.decode(new Buffer([0x6b, 0x00, 0x00, 0x00, 0x00]), '2.0') === 0.0);
+    it('should read 32 bits float double', function() {
+      assert(hessian.decode(Buffer.from([ 0x6b, 0x00, 0x00, 0x00, 0x00 ]), '2.0') === 0.0);
       assert(
-        hessian.decode(new Buffer([0x6b, 0x41, 0x44, 0x00, 0x00]), '2.0') === 12.25
+        hessian.decode(Buffer.from([ 0x6b, 0x41, 0x44, 0x00, 0x00 ]), '2.0') === 12.25
       );
     });
 
-    it('should read normal double', function () {
+    it('should read normal double', function() {
       assert(
-        hessian.decode(new Buffer([0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0]), '2.0') === 10.0
+        hessian.decode(Buffer.from([ 0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0 ]), '2.0') === 10.0
       );
     });
 
-    it('should decode with type', function () {
-      assert.deepEqual(hessian.decode(new Buffer([0x69, 0x01]), '2.0', true), {
+    it('should decode with type', function() {
+      assert.deepEqual(hessian.decode(Buffer.from([ 0x69, 0x01 ]), '2.0', true), {
         $class: 'double',
         $: 1.0,
       });
 
       assert.deepEqual(
-        hessian.decode(new Buffer([0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0]), '2.0', true),
-        {
+        hessian.decode(Buffer.from([ 0x44, 0x40, 0x24, 0, 0, 0, 0, 0, 0 ]), '2.0', true), {
           $class: 'double',
           $: 10.0,
         }
       );
 
-      assert.deepEqual(hessian.decode(new Buffer([0x6a, 0x00, 0x80]), '2.0', true), {
+      assert.deepEqual(hessian.decode(Buffer.from([ 0x6a, 0x00, 0x80 ]), '2.0', true), {
         $class: 'double',
         $: 128.0,
       });
     });
 
-    it('should write 0.0 and 1.0', function () {
-      assert.deepEqual(hessian.encode(java.double(0), '2.0'), new Buffer([0x67]));
-      assert.deepEqual(hessian.encode(java.double(0.0), '2.0'), new Buffer([0x67]));
+    it('should write 0.0 and 1.0', function() {
+      assert.deepEqual(hessian.encode(java.double(0), '2.0'), Buffer.from([ 0x67 ]));
+      assert.deepEqual(hessian.encode(java.double(0.0), '2.0'), Buffer.from([ 0x67 ]));
 
-      assert.deepEqual(hessian.encode(java.double(1), '2.0'), new Buffer([0x68]));
-      assert.deepEqual(hessian.encode(java.double(1.0), '2.0'), new Buffer([0x68]));
+      assert.deepEqual(hessian.encode(java.double(1), '2.0'), Buffer.from([ 0x68 ]));
+      assert.deepEqual(hessian.encode(java.double(1.0), '2.0'), Buffer.from([ 0x68 ]));
     });
 
-    it('should write as java impl', function () {
+    it('should write as java impl', function() {
       assert.deepEqual(hessian.encode(java.double(0), '2.0'), utils.bytes('v2/double/0'));
       assert.deepEqual(hessian.encode(java.double(0.0), '2.0'), utils.bytes('v2/double/0'));
       assert.deepEqual(hessian.encode(java.double(1), '2.0'), utils.bytes('v2/double/1'));
@@ -314,7 +314,7 @@ describe('double.test.js', function () {
       );
     });
 
-    it('should read java bin format', function () {
+    it('should read java bin format', function() {
       assert(hessian.decode(utils.bytes('v2/double/0'), '2.0') === 0);
       assert(hessian.decode(utils.bytes('v2/double/1'), '2.0') === 1);
       assert(hessian.decode(utils.bytes('v2/double/10'), '2.0') === 10);
@@ -360,7 +360,7 @@ describe('double.test.js', function () {
       );
     });
 
-    it('should read java hessian 1.0 bin format', function () {
+    it('should read java hessian 1.0 bin format', function() {
       assert(hessian.decode(utils.bytes('v1/double/0'), '2.0') === 0);
       assert(hessian.decode(utils.bytes('v1/double/1'), '2.0') === 1);
       assert(hessian.decode(utils.bytes('v1/double/10'), '2.0') === 10);

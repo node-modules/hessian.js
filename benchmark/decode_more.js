@@ -14,40 +14,40 @@
  * Module dependencies.
  */
 
-var ByteBuffer = require('byte');
-var Benchmark = require('benchmark');
-var benchmarks = require('beautify-benchmark');
-var java = require('js-to-java');
-var hessian = require('../');
+const ByteBuffer = require('byte');
+const Benchmark = require('benchmark');
+const benchmarks = require('beautify-benchmark');
+const java = require('js-to-java');
+const hessian = require('../');
 
-var suite = new Benchmark.Suite();
+const suite = new Benchmark.Suite();
 
-var simpleObject = {
+const simpleObject = {
   $class: 'com.hessiantest.org.MockRequest',
   $: {
     id: 123,
     name: 'getData',
-    args: [1, "name", "xxx1231231231231xxx123"]
-  }
+    args: [ 1, 'name', 'xxx1231231231231xxx123' ],
+  },
 };
 
-var simpleObjectBuf = hessian.encode(simpleObject, '2.0');
+const simpleObjectBuf = hessian.encode(simpleObject, '2.0');
 
-var complexObject = {
+const complexObject = {
   $class: 'com.hessiantest.org.MockRequest',
   $: {
     id: 123,
     name: 'getData',
-    args: [1, "name", "xxx1231231231231xxx123"],
+    args: [ 1, 'name', 'xxx1231231231231xxx123' ],
     conn: {
       $class: 'com.hessiantest.org.MockRequestConnection',
       $: {
-        ctx: java.long(1024)
-      }
-    }
-  }
+        ctx: java.long(1024),
+      },
+    },
+  },
 };
-var complexObjectBuf = hessian.encode(complexObject, '2.0');
+const complexObjectBuf = hessian.encode(complexObject, '2.0');
 
 const options = {
   classCache: new Map(),
@@ -88,7 +88,7 @@ suite
   .on('complete', function done() {
     benchmarks.log();
   })
-  .run({ 'async': false });
+  .run({ async: false });
 
 // Hessian Decode Benchmark
 // node version: v8.9.0, date: Thu Nov 16 2017 13:22:44 GMT+0800 (CST)

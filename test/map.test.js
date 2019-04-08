@@ -1,4 +1,4 @@
-/*!
+/* !
  * hessian.js - test/map.test.js
  *
  * Copyright(c) 2014
@@ -8,14 +8,14 @@
  *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
  */
 
-"use strict";
+'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
-var utils = require('./utils');
+const assert = require('assert');
+const hessian = require('../');
+const utils = require('./utils');
 
-describe('map.test.js', function () {
-  it('should read Serialization of a Java Object', function () {
+describe('map.test.js', function() {
+  it('should read Serialization of a Java Object', function() {
     // public class Car implements Serializable {
     //   String model = "Beetle";
     //   String color = "aquamarine";
@@ -35,124 +35,124 @@ describe('map.test.js', function () {
     //   I x00 x01 x00 x00
     //   z
 
-    var mapBuffer = Buffer.concat([
-      new Buffer('M'),
-      new Buffer([
+    const mapBuffer = Buffer.concat([
+      Buffer.from('M'),
+      Buffer.from([
         't'.charCodeAt(0), 0x00, 0x13,
       ]),
-      new Buffer('com.caucho.test.Car'),
-      new Buffer([
+      Buffer.from('com.caucho.test.Car'),
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x05,
       ]),
-      new Buffer('model'),
-      new Buffer([
+      Buffer.from('model'),
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x06,
       ]),
-      new Buffer('Beetle'),
+      Buffer.from('Beetle'),
 
-      new Buffer([
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x05,
       ]),
-      new Buffer('color'),
-      new Buffer([
+      Buffer.from('color'),
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x0a,
       ]),
-      new Buffer('aquamarine'),
+      Buffer.from('aquamarine'),
 
-      new Buffer([
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x07,
       ]),
-      new Buffer('mileage'),
-      new Buffer([
+      Buffer.from('mileage'),
+      Buffer.from([
         'I'.charCodeAt(0), 0x00, 0x01, 0x00, 0x00,
       ]),
 
-      new Buffer('z'),
+      Buffer.from('z'),
     ]);
 
     assert.deepEqual(hessian.decode(mapBuffer), {
       model: 'Beetle',
       color: 'aquamarine',
-      mileage: 65536
+      mileage: 65536,
     });
 
     assert.deepEqual(hessian.decode(mapBuffer, true), {
-      '$class': 'com.caucho.test.Car',
-      '$': {
-        model: { '$class': 'java.lang.String', '$': 'Beetle' },
-        color: { '$class': 'java.lang.String', '$': 'aquamarine' },
-        mileage: { '$class': 'int', '$': 65536 }
-      }
+      $class: 'com.caucho.test.Car',
+      $: {
+        model: { $class: 'java.lang.String', $: 'Beetle' },
+        color: { $class: 'java.lang.String', $: 'aquamarine' },
+        mileage: { $class: 'int', $: 65536 },
+      },
     });
   });
 
-  it('should write {hasOwnProperty: 1, a: 0, b: false, c: null} obj', function () {
+  it('should write {hasOwnProperty: 1, a: 0, b: false, c: null} obj', function() {
     /* jshint -W001 */
-    var buf = hessian.encode({hasOwnProperty: 1, a: 0, b: false, c: null});
+    const buf = hessian.encode({ hasOwnProperty: 1, a: 0, b: false, c: null });
     assert(Buffer.isBuffer(buf));
-    assert.deepEqual(hessian.decode(buf), {hasOwnProperty: 1, a: 0, b: false, c: null});
+    assert.deepEqual(hessian.decode(buf), { hasOwnProperty: 1, a: 0, b: false, c: null });
   });
 
-  it('should read A sparse array', function () {
+  it('should read A sparse array', function() {
     // map = new HashMap();
     // map.put(new Integer(1), "fee");
     // map.put(new Integer(16), "fie");
     // map.put(new Integer(256), "foe");
-    var mapBuffer = Buffer.concat([
-      new Buffer('M'),
-      new Buffer([
+    const mapBuffer = Buffer.concat([
+      Buffer.from('M'),
+      Buffer.from([
         'I'.charCodeAt(0), 0, 0, 0, 0x01,
       ]),
-      new Buffer([
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x03,
       ]),
-      new Buffer('fee'),
+      Buffer.from('fee'),
 
-      new Buffer([
+      Buffer.from([
         'I'.charCodeAt(0), 0, 0, 0, 0x10,
       ]),
-      new Buffer([
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x03,
       ]),
-      new Buffer('fie'),
+      Buffer.from('fie'),
 
-      new Buffer([
+      Buffer.from([
         'I'.charCodeAt(0), 0, 0, 0x01, 0x00,
       ]),
-      new Buffer([
+      Buffer.from([
         'S'.charCodeAt(0), 0x00, 0x03,
       ]),
-      new Buffer('foe'),
+      Buffer.from('foe'),
 
-      new Buffer('z'),
+      Buffer.from('z'),
     ]);
 
     assert.deepEqual(hessian.decode(mapBuffer), {
-      '1': 'fee',
-      '16': 'fie',
-      '256': 'foe',
+      1: 'fee',
+      16: 'fie',
+      256: 'foe',
     });
   });
 
-  it('should write js object to no type hash map', function () {
-    var buf = hessian.encode({ foo: '' });
+  it('should write js object to no type hash map', function() {
+    const buf = hessian.encode({ foo: '' });
     assert.deepEqual(buf, utils.bytes('v1/map/foo_empty'));
     assert.deepEqual(hessian.decode(utils.bytes('v1/map/foo_empty'), '1.0'), {
-      foo: ''
+      foo: '',
     });
 
     assert.deepEqual(hessian.encode({
-      '123': 456,
+      123: 456,
       foo: 'bar',
       zero: 0,
-      '中文key': '中文哈哈value',
+      中文key: '中文哈哈value',
     }), utils.bytes('v1/map/foo_bar'));
 
     // read it
     assert.deepEqual(hessian.decode(utils.bytes('v1/map/foo_bar'), '1.0'), {
       foo: 'bar',
-      '中文key': '中文哈哈value',
-      '123': 456,
+      中文key: '中文哈哈value',
+      123: 456,
       zero: 0,
     });
   });
@@ -162,75 +162,75 @@ describe('map.test.js', function () {
       // pass if not support es6 Map
       return;
     }
-    
-    var map = new Map();
-    map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
-    map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
-    var buf = hessian.encode(map);
+
+    const map = new Map();
+    map.set({ $class: 'java.lang.Long', $: 123 }, 123456);
+    map.set({ $class: 'java.lang.Long', $: 123456 }, 123);
+    let buf = hessian.encode(map);
     assert.deepEqual(buf, utils.bytes('v1/map/generic'));
 
-    buf = hessian.encode({ '$class': 'java.util.HashMap', '$': map });
+    buf = hessian.encode({ $class: 'java.util.HashMap', $: map });
     assert.deepEqual(buf, utils.bytes('v1/map/generic'));
 
     // decode auto transfer key to string
     assert.deepEqual(hessian.decode(utils.bytes('v1/map/generic'), '1.0'), {
-      '123': 123456,
-      '123456': 123
+      123: 123456,
+      123456: 123,
     });
   });
 
-  describe('v2.0', function () {
+  describe('v2.0', function() {
     it('should write es6 Map to java.util.Map', function() {
       if (typeof Map !== 'function') {
         // pass if not support es6 Map
         return;
       }
-      var generic = new Buffer('4df87bd5e2403de240c87b7a', 'hex');
-      var map = new Map();
-      map.set({ '$class': 'java.lang.Long', '$': 123 }, 123456);
-      map.set({ '$class': 'java.lang.Long', '$': 123456 }, 123);
-      var encoder = new hessian.EncoderV2();
-      var buf = encoder.write(map).get();
+      const generic = Buffer.from('4df87bd5e2403de240c87b7a', 'hex');
+      const map = new Map();
+      map.set({ $class: 'java.lang.Long', $: 123 }, 123456);
+      map.set({ $class: 'java.lang.Long', $: 123456 }, 123);
+      const encoder = new hessian.EncoderV2();
+      let buf = encoder.write(map).get();
       assert.deepEqual(buf, generic);
 
       encoder.reset();
 
-      buf = encoder.write({ '$class': 'java.util.HashMap', '$': map }).get();
+      buf = encoder.write({ $class: 'java.util.HashMap', $: map }).get();
       assert.deepEqual(buf, generic);
 
       // decode auto transfer key to string
       assert.deepEqual(hessian.decode(generic, '2.0'), {
-        '123': 123456,
-        '123456': 123
+        123: 123456,
+        123456: 123,
       });
     });
     // map = new HashMap();
     // map.put(new Integer(1), "fee");
     // map.put(new Integer(16), "fie");
     // map.put(new Integer(256), "foe");
-    var hashmapBuffer = Buffer.concat([
-      new Buffer([
+    const hashmapBuffer = Buffer.concat([
+      Buffer.from([
         'M'.charCodeAt(0),
         0x91, // 1
         0x03,
       ]),
-      new Buffer('fee'), // 'fee'
-      new Buffer([
+      Buffer.from('fee'), // 'fee'
+      Buffer.from([
         0xa0, // 16
         0x03,
       ]),
-      new Buffer('fie'), // 'fie'
-      new Buffer([
+      Buffer.from('fie'), // 'fie'
+      Buffer.from([
         0xc9, 0x00, // 256
         0x03,
       ]),
-      new Buffer('foe'), // 'foe'
-      new Buffer('z')
+      Buffer.from('foe'), // 'foe'
+      Buffer.from('z'),
     ]);
 
-    it('should write a java Class instance', function () {
-      var encoder = new hessian.EncoderV2();
-      var car = {
+    it('should write a java Class instance', function() {
+      const encoder = new hessian.EncoderV2();
+      const car = {
         $class: 'hessian.demo.Car',
         $: {
           // field defined sort must same as java Class defined
@@ -240,32 +240,32 @@ describe('map.test.js', function () {
           model: 'Beetle',
           color: 'aquamarine',
           mileage: 65536,
-        }
+        },
       };
-      var buf = encoder.write(car).get();
+      const buf = encoder.write(car).get();
       assert.deepEqual(buf, utils.bytes('v2/map/car'));
     });
 
-    it('should read java hash map', function () {
+    it('should read java hash map', function() {
       assert.deepEqual(hessian.decode(hashmapBuffer, '2.0'), {
         1: 'fee',
         16: 'fie',
-        256: 'foe'
+        256: 'foe',
       });
     });
 
-    it('should read a Circular java Object', function () {
-      var car = hessian.decode(utils.bytes('v2/map/car'), '2.0');
+    it('should read a Circular java Object', function() {
+      const car = hessian.decode(utils.bytes('v2/map/car'), '2.0');
       assert.deepEqual(car, {
         a: 'a',
         c: 'c',
         b: 'b',
         model: 'Beetle',
         color: 'aquamarine',
-        mileage: 65536
+        mileage: 65536,
       });
 
-      var obj = hessian.decode(utils.bytes('v2/map/car1'), '2.0');
+      const obj = hessian.decode(utils.bytes('v2/map/car1'), '2.0');
       [ 'color', 'model', 'mileage', 'self', 'prev' ].forEach(function(p) {
         assert(Object.prototype.hasOwnProperty.call(obj, p));
       });
@@ -276,21 +276,21 @@ describe('map.test.js', function () {
       });
     });
 
-    it('should write js object to no type hash map', function () {
-      var encoder = new hessian.EncoderV2();
-      var fooEmpty = new Buffer('4d03666f6f007a', 'hex');
-      var buf = encoder.write({ foo: '' }).get();
+    it('should write js object to no type hash map', function() {
+      let encoder = new hessian.EncoderV2();
+      const fooEmpty = Buffer.from('4d03666f6f007a', 'hex');
+      let buf = encoder.write({ foo: '' }).get();
       assert.deepEqual(buf, fooEmpty);
       assert.deepEqual(hessian.decode(fooEmpty, '2.0'), {
-        foo: ''
+        foo: '',
       });
 
-      var fooBar = new Buffer('4d03313233c9c803666f6f03626172047a65726f9005e4b8ade696876b657909e4b8ade69687e59388e5938876616c75657a', 'hex');
+      const fooBar = Buffer.from('4d03313233c9c803666f6f03626172047a65726f9005e4b8ade696876b657909e4b8ade69687e59388e5938876616c75657a', 'hex');
       encoder = new hessian.EncoderV2();
       buf = encoder.write({
         foo: 'bar',
-        '中文key': '中文哈哈value',
-        '123': 456,
+        中文key: '中文哈哈value',
+        123: 456,
         zero: 0,
       }).get();
       assert.deepEqual(buf, fooBar);
@@ -298,25 +298,25 @@ describe('map.test.js', function () {
       // read it
       assert.deepEqual(hessian.decode(fooBar, '2.0'), {
         foo: 'bar',
-        '中文key': '中文哈哈value',
-        '123': 456,
+        中文key: '中文哈哈value',
+        123: 456,
         zero: 0,
       });
     });
 
-    it('should read hessian 1.0 hash map', function () {
+    it('should read hessian 1.0 hash map', function() {
       assert.deepEqual(hessian.decode(utils.bytes('v1/map/foo_empty'), '2.0'), {
-        foo: ''
+        foo: '',
       });
       assert.deepEqual(hessian.decode(utils.bytes('v1/map/foo_bar'), '2.0'), {
         foo: 'bar',
-        '中文key': '中文哈哈value',
-        '123': 456,
+        中文key: '中文哈哈value',
+        123: 456,
         zero: 0,
       });
     });
 
-    it('should write simple map to java hash map', function () {
+    it('should write simple map to java hash map', function() {
       // map = new HashMap();
       // map.put(new Integer(1), "fee");
       // map.put(new Integer(16), "fie");
@@ -334,32 +334,32 @@ describe('map.test.js', function () {
       //   x03 foe   # "foe"
 
       //   Z
-      var map = {
-        1: "fee",
-        2: "fie",
-        3: "foe"
+      const map = {
+        1: 'fee',
+        2: 'fie',
+        3: 'foe',
       };
-      var encoder = new hessian.EncoderV2();
-      var buf = encoder.write(map).get();
+      const encoder = new hessian.EncoderV2();
+      const buf = encoder.write(map).get();
       assert.deepEqual(hessian.decode(buf, '2.0'), map);
 
       // writeRef
-      var bufRef = encoder.write(map).get();
+      const bufRef = encoder.write(map).get();
       assert.deepEqual(hessian.decode(bufRef, '2.0'), map);
-      assert.deepEqual(bufRef.slice(buf.length), new Buffer([0x4a, 0x00]));
+      assert.deepEqual(bufRef.slice(buf.length), Buffer.from([ 0x4a, 0x00 ]));
 
-      var buf2 = hessian.encode({
+      const buf2 = hessian.encode({
         $class: 'java.util.HashMap',
-        $: map
+        $: map,
       }, '2.0');
       assert.deepEqual(buf2, buf);
       assert.deepEqual(hessian.decode(buf2, '2.0'), map);
     });
   });
 
-  it('should decode successful when key is null', function () {
-    var data = new Buffer([77, 116, 0, 0, 78, 83, 0, 4, 110, 117, 108, 108, 122]);
-    var rv = hessian.decode(data);
-    assert.deepEqual(rv, {null: 'null'});
+  it('should decode successful when key is null', function() {
+    const data = Buffer.from([ 77, 116, 0, 0, 78, 83, 0, 4, 110, 117, 108, 108, 122 ]);
+    const rv = hessian.decode(data);
+    assert.deepEqual(rv, { null: 'null' });
   });
 });

@@ -14,14 +14,14 @@
  * Module dependencies.
  */
 
-var fs = require('fs');
-var path = require('path');
-var fixtures = path.join(__dirname, 'fixtures');
+const fs = require('fs');
+const path = require('path');
+const fixtures = path.join(__dirname, 'fixtures');
 
-exports.bytes = function (name) {
+exports.bytes = function(name) {
   return fs.readFileSync(path.join(fixtures, name + '.bin'));
 };
 
-exports.string = function (name) {
+exports.string = function(name) {
   return fs.readFileSync(path.join(fixtures, name + '.txt'), 'utf8');
 };
