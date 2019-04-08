@@ -1,44 +1,44 @@
 'use strict';
 
-var Benchmark = require('benchmark');
-var benchmarks = require('beautify-benchmark');
+const Benchmark = require('benchmark');
+const benchmarks = require('beautify-benchmark');
 
-var suite = new Benchmark.Suite();
+const suite = new Benchmark.Suite();
 
 
-var INNER_CLASS_PROPERTY_REG = /^this\$\d+$/;
-var INNER_CLASS_LABEL = '$$ignore_inner_property$$';
+const INNER_CLASS_PROPERTY_REG = /^this\$\d+$/;
+const INNER_CLASS_LABEL = '$$ignore_inner_property$$';
 
-var name1 = 'foobar';
-var name2 = 'this$123';
-var name3 = INNER_CLASS_LABEL;
+const name1 = 'foobar';
+const name2 = 'this$123';
+const name3 = INNER_CLASS_LABEL;
 
 suite
 
-.add('dynamic', function() {
-  /^this\$\d+/.test(name1);
-  /^this\$\d+/.test(name2);
-})
-.add('static', function() {
-  INNER_CLASS_PROPERTY_REG.test(name1);
-  INNER_CLASS_PROPERTY_REG.test(name2);
-})
-.add('equal', function() {
-  name1 === INNER_CLASS_LABEL;
-  name3 === INNER_CLASS_LABEL;
-})
+  .add('dynamic', function() {
+    /^this\$\d+/.test(name1);
+    /^this\$\d+/.test(name2);
+  })
+  .add('static', function() {
+    INNER_CLASS_PROPERTY_REG.test(name1);
+    INNER_CLASS_PROPERTY_REG.test(name2);
+  })
+  .add('equal', function() {
+    name1 === INNER_CLASS_LABEL;
+    name3 === INNER_CLASS_LABEL;
+  })
 
-.on('cycle', function(event) {
-  benchmarks.add(event.target);
-})
-.on('start', function(event) {
-  console.log('\n  Reg Benchmark\n  node version: %s, date: %s\n  Starting...',
-    process.version, Date());
-})
-.on('complete', function done() {
-  benchmarks.log();
-})
-.run({ 'async': false });
+  .on('cycle', function(event) {
+    benchmarks.add(event.target);
+  })
+  .on('start', function(event) {
+    console.log('\n  Reg Benchmark\n  node version: %s, date: %s\n  Starting...',
+      process.version, Date());
+  })
+  .on('complete', function done() {
+    benchmarks.log();
+  })
+  .run({ async: false });
 
 // node version: v8.5.0, date: Sat Oct 21 2017 08:00:33 GMT+0800 (CST)
 // Starting...

@@ -1,32 +1,22 @@
-/**!
- * hessian.js - test/null.test.js
- *
- * Copyright(c) 2014
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
- */
+'use strict';
 
-"use strict";
+const assert = require('assert');
+const hessian = require('../');
 
-var assert = require('assert');
-var hessian = require('../');
-
-describe('null.test.js', function () {
-  it('should read null', function () {
-    var a = hessian.decode(new Buffer('N'));
+describe('null.test.js', function() {
+  it('should read null', function() {
+    const a = hessian.decode(Buffer.from('N'));
     assert(a === null);
   });
 
-  it('should write null', function () {
-    assert.deepEqual(hessian.encode(null), new Buffer('N'));
+  it('should write null', function() {
+    assert.deepEqual(hessian.encode(null), Buffer.from('N'));
   });
 
-  describe('v2.0', function () {
-    it('should read write as 1.0', function () {
-      assert.deepEqual(hessian.encode(null, '2.0'), new Buffer('N'));
-      assert(hessian.decode(new Buffer('N'), '2.0') === null);
+  describe('v2.0', function() {
+    it('should read write as 1.0', function() {
+      assert.deepEqual(hessian.encode(null, '2.0'), Buffer.from('N'));
+      assert(hessian.decode(Buffer.from('N'), '2.0') === null);
     });
   });
 });

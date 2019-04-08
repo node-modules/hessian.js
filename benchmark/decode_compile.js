@@ -43,7 +43,7 @@ suite
   .on('complete', function done() {
     benchmarks.log();
   })
-  .run({ 'async': false });
+  .run({ async: false });
 
 // Cache Benchmark
 // node version: v8.9.4, date: Thu Feb 01 2018 21:17:48 GMT+0800 (CST)
