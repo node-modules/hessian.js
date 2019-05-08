@@ -46,3 +46,8 @@ exports.encode = function encode(obj, version) {
   encoder.reset();
   return encoder.write(obj).get();
 };
+
+var custom = require('./lib/custom_handler');
+
+exports.registerDecodeHandler = custom.registerDecodeHandler;
+exports.deregisterDecodeHandler= custom.deregisterDecodeHandler;
