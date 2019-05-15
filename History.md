@@ -1,4 +1,16 @@
 
+2.9.0 / 2019-05-15
+==================
+
+**features**
+  * [[`ee57e93`](http://github.com/node-modules/hessian.js/commit/ee57e93e580dd4a595cf1098a4f35febfbc6a990)] - feat: support custom decode handler (#119) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
+**fixes**
+  * [[`3f0b392`](http://github.com/node-modules/hessian.js/commit/3f0b392c58a9b5e65915eca55bc209439ba1e3db)] - fix: should reset _classRefFields (#87) (fengmk2 <<fengmk2@gmail.com>>)
+
+**others**
+  * [[`f71da69`](http://github.com/node-modules/hessian.js/commit/f71da690266f1fb65e6a569ee417996001ded8f1)] - test: fix throws test on node 10 (#110) (fengmk2 <<fengmk2@gmail.com>>)
+
 2.8.1 / 2018-01-18
 ==================
 
