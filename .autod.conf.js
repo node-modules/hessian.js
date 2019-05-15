@@ -13,6 +13,8 @@ module.exports = {
     'istanbul',
   ],
   semver: [
+    'byte@1',
+    'debug@3',
     'mocha@3',
   ],
 };
