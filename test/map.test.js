@@ -219,6 +219,65 @@ describe('map.test.js', function() {
     assert(result.$map.get(123456) === 123);
   });
 
+  it('should encode & decode custom map type', function() {
+     var buf = new Buffer('5674001E636F6D2E616C69626162612E666173746A736F6E2E4A534F4E41727261796C000000034D74001F636F6D2E616C69626162612E666173746A736F6E2E4A534F4E4F626A65637453000D44415445204F46204249525448530013323031362F31322F31322031323A31323A313253000946554C4C204E414D45530005446F652030530003414745490000000A7A4D74001F636F6D2E616C69626162612E666173746A736F6E2E4A534F4E4F626A65637453000D44415445204F46204249525448530013323031362F31322F31322031323A31323A313253000946554C4C204E414D45530005446F652031530003414745490000000A7A4D74001F636F6D2E616C69626162612E666173746A736F6E2E4A534F4E4F626A6563745300037878785300037979797A7A', 'hex');
+     var obj = hessian.decode(buf, '1.0', true);
+     assert.deepEqual(obj, {
+       $class: 'com.alibaba.fastjson.JSONArray',
+       $: [
+        {
+         $class: 'com.alibaba.fastjson.JSONObject',
+         $: {
+          'DATE OF BIRTH': {
+            $class: 'java.lang.String',
+            $: '2016/12/12 12:12:12',
+          },
+          'FULL NAME': {
+            $class: 'java.lang.String',
+            $: 'Doe 0',
+          },
+          AGE: {
+            $: 10,
+            $class: 'int',
+          }
+         }
+        },
+        {
+         $class: 'com.alibaba.fastjson.JSONObject',
+         $: {
+          'DATE OF BIRTH': {
+            $class: 'java.lang.String',
+            $: '2016/12/12 12:12:12',
+          },
+          'FULL NAME': {
+            $class: 'java.lang.String',
+            $: 'Doe 1',
+          },
+          AGE: {
+            $: 10,
+            $class: 'int',
+          }
+         }
+        },
+        {
+         $class: 'com.alibaba.fastjson.JSONObject',
+         $: {
+          xxx: {
+            $class: 'java.lang.String',
+            $: 'yyy',
+          }
+         }
+        }
+       ]
+      });
+
+     var buf2 = hessian.encode(obj, '1.0', {
+      'com.alibaba.fastjson.JSONObject': true,
+     });
+     var obj2 = hessian.decode(buf2, '1.0', true);
+     assert.deepEqual(obj, obj2);
+  });
+
   describe('v2.0', function() {
     // map = new HashMap();
     // map.put(new Integer(1), "fee");
@@ -468,6 +527,42 @@ describe('map.test.js', function() {
 
       var plainObject = JSON.parse(JSON.stringify(res.data));
       assert.deepEqual(plainObject, { '[object Object]': 166239 });
+    });
+
+    it('should encode & decode custom map type', function() {
+       var buf = new Buffer('731E636F6D2E616C69626162612E666173746A736F6E2E4A534F4E41727261794D1F636F6D2E616C69626162612E666173746A736F6E2E4A534F4E4F626A6563740D44415445204F4620424952544813323031362F31322F31322031323A31323A31320946554C4C204E414D4505446F652030034147459A5A4D910D44415445204F4620424952544813323031362F31322F31322031323A31323A31320946554C4C204E414D4505446F652031034147459A5A4D9103787878037979795A', 'hex');
+       var obj = hessian.decode(buf, '2.0', true);
+       assert.deepEqual(obj, {
+         $class: 'com.alibaba.fastjson.JSONArray',
+         $: [
+          {
+           $class: 'com.alibaba.fastjson.JSONObject',
+           $: {
+            'DATE OF BIRTH': '2016/12/12 12:12:12',
+            'FULL NAME': 'Doe 0',
+            AGE: 10
+           }
+          },
+          {
+           $class: 'com.alibaba.fastjson.JSONObject',
+           $: {
+            'DATE OF BIRTH': '2016/12/12 12:12:12',
+            'FULL NAME': 'Doe 1',
+            AGE: 10
+           }
+          },
+          {
+           $class: 'com.alibaba.fastjson.JSONObject',
+           $: {
+            xxx: 'yyy'
+           }
+          }
+         ]
+        });
+
+       var buf2 = hessian.encode(obj, '2.0');
+       var obj2 = hessian.decode(buf2, '2.0', true);
+       assert.deepEqual(obj, obj2);
     });
   });
 
