@@ -1,4 +1,10 @@
 
+2.10.0 / 2020-05-15
+==================
+
+**features**
+  * [[`461a715`](http://github.com/node-modules/hessian.js/commit/461a71551503d6f6430f9b078ffd2be4f7624de4)] - feat: support encode & decode custom map type (#122) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 2.9.0 / 2019-05-15
 ==================
 
