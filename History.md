@@ -1,4 +1,10 @@
 
+1.9.1 / 2020-09-17
+==================
+
+**fixes**
+  * [[`b92e433`](http://github.com/node-modules/hessian.js/commit/b92e4338afe435334a8486a285d9ecb13aada5a6)] - fix: float32 accuracy issue (#123) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.9.0 / 2018-11-02
 ==================
 
