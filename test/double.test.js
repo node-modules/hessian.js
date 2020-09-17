@@ -242,76 +242,93 @@ describe('double.test.js', function () {
     });
 
     it('should write as java impl', function () {
-      assert.deepEqual(hessian.encode(java.double(0), '2.0'), utils.bytes('v2/double/0'));
-      assert.deepEqual(hessian.encode(java.double(0.0), '2.0'), utils.bytes('v2/double/0'));
-      assert.deepEqual(hessian.encode(java.double(1), '2.0'), utils.bytes('v2/double/1'));
-      assert.deepEqual(hessian.encode(java.double(1.0), '2.0'), utils.bytes('v2/double/1'));
-      assert.deepEqual(hessian.encode(java.double(10), '2.0'), utils.bytes('v2/double/10'));
-      assert.deepEqual(
-        hessian.encode(java.double(10.123), '2.0'),
-        utils.bytes('v2/double/10.123')
-      );
-      assert.deepEqual(hessian.encode(java.double(10.1), '2.0'), utils.bytes('v2/double/10.1'));
-      assert.deepEqual(hessian.encode(java.double(-128), '2.0'), utils.bytes('v2/double/-128'));
-      assert.deepEqual(
-        hessian.encode(java.double(-127.9999), '2.0'),
-        utils.bytes('v2/double/-127.9999')
-      );
-      assert.deepEqual(hessian.encode(java.double(127), '2.0'), utils.bytes('v2/double/127'));
-      assert.deepEqual(
-        hessian.encode(java.double(126.9989), '2.0'),
-        utils.bytes('v2/double/126.9989')
-      );
-      assert.deepEqual(
-        hessian.encode(java.double(-32768), '2.0'),
-        utils.bytes('v2/double/-32768')
-      );
-      assert.deepEqual(
-        hessian.encode(java.double(-32767.999), '2.0'),
-        utils.bytes('v2/double/-32767.999')
-      );
-      assert.deepEqual(hessian.encode(java.double(32767), '2.0'), utils.bytes('v2/double/32767'));
-      assert.deepEqual(
-        hessian.encode(java.double(32766.99999), '2.0'),
-        utils.bytes('v2/double/32766.99999')
-      );
-      assert.deepEqual(hessian.encode(java.double(32768), '2.0'), utils.bytes('v2/double/32768'));
-      assert.deepEqual(
-        hessian.encode(java.double(32767.99999), '2.0'),
-        utils.bytes('v2/double/32767.99999')
-      );
+      for (var i = 0; i < 100; i++) {
+        assert.deepEqual(hessian.encode(java.double(0), '2.0'), utils.bytes('v2/double/0'));
+        assert.deepEqual(hessian.encode(java.double(0.0), '2.0'), utils.bytes('v2/double/0'));
+        assert.deepEqual(hessian.encode(java.double(1), '2.0'), utils.bytes('v2/double/1'));
+        assert.deepEqual(hessian.encode(java.double(1.0), '2.0'), utils.bytes('v2/double/1'));
+        assert.deepEqual(hessian.encode(java.double(10), '2.0'), utils.bytes('v2/double/10'));
+        assert.deepEqual(
+          hessian.encode(java.double(10.123), '2.0'),
+          utils.bytes('v2/double/10.123')
+        );
+        assert.deepEqual(hessian.encode(java.double(10.1), '2.0'), utils.bytes('v2/double/10.1'));
+        assert.deepEqual(hessian.encode(java.double(-128), '2.0'), utils.bytes('v2/double/-128'));
+        assert.deepEqual(
+          hessian.encode(java.double(-127.9999), '2.0'),
+          utils.bytes('v2/double/-127.9999')
+        );
+        assert.deepEqual(hessian.encode(java.double(127), '2.0'), utils.bytes('v2/double/127'));
+        assert.deepEqual(
+          hessian.encode(java.double(126.9989), '2.0'),
+          utils.bytes('v2/double/126.9989')
+        );
+        assert.deepEqual(
+          hessian.encode(java.double(-32768), '2.0'),
+          utils.bytes('v2/double/-32768')
+        );
+        assert.deepEqual(
+          hessian.encode(java.double(-32767.999), '2.0'),
+          utils.bytes('v2/double/-32767.999')
+        );
+        assert.deepEqual(hessian.encode(java.double(32767), '2.0'), utils.bytes('v2/double/32767'));
+        assert.deepEqual(
+          hessian.encode(java.double(32766.99999), '2.0'),
+          utils.bytes('v2/double/32766.99999')
+        );
+        assert.deepEqual(hessian.encode(java.double(32768), '2.0'), utils.bytes('v2/double/32768'));
+        assert.deepEqual(hessian.encode(java.double(19400447), '2.0'), utils.bytes('v2/double/19400447'));
+        assert.deepEqual(hessian.encode(java.double(19400448), '2.0'), utils.bytes('v2/double/19400448'));
+        assert.deepEqual(
+          hessian.encode(java.double(32767.99999), '2.0'),
+          utils.bytes('v2/double/32767.99999')
+        );
 
-      // float byte
-      assert(hessian.encode(java.double(-0x800000), '2.0').length === 5);
-      assert.deepEqual(
-        hessian.encode(java.double(-0x800000), '2.0'),
-        utils.bytes('v2/double/-0x800000')
-      );
-      assert(hessian.encode(java.double(-0x80000000), '2.0').length === 5);
-      assert.deepEqual(
-        hessian.encode(java.double(-0x80000000), '2.0'),
-        utils.bytes('v2/double/-0x80000000')
-      );
-      assert.deepEqual(
-        hessian.encode(java.double(-2147483649), '2.0'),
-        utils.bytes('v2/double/-2147483649')
-      );
-      assert.deepEqual(
-        hessian.encode(java.double(-2147483648), '2.0'),
-        utils.bytes('v2/double/-2147483648')
-      );
-      // hessian.encode(java.double(-2147483647), '2.0').should.eql(utils.bytes('v2/double/-2147483647'));
-      assert.deepEqual(
-        hessian.encode(java.double(-2147483610.123), '2.0'),
-        utils.bytes('v2/double/-2147483610.123')
-      );
-      // hessian.encode(java.double(2147483648), '2.0').should.eql(utils.bytes('v2/double/2147483648'));
-      // hessian.encode(java.double(2147483647), '2.0').should.eql(utils.bytes('v2/double/2147483647'));
-      // hessian.encode(java.double(2147483646), '2.0').should.eql(utils.bytes('v2/double/2147483646'));
-      assert.deepEqual(
-        hessian.encode(java.double(2147483646.456), '2.0'),
-        utils.bytes('v2/double/2147483646.456')
-      );
+        // float byte
+        assert(hessian.encode(java.double(-0x800000), '2.0').length === 5);
+        assert.deepEqual(
+          hessian.encode(java.double(-0x800000), '2.0'),
+          utils.bytes('v2/double/-0x800000')
+        );
+        assert(hessian.encode(java.double(-0x80000000), '2.0').length === 5);
+        assert.deepEqual(
+          hessian.encode(java.double(-0x80000000), '2.0'),
+          utils.bytes('v2/double/-0x80000000')
+        );
+        assert.deepEqual(
+          hessian.encode(java.double(-2147483649), '2.0'),
+          utils.bytes('v2/double/-2147483649')
+        );
+        assert.deepEqual(
+          hessian.encode(java.double(-2147483648), '2.0'),
+          utils.bytes('v2/double/-2147483648')
+        );
+        // hessian.encode(java.double(-2147483647), '2.0').should.eql(utils.bytes('v2/double/-2147483647'));
+        assert.deepEqual(
+          hessian.encode(java.double(-2147483610.123), '2.0'),
+          utils.bytes('v2/double/-2147483610.123')
+        );
+        // hessian.encode(java.double(2147483648), '2.0').should.eql(utils.bytes('v2/double/2147483648'));
+        // hessian.encode(java.double(2147483647), '2.0').should.eql(utils.bytes('v2/double/2147483647'));
+        // hessian.encode(java.double(2147483646), '2.0').should.eql(utils.bytes('v2/double/2147483646'));
+        assert.deepEqual(
+          hessian.encode(java.double(2147483646.456), '2.0'),
+          utils.bytes('v2/double/2147483646.456')
+        );
+      }
+    });
+
+    it('should write double between 0x80000000L and 0x7fffffffL', function () {
+      var map = new Map();
+      for (var i = -2147483648; i < -2147473648; i++) {
+        map.set(i, hessian.encode(java.double(i), '2.0'));
+      }
+      for (var i = 2147473648; i < 2147483648; i++) {
+        map.set(i, hessian.encode(java.double(i), '2.0'));
+      }
+      for (var k of map.keys()) {
+        assert.deepEqual(map.get(k), hessian.encode(java.double(k), '2.0'));
+      }
     });
 
     it('should read java bin format', function () {
