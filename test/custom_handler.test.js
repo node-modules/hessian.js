@@ -93,6 +93,33 @@ describe('utils.test.js', function () {
       assert.deepEqual(output, {'1': { value: '100.06'}, '2': { value: '100.06' }});
   	});
 
+    it('should decode with custom handler if has ref and has circular ref', function () {
+      var circularObj = { value: '100.06' };
+      circularObj['ref'] = circularObj;
+  		hessian.registerDecodeHandler('java.test.circular', function (result) {
+        return {
+          $class: result.$class,
+          $: result.$,
+        };
+  		});
+      var o = { $class: 'java.test.circular', $: circularObj };
+      var map = new Map();
+      map.set(1, o);
+      map.set(2, o);
+      var buf = hessian.encode({
+        $class: 'java.util.HashMap',
+        $: map
+      }, '2.0');
+      var output = hessian.decode(buf, '2.0');
+      /**
+       * fix problem like ref object reuse
+       */
+      assert(output[1].value === '100.06');
+      assert(output[2].value === '100.06');
+      assert(output[1].ref.ref.ref.ref.value === '100.06');
+      hessian.deregisterDecodeHandler('java.test.circular');
+  	});
+
   	if (!supportES6Map) {
   		return;
   	}
