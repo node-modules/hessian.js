@@ -97,6 +97,7 @@ describe('utils.test.js', function () {
       var circularObj = { value: '100.06' };
       circularObj.ref = circularObj;
   		hessian.registerDecodeHandler('java.test.circular', function (result) {
+        // must modify result in place to avoid circular problem
         return {
           $class: result.$class,
           $: result.$,
