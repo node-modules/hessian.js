@@ -2,19 +2,16 @@ hessian.js
 =========
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![build status][github-action-image]][github-action-url]
 [![Test coverage][codecov-image]][codecov-url]
-[![David deps][david-image]][david-url]
 [![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/hessian.js.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/hessian.js
-[travis-image]: https://img.shields.io/travis/node-modules/hessian.js.svg?style=flat-square
-[travis-url]: https://travis-ci.org/node-modules/hessian.js
+[github-action-image]: https://github.com/node-modules/hessian.js/actions/workflows/nodejs.yml/badge.svg
+[github-action-url]: https://github.com/node-modules/hessian.js/actions/workflows/nodejs.yml
 [codecov-image]: https://codecov.io/github/node-modules/hessian.js/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/node-modules/hessian.js?branch=master
-[david-image]: https://img.shields.io/david/node-modules/hessian.js.svg?style=flat-square
-[david-url]: https://david-dm.org/node-modules/hessian.js
 [download-image]: https://img.shields.io/npm/dm/hessian.js.svg?style=flat-square
 [download-url]: https://npmjs.org/package/hessian.js
 
