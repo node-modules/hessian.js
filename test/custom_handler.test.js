@@ -95,7 +95,7 @@ describe('utils.test.js', function () {
 
     it('should decode with custom handler if has ref and has circular ref', function () {
       var circularObj = { value: '100.06' };
-      circularObj['ref'] = circularObj;
+      circularObj.ref = circularObj;
   		hessian.registerDecodeHandler('java.test.circular', function (result) {
         return {
           $class: result.$class,
