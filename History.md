@@ -1,4 +1,17 @@
 
+2.10.1 / 2021-11-15
+==================
+
+**fixes**
+  * [[`543b2bc`](https://github.com/node-modules/hessian.js.git/commit/543b2bc482828ae5e6cb804cf958c9f22dfb24d6)] - fix: 🐛 ref should use custom handler (#126) (Hongcai Deng <<admin@dhchouse.com>>)
+
+**others**
+  * [[`33dcabf`](https://github.com/node-modules/hessian.js.git/commit/33dcabf7a585705c6e88b9f49782120bf5e29475)] - test: github action only test on macOS and Linux (#129) (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`895fa83`](https://github.com/node-modules/hessian.js.git/commit/895fa8367c428cb6b2a42dd6ded311ed9eb1b475)] - test: 💍 fix ref should use custom handler circular bug (#128) (Hongcai Deng <<admin@dhchouse.com>>)
+  * [[`5c633be`](https://github.com/node-modules/hessian.js.git/commit/5c633be4ae130d55f263133b6607ce1238273b52)] - test: run test on github action (#127) (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`0b14874`](https://github.com/node-modules/hessian.js.git/commit/0b148740d78e312d2ec6da4e37b0ade35a3c15ae)] - chore: add contributors (#117) (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`9012536`](https://github.com/node-modules/hessian.js.git/commit/9012536fc49fe7d57eeafb390ab11fcff027d12a)] - chore: add node 12 & 14 into travis list (#125) (Jackson Tian <<shyvo1987@gmail.com>>)
+
 2.10.0 / 2020-05-15
 ==================
 
