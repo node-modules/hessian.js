@@ -12,9 +12,7 @@
     "test-cov": "istanbul cover _mocha -- -t 15000 test/*.test.js",
     "lint": "jshint .",
     "ci": "npm run lint && npm run test-cov",
-    "autod": "autod",
-    "benchmark": "node benchmark/encode.js && node benchmark/decode.js",
-    "contributor": "git-contributor"
+    "benchmark": "node benchmark/encode.js && node benchmark/decode.js"
   },
   "repository": {
     "type": "git",
@@ -45,20 +43,11 @@
     "autod": "^3.1.0",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
-    "egg-ci": "^1.19.0",
-    "git-contributor": "^1.0.10",
     "istanbul": "^0.4.5",
     "js-to-java": "^2.6.1",
     "jshint": "^2.10.2",
     "mm": "^2.5.0",
     "mocha": "^3.5.3"
-  },
-  "ci": {
-    "type": "github",
-    "os": {
-      "github": "linux, macos"
-    },
-    "version": "8, 10, 12, 14, 16"
   },
   "engines": {
     "node": ">= 0.12.0"
