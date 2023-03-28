@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "autod": "autod",
-    "test": "make jshint && make test"
+    "test": "make jshint && make test",
+    "build-local": "cd lib/v2rust && napi build --platform --release ./harness/",
+    "build-darwin": "cd lib/v2rust && napi build --platform --target x86_64-apple-darwin --release ./harness/ && napi build --platform --target aarch64-apple-darwin --release ./harness/"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
     "debug": "^3.2.6",
     "is-type-of": "^1.2.1",
     "long": "^4.0.0",
+    "benchmark": "^2.1.4",
     "utility": "^1.15.0"
   },
   "devDependencies": {
@@ -46,6 +49,7 @@
     "jshint": "^2.9.6",
     "mm": "^2.4.1",
     "mocha": "^3.5.3",
+    "@napi-rs/cli": "^1.0.0",
     "should": "^13.2.3"
   },
   "engines": {

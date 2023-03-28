@@ -1,4 +1,4 @@
-TESTS = test/*.test.js
+TESTS = test/**/*.test.js
 REPORTER = spec
 TIMEOUT = 10000
 MOCHA_OPTS =
@@ -11,6 +11,12 @@ jshint:
 
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
+		--reporter $(REPORTER) \
+		--timeout $(TIMEOUT) \
+		$(MOCHA_OPTS) \
+		$(TESTS)
+
+	@NODE_ENV=test maxCacheLength=0 ./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
 		$(MOCHA_OPTS) \

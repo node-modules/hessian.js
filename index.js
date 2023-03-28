@@ -16,6 +16,7 @@ var DecoderV1 = exports.DecoderV1 = exports.Decoder = require('./lib/v1/decoder'
 
 var EncoderV2 = exports.EncoderV2 = require('./lib/v2/encoder');
 var DecoderV2 = exports.DecoderV2 = require('./lib/v2/decoder');
+exports.DecoderV2Rust = require('./lib/v2rust/decoder');
 
 exports.encoderV1 = new EncoderV1({size: 1024 * 1024});
 exports.encoderV2 = new EncoderV2({size: 1024 * 1024});
