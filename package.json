@@ -10,8 +10,8 @@
   "scripts": {
     "autod": "autod",
     "test": "make jshint && make test",
-    "build-local": "cd lib/v2rust && napi build --platform --release ./harness/",
-    "build-darwin": "cd lib/v2rust && napi build --platform --target x86_64-apple-darwin --release ./harness/ && napi build --platform --target aarch64-apple-darwin --release ./harness/"
+    "build-local": "napi build --cargo-cwd ./lib/v2rust --platform --release ./harness/",
+    "build-darwin": "napi build --cargo-cwd ./lib/v2rust --platform --target x86_64-apple-darwin --release ./harness/ && napi build --platform --target aarch64-apple-darwin --release ./harness/"
   },
   "repository": {
     "type": "git",

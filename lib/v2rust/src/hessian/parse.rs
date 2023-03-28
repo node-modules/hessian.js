@@ -1,7 +1,6 @@
 use super::*;
 use std::io::Write;
-use std::mem::{ManuallyDrop};
-use std::ops::{Range, Index};
+use std::ops::{Index, Range};
 
 struct Parser<'a> {
     input: &'a mut Input<'a>,
@@ -53,9 +52,15 @@ impl Temp {
     }
 }
 
+// 从一个slice中leak一个string. 生命周期和 input 一样。
+#[inline]
+fn leak_string_by_input_range(input: &[u8], range: Range<usize>) -> &str {
+    unsafe { std::str::from_utf8_unchecked(input.index(range)) }
+}
+
 impl<'a> Parser<'a> {
     #[inline]
-    fn push_kv(self: &mut Self, key: &[u8], object_key: bool) -> u32 {
+    fn push_kv(self: &mut Self, key: &[u8], object_key: bool) {
         let names = Temp::get_mut_buffer();
         names.write(key).unwrap(); // 写入key
         names.write(SEPARATOR.as_bytes()).unwrap(); // 写入分隔符
@@ -63,7 +68,6 @@ impl<'a> Parser<'a> {
             self.read(); // 写入key对象
         }
         self.read(); // 写入value
-        1
     }
     #[inline]
     fn assert(
@@ -303,14 +307,6 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn get_string_by_input_range(&self, range: &Range<usize>) -> ManuallyDrop<String> {
-        unsafe {
-            let ptr = self.input.data.as_ptr().offset(range.start as isize) as *mut u8;
-            let len = range.end - range.start;
-            ManuallyDrop::new(String::from_raw_parts(ptr, len, len))
-        }
-    }
-
     #[inline]
     fn gen_cls_info(&mut self, len: u32) -> Box<ClassInfo>{
         let start = self.input.get_rpos();
@@ -318,12 +314,12 @@ impl<'a> Parser<'a> {
         let mut skip_idx = Vec::<u32>::new();
         let mut field_count = 0;
         for i in 0..len {
-            let range = self.read_string_key();
-            let field_str = self.get_string_by_input_range(&range);
+            let range = self.with_stop_push(|this: &mut Self| this.read_string_key());
+            let field_str = leak_string_by_input_range(self.input.data, range);
             if field_str.starts_with("this$") {
                 skip_idx.push(i);
             } else {
-                fields.write(&self.input.data[range]).unwrap();
+                fields.write(field_str.as_bytes()).unwrap();
                 fields.write(SEPARATOR.as_bytes()).unwrap();
                 field_count += 1;
             }
@@ -349,40 +345,51 @@ impl<'a> Parser<'a> {
     fn read_object_def(&mut self) {
         let size = self.read_int();
         let range = self.read_utf8_str(Some(size as u16));
-        let cls_name = self.get_string_by_input_range(&range);
+        let cls_name = leak_string_by_input_range(self.input.data, range);
         let len = self.read_int() as u32;
+        enum CacheStatus {
+            Miss,
+            Hit(*const ClassInfo)
+        }
         // 先从缓存里面通过cls_name读取
-        let info_ptr = match self.state.class_shape_cache.get_mut(&*cls_name) {
+        let cache_status = match self.state.class_shape_cache.get(cls_name) {
             Some(lst) => {
                 // 命中缓存后开始读取缓存值
-                let lst = unsafe { &mut *(lst as *const Vec<Box<ClassInfo>> as *mut Vec<Box<ClassInfo>>) };
-                
                 // 在缓存值中查找字段个数等于当前字段个数的缓存
                 let target = lst.iter().find(|x| {
                     x.len == len
                 });
-
                 // 如果找到缓存就返回缓存的指针, 否则就通过gen_cls_info 插入缓存，然后返回指针
                 if let Some(target) = target {
                     self.input.skip(target.bytelen as i32);
-                    &**target as *const ClassInfo
+                    CacheStatus::Hit(&**target as *const ClassInfo)
                 } else {
-                    let info = self.gen_cls_info(len);
-                    let info_ptr = &*info as *const ClassInfo;
-                    lst.push(info);
-                    info_ptr
+                    CacheStatus::Miss
                 }
             }
             None => {
-                let info = self.gen_cls_info(len);
-                let info_ptr = &*info as *const ClassInfo;
-                self.state
-                    .class_shape_cache
-                    .insert(String::clone(&cls_name), vec![info]);
-                info_ptr
+                CacheStatus::Miss
             }
         };
         // 将换成指针push到definition缓冲区，hessian用这个办法来共享类型定义
+        let info_ptr = match cache_status {
+            CacheStatus::Hit(info_ptr) => {
+                info_ptr
+            },
+            CacheStatus::Miss => {
+                let info = self.gen_cls_info(len);
+                let info_ptr = &*info as *const ClassInfo;
+                if !self.state.class_shape_cache.contains_key(cls_name) {
+                    self.state
+                        .class_shape_cache
+                        .insert(cls_name.to_owned(), vec![info]);
+                } else {
+                    let lst = self.state.class_shape_cache.get_mut(cls_name).expect("should contains");
+                    lst.push(info);
+                }
+                info_ptr
+            },
+        };
         Temp::get_mut_definition().push(info_ptr);
 
     }
@@ -483,7 +490,7 @@ impl<'a> Parser<'a> {
             let mut code = self.get_u8();
             let mut field_len = 0;
             while code != 0x7a {
-                field_len += match self.read_map_key() {
+                match self.read_map_key() {
                     MapKey::True => self.push_kv(TRUE.as_bytes(), false),
                     MapKey::False => self.push_kv(FALSE.as_bytes(), false),
                     MapKey::Null => self.push_kv(NULL.as_bytes(), false),
@@ -496,25 +503,16 @@ impl<'a> Parser<'a> {
                     MapKey::Spec => self.push_kv(SPEC.as_bytes(), true),
                 };
                 code = self.get_u8();
+                field_len += 1;
             }
             field_len
         };
         let names = Temp::get_mut_buffer();
         self.output
             .set_u32(output_start + 1, (self.output.cursor() - output_start) as u32);
-        let len = names.len() - names_start;
-        self.output.push_map_type(
-            &ManuallyDrop::new(unsafe {
-                String::from_raw_parts(
-                    names.as_ptr().offset(names_start as isize) as *mut u8,
-                    len,
-                    len,
-                )
-            }),
-            field_len,
-            &mut self.state,
-            self.set_cache,
-        );
+        let field_string = leak_string_by_input_range(names.as_slice(), names_start..names.len());
+        self.output
+            .push_map_type(field_string, field_len, &mut self.state, self.set_cache);
         names.drain(names_start..);
         self.input.read_u8();
     }
@@ -650,5 +648,8 @@ pub fn from_byte_buffer(
     assert!(Temp::get_mut_buffer().len() == 0);
 
     // 返回2个字符串的长度，因为这2个buffer是一个很大的缓冲区，所以需要知道缓冲区里面字符串的真实长度
-    (parser.latin1_string_ret.cursor(), parser.ucs2_string_ret.cursor())
+    (
+        parser.latin1_string_ret.cursor(),
+        parser.ucs2_string_ret.cursor(),
+    )
 }

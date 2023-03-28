@@ -205,7 +205,7 @@ impl<'a> OutPut<'a, u8> {
     #[inline]
     pub fn push_map_type(
         &mut self,
-        field_string: &String, // key的组合，用 , 分隔
+        field_string: &str, // key的组合，用 , 分隔
         field_len: u32,        // key的数量，用来校验 field_string 分隔后的产物
         cache: &mut State,
         set_cache: &dyn Fn(String, u32, bool) -> u32,
@@ -226,10 +226,10 @@ impl<'a> OutPut<'a, u8> {
                 self.write_u32(bytes.len() as u32);
                 self.write(bytes);
             } else {
-                let idx = set_cache(field_string.clone(), field_len, true);
+                let idx = set_cache(field_string.to_owned(), field_len, true);
                 cache
                     .map_shape_cache
-                    .insert(field_string.clone(), idx as u32);
+                    .insert(field_string.to_owned(), idx as u32);
                 self.write_u8(MagicCode::TypingIdx as u8);
                 self.write_u32(idx);
             }
