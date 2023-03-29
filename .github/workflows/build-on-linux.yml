@@ -1,0 +1,42 @@
+name: Hessian Rust build and test on linux
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        targets:
+          [
+            'x86_64-apple-darwin',
+            'aarch64-apple-darwin',
+            'x86_64-unknown-linux-gnu',
+            'aarch64-unknown-linux-gnu'
+          ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          target: ${{ matrix.targets }}
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install ziglang
+        uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.10.0
+      - run: cargo install cargo-xwin
+      - run: npm install
+      - run: rustup toolchain install nightly-2022-12-12
+      - run: rustup target add --toolchain nightly-2022-12-12 ${{ matrix.targets }}
+      - run: npx napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/  --zig --target ${{ matrix.targets }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: bindings-${{ matrix.targets }}
+          path: lib/v2rust/harness/*.node
+          if-no-files-found: error
