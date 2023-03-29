@@ -365,7 +365,7 @@ impl<'a> Input<'a> {
         let mut remain = size - used;
         while remain > 0 {
             let cursor = start + used;
-            let ch = unsafe { *self.data.get_unchecked(cursor) };
+            let ch = *self.data.get(cursor).unwrap();
             used += if ch < 0x80 {
                 1
             } else if (ch & 0xe0) == 0xc0 {
@@ -373,8 +373,8 @@ impl<'a> Input<'a> {
             } else if (ch & 0xf0) == 0xe0 {
                 // 代理码点，hessian独有的，utf8不存在这个。3个字节的要先看看有没有代理码点。
                 if !has_surrogate {
-                    let ch1 = unsafe { *self.data.get_unchecked(cursor + 1) } as u16;
-                    let ch2 = unsafe { *self.data.get_unchecked(cursor + 2) } as u16;
+                    let ch1 = *self.data.get(cursor + 1).unwrap() as u16;
+                    let ch2 = *self.data.get(cursor + 2).unwrap() as u16;
                     let maybe_surrogate =
                         (((ch as u16) & 0x0f) << 12) + ((ch1 & 0x3f) << 6) + (ch2 & 0x3f);
                     if maybe_surrogate >= 0xd800 && maybe_surrogate <= 0xdfff {
@@ -420,7 +420,7 @@ impl<'a> Input<'a> {
     pub fn read_u8(&mut self) -> u8 {
         let pos = self.cursor;
         self.cursor += 1;
-        unsafe { *self.data.get_unchecked(pos) }
+        *self.data.get(pos).unwrap()
     }
 
     #[inline]
