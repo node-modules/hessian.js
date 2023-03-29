@@ -1,6 +1,7 @@
 use super::*;
 use std::io::Write;
 use std::ops::{Index, Range};
+use std::str;
 
 struct Parser<'a> {
     input: &'a mut Input<'a>,
@@ -50,12 +51,6 @@ impl Temp {
     pub fn get_mut_definition() -> &'static mut Vec<*const ClassInfo> {
         unsafe { &mut TEMP.definition }
     }
-}
-
-// 从一个slice中leak一个string. 生命周期和 input 一样。
-#[inline]
-fn leak_string_by_input_range(input: &[u8], range: Range<usize>) -> &str {
-    unsafe { std::str::from_utf8_unchecked(input.index(range)) }
 }
 
 impl<'a> Parser<'a> {
@@ -196,7 +191,12 @@ impl<'a> Parser<'a> {
             _ => self.input.read_u16(),
         };
         let start = self.input.cursor;
-        self.input.read_utf8(real_len as usize, &mut self.output, &mut self.latin1_string_ret, &mut self.ucs2_string_ret);
+        self.input.read_utf8(
+            real_len as usize,
+            &mut self.output,
+            &mut self.latin1_string_ret,
+            &mut self.ucs2_string_ret,
+        );
         start..self.input.cursor
     }
     #[inline]
@@ -308,14 +308,14 @@ impl<'a> Parser<'a> {
     }
 
     #[inline]
-    fn gen_cls_info(&mut self, len: u32) -> Box<ClassInfo>{
+    fn gen_cls_info(&mut self, len: u32) -> Box<ClassInfo> {
         let start = self.input.get_rpos();
         let mut fields = Vec::<u8>::new();
         let mut skip_idx = Vec::<u32>::new();
         let mut field_count = 0;
         for i in 0..len {
             let range = self.with_stop_push(|this: &mut Self| this.read_string_key());
-            let field_str = leak_string_by_input_range(self.input.data, range);
+            let field_str = unsafe { str::from_utf8_unchecked(self.input.data.index(range)) };
             if field_str.starts_with("this$") {
                 skip_idx.push(i);
             } else {
@@ -325,11 +325,7 @@ impl<'a> Parser<'a> {
             }
         }
         let end = self.input.get_rpos();
-        let idx = (self.set_cache)(
-            String::from_utf8(fields).unwrap(),
-            field_count,
-            false,
-        );
+        let idx = (self.set_cache)(String::from_utf8(fields).unwrap(), field_count, false);
         // classInfo会被转化成指针放到 definition里面，因此要放到box，直接放到vec有可能导致野指针，因为vec没有pin
         Box::new(ClassInfo {
             len,
@@ -339,26 +335,23 @@ impl<'a> Parser<'a> {
         })
     }
 
-
     /// 读取object的类定义
     #[inline]
     fn read_object_def(&mut self) {
         let size = self.read_int();
         let range = self.read_utf8_str(Some(size as u16));
-        let cls_name = leak_string_by_input_range(self.input.data, range);
+        let cls_name = unsafe { str::from_utf8_unchecked(self.input.data.index(range)) };
         let len = self.read_int() as u32;
         enum CacheStatus {
             Miss,
-            Hit(*const ClassInfo)
+            Hit(*const ClassInfo),
         }
         // 先从缓存里面通过cls_name读取
         let cache_status = match self.state.class_shape_cache.get(cls_name) {
             Some(lst) => {
                 // 命中缓存后开始读取缓存值
                 // 在缓存值中查找字段个数等于当前字段个数的缓存
-                let target = lst.iter().find(|x| {
-                    x.len == len
-                });
+                let target = lst.iter().find(|x| x.len == len);
                 // 如果找到缓存就返回缓存的指针, 否则就通过gen_cls_info 插入缓存，然后返回指针
                 if let Some(target) = target {
                     self.input.skip(target.bytelen as i32);
@@ -367,15 +360,11 @@ impl<'a> Parser<'a> {
                     CacheStatus::Miss
                 }
             }
-            None => {
-                CacheStatus::Miss
-            }
+            None => CacheStatus::Miss,
         };
         // 将换成指针push到definition缓冲区，hessian用这个办法来共享类型定义
         let info_ptr = match cache_status {
-            CacheStatus::Hit(info_ptr) => {
-                info_ptr
-            },
+            CacheStatus::Hit(info_ptr) => info_ptr,
             CacheStatus::Miss => {
                 let info = self.gen_cls_info(len);
                 let info_ptr = &*info as *const ClassInfo;
@@ -384,14 +373,17 @@ impl<'a> Parser<'a> {
                         .class_shape_cache
                         .insert(cls_name.to_owned(), vec![info]);
                 } else {
-                    let lst = self.state.class_shape_cache.get_mut(cls_name).expect("should contains");
+                    let lst = self
+                        .state
+                        .class_shape_cache
+                        .get_mut(cls_name)
+                        .expect("should contains");
                     lst.push(info);
                 }
                 info_ptr
-            },
+            }
         };
         Temp::get_mut_definition().push(info_ptr);
-
     }
 
     // 用于禁止push的情况，比如对象的key
@@ -474,7 +466,7 @@ impl<'a> Parser<'a> {
             panic!("read_ref_id error")
         }
     }
-    
+
     #[inline]
     fn read_ref(&mut self) {
         let v = self.read_ref_id();
@@ -508,9 +500,11 @@ impl<'a> Parser<'a> {
             field_len
         };
         let names = Temp::get_mut_buffer();
-        self.output
-            .set_u32(output_start + 1, (self.output.cursor() - output_start) as u32);
-        let field_string = leak_string_by_input_range(names.as_slice(), names_start..names.len());
+        self.output.set_u32(
+            output_start + 1,
+            (self.output.cursor() - output_start) as u32,
+        );
+        let field_string = unsafe { str::from_utf8_unchecked(names.index(names_start..)) };
         self.output
             .push_map_type(field_string, field_len, &mut self.state, self.set_cache);
         names.drain(names_start..);
