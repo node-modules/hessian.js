@@ -10,7 +10,7 @@
   "scripts": {
     "autod": "autod",
     "test": "make jshint && make test",
-    "build::platform": "napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/"
+    "build::platform": "napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist"
   },
   "repository": {
     "type": "git",

@@ -34,9 +34,9 @@ jobs:
       - run: npm install
       - run: rustup toolchain install nightly-2022-12-12
       - run: rustup target add --toolchain nightly-2022-12-12 ${{ matrix.targets }}
-      - run: npx napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/  --zig --target ${{ matrix.targets }}
+      - run: npx napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist/  --zig --target ${{ matrix.targets }}
       - uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.targets }}
-          path: lib/v2rust/harness/*.node
+          path: lib/v2rust/harness/dist/
           if-no-files-found: error

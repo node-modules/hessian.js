@@ -35,6 +35,7 @@ use byteorder::{ByteOrder, LittleEndian};
 use hessian::*;
 use napi_derive::napi;
 use std::ops::IndexMut;
+#[cfg(test)]
 mod test;
 
 use napi::{bindgen_prelude::*, JsBuffer};
@@ -42,6 +43,7 @@ use napi::{bindgen_prelude::*, JsBuffer};
 #[napi]
 struct Harness(State);
 
+#[allow(dead_code)]
 #[napi]
 impl Harness {
     ///
@@ -142,6 +144,7 @@ impl Harness {
 
 const PKG_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
+#[allow(dead_code)]
 #[napi(catch_unwind)]
 fn version() -> &'static str {
     PKG_VERSION

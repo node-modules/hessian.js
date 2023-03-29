@@ -35,8 +35,6 @@ pub struct Temp {
     definition: Vec<*const ClassInfo>,
     buffer: Vec<u8>,
 }
-unsafe impl Sync for Temp {}
-unsafe impl Send for Temp {}
 
 static mut TEMP: Temp = Temp {
     definition: Vec::new(),
