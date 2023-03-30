@@ -3,14 +3,12 @@ name: Hessian Rust build and test on linux
 on: [push]
 
 jobs:
-  build-unix:
+  build-with-zig:
     strategy:
       fail-fast: false
       matrix:
         targets:
           [
-            'x86_64-apple-darwin',
-            'aarch64-apple-darwin',
             'x86_64-unknown-linux-gnu',
             'aarch64-unknown-linux-gnu'
           ]
@@ -41,14 +39,16 @@ jobs:
           path: lib/v2rust/harness/dist/
           if-no-files-found: error
   
-  build-windows:
+  build:
     strategy:
       fail-fast: false
       matrix:
         targets:
           [
             'x86_64-pc-windows-msvc',
-            'aarch64-pc-windows-msvc'
+            'aarch64-pc-windows-msvc',
+            'x86_64-apple-darwin',
+            'aarch64-apple-darwin'
           ]
     runs-on: ubuntu-latest
     steps:
