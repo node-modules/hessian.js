@@ -278,7 +278,7 @@ impl<'a> Input<'a> {
     /// 确定字符串中单字节的宽度，start表示buffer的起始位置，len表示字符的个数，返回值是确定了的个数。
     /// 如果发现了多字节的utf8就直接返回，如果剩下的个数不足8位也返回。
     /// 从 512 位的simd到64位的simd
-    fn lation1_bytelen_simd(&self, start: usize, len: usize) -> usize {
+    pub fn lation1_bytelen_simd(&self, start: usize, len: usize) -> usize {
         let mut used = 0;
         macro_rules! process {
             ($bit:literal) => {{
@@ -346,6 +346,34 @@ impl<'a> Input<'a> {
             start,
             (start + size as u32) as u32,
         );
+    }
+
+    // 跳过utf8 字符串
+    pub fn skip_utf8(
+        &mut self,
+        size: usize,
+    ) {
+        // 首先用simd假设它是单字节的，因为单字节最常见
+        let start = self.get_rpos();
+        // 单字节长度 simd
+        let mut used = self.lation1_bytelen_simd(start, size);
+        // 剩下的字符数小于8，simd不能处理
+        let mut remain = size - used;
+        while remain > 0 {
+            let cursor = start + used;
+            let ch = *self.data.get(cursor).unwrap();
+            used += if ch < 0x80 {
+                1
+            } else if (ch & 0xe0) == 0xc0 {
+                2
+            } else if (ch & 0xf0) == 0xe0 {
+                3
+            } else {
+                panic!("string is not valid UTF-8 encode");
+            };
+            remain -= 1;
+        }
+        self.set_rpos(start + used);
     }
 
     // 读取utf8 字符串

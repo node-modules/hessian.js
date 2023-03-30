@@ -182,21 +182,22 @@ impl<'a> Parser<'a> {
         let i = self.input.read_u64();
         self.output.push_date(i);
     }
+
+
+
     #[inline]
-    fn read_utf8_str(&mut self, len: Option<u16>) -> Range<usize> {
+    fn skip_utf8_str(&mut self, len: Option<u16>) -> Range<usize> {
         let real_len = match len {
             Some(x) => x,
             _ => self.input.read_u16(),
         };
         let start = self.input.cursor;
-        self.input.read_utf8(
+        self.input.skip_utf8(
             real_len as usize,
-            &mut self.output,
-            &mut self.latin1_string_ret,
-            &mut self.ucs2_string_ret,
         );
         start..self.input.cursor
     }
+
     #[inline]
     fn read_map_key(&mut self) -> MapKey {
         let code = self.get_u8();
@@ -238,16 +239,18 @@ impl<'a> Parser<'a> {
             }
         }
     }
+    
     #[inline]
     fn read_string_key(&mut self) -> Range<usize> {
+
         let start = self.input.read_u8();
         if start == 0x73 {
             panic!("object key cant be string chunk")
         }
         if start <= 0x1f {
-            self.read_utf8_str(Some(start as u16))
+            self.skip_utf8_str(Some(start as u16))
         } else if start == 0x53 {
-            self.read_utf8_str(None)
+            self.skip_utf8_str(None)
         } else {
             panic!("read string key error, string muse be end")
         }
@@ -262,9 +265,26 @@ impl<'a> Parser<'a> {
             self.output.push_chunk(2, 0);
             chunk_offset = self.output.cursor() - 4;
         }
+
+        #[inline]
+        fn read_utf8_str(parser: &mut Parser, len: Option<u16>) -> Range<usize> {
+            let real_len = match len {
+                Some(x) => x,
+                _ => parser.input.read_u16(),
+            };
+            let start = parser.input.cursor;
+            parser.input.read_utf8(
+                real_len as usize,
+                &mut parser.output,
+                &mut parser.latin1_string_ret,
+                &mut parser.ucs2_string_ret,
+            );
+            start..parser.input.cursor
+        }
+
         loop {
             if start == 0x73 {
-                self.read_utf8_str(None);
+                read_utf8_str(self, None);
                 start = self.input.read_u8();
                 chunk_len += 1;
             } else {
@@ -273,10 +293,10 @@ impl<'a> Parser<'a> {
         }
         if start <= 0x1f {
             chunk_len += 1;
-            self.read_utf8_str(Some(start as u16));
+            read_utf8_str(self, Some(start as u16));
         } else if start == 0x53 {
             chunk_len += 1;
-            self.read_utf8_str(None);
+            read_utf8_str(self, None);
         } else {
             panic!("string muse be end")
         }
@@ -312,7 +332,7 @@ impl<'a> Parser<'a> {
         let mut skip_idx = Vec::<u32>::new();
         let mut field_count = 0;
         for i in 0..len {
-            let range = self.with_stop_push(|this: &mut Self| this.read_string_key());
+            let range = self.read_string_key();
             let field_str = unsafe { str::from_utf8_unchecked(self.input.data.index(range)) };
             if field_str.starts_with("this$") {
                 skip_idx.push(i);
@@ -337,7 +357,7 @@ impl<'a> Parser<'a> {
     #[inline]
     fn read_object_def(&mut self) {
         let size = self.read_int();
-        let range = self.read_utf8_str(Some(size as u16));
+        let range = self.skip_utf8_str(Some(size as u16));
         let cls_name = unsafe { str::from_utf8_unchecked(self.input.data.index(range)) };
         let len = self.read_int() as u32;
         enum CacheStatus {
@@ -485,7 +505,7 @@ impl<'a> Parser<'a> {
                     MapKey::False => self.push_kv(FALSE.as_bytes(), false),
                     MapKey::Null => self.push_kv(NULL.as_bytes(), false),
                     MapKey::String => {
-                        let range = self.with_stop_push(|this: &mut Self| this.read_string_key());
+                        let range = self.read_string_key();
                         self.push_kv(self.input.data.index(range), false)
                     }
                     MapKey::Int(s) => self.push_kv(s.as_bytes(), false),

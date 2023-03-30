@@ -28,10 +28,10 @@ jobs:
         uses: goto-bus-stop/setup-zig@v1
         with:
           version: 0.10.0
-      - run: cargo install cargo-xwin
       - run: npm install
       - run: rustup toolchain install nightly-2022-12-12
       - run: rustup target add --toolchain nightly-2022-12-12 ${{ matrix.targets }}
+      - run: (cd ./lib/v2rust && cargo test -- --nocapture --test-threads=1)
       - run: npx napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist/  --zig --zig-abi-suffix 2.17 --target ${{ matrix.targets }}
       - uses: actions/upload-artifact@v3
         with:
@@ -62,10 +62,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
+      - name: Install ziglang
+        uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.10.0
       - run: cargo install cargo-xwin
       - run: npm install
       - run: rustup toolchain install nightly-2022-12-12
       - run: rustup target add --toolchain nightly-2022-12-12 ${{ matrix.targets }}
+      - run: (cd ./lib/v2rust && cargo test -- --nocapture --test-threads=1)
       - run: npx napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist/ --target ${{ matrix.targets }}
       - uses: actions/upload-artifact@v3
         with:
@@ -81,12 +86,9 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             docker: node:18-slim
             setup: 'exit 0'
-          - target: aarch64-unknown-linux-gnu
-            docker: ghcr.io/napi-rs/napi-rs/nodejs:aarch64-18
-            setup: 'exit 0'
     runs-on: ubuntu-latest
     needs:
-      - build-unix
+      - build-with-zig
     steps:
       - run: docker run --rm --privileged multiarch/qemu-user-static:register --reset
       - uses: actions/checkout@v3
@@ -106,6 +108,7 @@ jobs:
           image: ${{ matrix.settings.docker }}
           options: -v ${{ github.workspace }}:/build -w /build
           run: |
-            set -e
-            ${{ matrix.settings.setup }}
+            set -e ${{ matrix.settings.setup }}
+            apt update
+            apt install make
             npm run test
