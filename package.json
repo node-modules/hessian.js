@@ -8,7 +8,6 @@
     "lib"
   ],
   "scripts": {
-    "autod": "autod",
     "test": "make jshint && make test"
   },
   "repository": {
@@ -38,7 +37,6 @@
     "utility": "^1.15.0"
   },
   "devDependencies": {
-    "autod": "^3.0.1",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
     "istanbul": "^0.4.5",
