@@ -8,7 +8,9 @@
     "lib"
   ],
   "scripts": {
-    "test": "make jshint && make test"
+    "lint": "make jshint",
+    "test": "make test",
+    "ci": "npm run lint && npm run test"
   },
   "repository": {
     "type": "git",
