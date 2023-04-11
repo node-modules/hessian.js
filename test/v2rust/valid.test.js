@@ -141,10 +141,10 @@ describe("valid.test.js", function () {
       }
       const use = usage();
       assert.deepEqual(use.rustUsage, {
-        temp_definition_size: 16,
+        temp_definition_size: 4,
         map_shape_cache_size: 1,
         class_shape_cache_size: 1,
-        temp_buffer_size: 4864
+        temp_buffer_size: 128
       });
 
       assert.deepEqual(use.jsUsage, {
