@@ -35,7 +35,6 @@ test-cov cov: install
 test-all: test test-cov jshint
 
 benchmark:
-	@node benchmark/encode.js
 	@node benchmark/decode.js
 
 autod: install

@@ -14,72 +14,36 @@
  * Module dependencies.
  */
 
-var ByteBuffer = require('byte');
 var Benchmark = require('benchmark');
 var benchmarks = require('beautify-benchmark');
 var java = require('js-to-java');
 var hessian = require('../');
+const { assert } = require('console');
 
 var suite = new Benchmark.Suite();
 
-var simpleObject = {
-  $class: 'com.hessiantest.org.MockRequest',
-  $: {
-    id: 123,
-    name: 'getData',
-    args: [1, "name", "xxx1231231231231xxx123"]
-  }
-};
-
-var simpleObjectBuf1 = hessian.encode(simpleObject, '1.0');
-var simpleObjectBuf2 = hessian.encode(simpleObject, '2.0');
 
 var complexObject = {
   $class: 'com.hessiantest.org.MockRequest',
   $: {
     id: 123,
-    name: 'getData',
-    args: [1, "name", "xxx1231231231231xxx123"],
+    name: 123,
+    args: null,
     conn: {
-      $class: 'com.hessiantest.org.MockRequestConnection',
+      $class: "foo.class",
       $: {
         ctx: java.long(1024)
       }
     },
-    hashMap: {
-      name: 'getData',
-      args: [1, "name", "xxx1231231231231xxx123"],
-      conn: {
-        foo: 'bar'
-      }
-    }
+    foo: 111111111111,
+    b: true,
   }
 };
 
-var complexObjectBuf1 = hessian.encode(complexObject, '1.0');
-var complexObjectBuf2 = hessian.encode(complexObject, '1.0');
+var complexObjectBuf2 = hessian.encode(complexObject, '2.0');
 
-var number1Buf1 = hessian.encode(1, '1.0');
-var number1Buf2 = hessian.encode(1, '2.0');
-
-var dateBuf1 = hessian.encode(new Date(), '1.0');
-var dateBuf2 = hessian.encode(new Date(), '2.0');
-
-var longBuf1 = hessian.encode(java.long(300), '1.0');
-var longBuf2 = hessian.encode(java.long(300), '2.0');
-
-var stringBuf1 = hessian.encode('xxx1231231231231xxx123', '1.0');
-var stringBuf2 = hessian.encode('xxx1231231231231xxx123', '2.0');
-
-var bigStringBuf1 = hessian.encode(new Array(15).fill('xxx1231231231231xxx123').join(''), '1.0');
-var bigStringBuf2 = hessian.encode(new Array(15).fill('xxx1231231231231xxx123').join(''), '2.0');
-
-
-var arrBuf1 = hessian.encode([1, 2, 3], '1.0');
-var arrBuf2 = hessian.encode([1, 2, 3], '2.0');
-
-var arrObjectBuf1 = hessian.encode([1, "name", "xxx1231231231231xxx123"], '1.0');
-var arrObjectBuf2 = hessian.encode([1, "name", "xxx1231231231231xxx123"], '2.0');
+var complexObjectBuf2_2 = hessian.encode(complexObject, '2.0');
+complexObjectBuf2_2.useV2 = true;
 
 const classCache = new Map();
 classCache.enableCompile = true;
@@ -88,159 +52,31 @@ const options = {
 };
 
 var decoderV2RustState = hessian.DecoderV2Rust.makeState();
-function decoderV2Rust(bf) {
-  var decoderV2Rust = new hessian.DecoderV2Rust(bf);
-  decoderV2Rust.rustState = decoderV2RustState;
-  return decoderV2Rust.read();
+const { read } = decoderV2RustState.preset(complexObjectBuf2);
+
+function decoderV2Rust() {
+  decoderV2RustState.reset();
+  return read();
 }
 
+assert(JSON.stringify(hessian.decode(complexObjectBuf2, '2.0', options)) === JSON.stringify(decoderV2Rust(complexObjectBuf2)))
+
+// console.log(process.pid)
+// while (true) {
+//   hessian.decode(complexObjectBuf2, '2.0', options);
+// }
+
 suite
-
-.add('hessian1 decode: number', function() {
-  hessian.decode(number1Buf1, '1.0');
-})
-.add('hessian2 decode: number', function() {
-  hessian.decode(number1Buf2, '2.0');
-})
-
-.add('hessian2Rust decode: number', function() {
-  decoderV2Rust(number1Buf2);
-})
-.add('hessian1 decode: date', function() {
-  hessian.decode(dateBuf1, '1.0');
-})
-.add('hessian2 decode: date', function() {
-  hessian.decode(dateBuf2, '2.0');
-})
-.add('hessian2Rust decode: date', function() {
-  decoderV2Rust(dateBuf2);
-})
-
-.add('hessian1 decode: long', function() {
-  hessian.decode(longBuf1, '1.0');
-})
-.add('hessian2 decode: long', function() {
-  hessian.decode(longBuf2, '2.0');
-})
-.add('hessian2Rust decode: long', function() {
-  decoderV2Rust(longBuf2);
-})
-
-.add('hessian1 decode: string', function() {
-  hessian.decode(stringBuf1, '1.0');
-})
-.add('hessian2 decode: string', function() {
-  hessian.decode(stringBuf2, '2.0');
-})
-
-.add('hessian2Rust decode: string', function() {
-  decoderV2Rust(stringBuf2);
-})
-
-
-.add('hessian1 decode: big string', function() {
-  hessian.decode(bigStringBuf1, '1.0');
-})
-.add('hessian2 decode: big string', function() {
-  hessian.decode(bigStringBuf2, '2.0');
-})
-
-.add('hessian2Rust decode: big string', function() {
-  decoderV2Rust(bigStringBuf2);
-})
-
-
-.add('hessian1 decode: [1, 2, 3]', function() {
-  hessian.decode(arrBuf1, '1.0');
-})
-.add('hessian2 decode: [1, 2, 3]', function() {
-  hessian.decode(arrBuf2, '2.0');
-})
-.add('hessian2Rust decode: [1, 2, 3]', function() {
-  decoderV2Rust(arrBuf2);
-})
-.add('hessian1 decode array', function() {
-  hessian.decode(arrObjectBuf1, '1.0');
-})
-.add('hessian2 decode array', function() {
-  hessian.decode(arrObjectBuf2, '2.0');
-})
-
-.add('hessian2Rust decode: array', function() {
-  decoderV2Rust(arrObjectBuf2);
-})
-.add('hessian1 decode: simple object', function() {
-  hessian.decode(simpleObjectBuf1, '1.0', options);
-})
-.add('hessian2 decode: simple object', function() {
-  hessian.decode(simpleObjectBuf2, '2.0', options);
-})
-.add('hessian2Rust decode: simple object', function() {
-  decoderV2Rust(simpleObjectBuf2);
-})
-.add('hessian1 decode: complex object', function() {
-  hessian.decode(complexObjectBuf1, '1.0', options);
-})
 .add('hessian2 decode: complex object', function() {
   hessian.decode(complexObjectBuf2, '2.0', options);
+})
+.add('hessian2 dataview decode: complex object', function() {
+  hessian.decode(complexObjectBuf2_2, '2.0', options);
 })
 .add('hessian2Rust decode: complex object', function() {
   decoderV2Rust(complexObjectBuf2);
 })
-.add('hessian1 decode with type: number', function() {
-  hessian.decode(number1Buf1, '1.0', true);
-})
-.add('hessian2 decode with type: number', function() {
-  hessian.decode(number1Buf2, '2.0', true);
-})
 
-.add('hessian1 decode with type: date', function() {
-  hessian.decode(dateBuf1, '1.0', true);
-})
-.add('hessian2 decode with type: date', function() {
-  hessian.decode(dateBuf2, '2.0', true);
-})
-
-.add('hessian1 decode with type: long', function() {
-  hessian.decode(longBuf1, '1.0', true);
-})
-.add('hessian2 decode with type: long', function() {
-  hessian.decode(longBuf2, '2.0', true);
-})
-
-.add('hessian1 decode with type: string', function() {
-  hessian.decode(stringBuf1, '1.0', true);
-})
-.add('hessian2 decode with type: string', function() {
-  hessian.decode(stringBuf2, '2.0', true);
-})
-
-.add('hessian1 decode with type: [1, 2, 3]', function() {
-  hessian.decode(arrBuf1, '1.0', true);
-})
-.add('hessian2 decode with type: [1, 2, 3]', function() {
-  hessian.decode(arrBuf2, '2.0', true);
-})
-.add('hessian1 decode with type array', function() {
-  hessian.decode(arrObjectBuf1, '1.0', true);
-})
-.add('hessian2 decode with type array', function() {
-  hessian.decode(arrObjectBuf2, '2.0', true);
-})
-
-.add('hessian1 decode with type: simple object', function() {
-  hessian.decode(simpleObjectBuf1, '1.0', true);
-})
-.add('hessian2 decode with type: simple object', function() {
-  hessian.decode(simpleObjectBuf2, '2.0', true);
-})
-
-.add('hessian1 decode with type: complex object', function() {
-  hessian.decode(complexObjectBuf1, '1.0', true);
-})
-.add('hessian2 decode with type: complex object', function() {
-  hessian.decode(complexObjectBuf2, '2.0', true);
-})
 
 .on('cycle', function(event) {
   benchmarks.add(event.target);
