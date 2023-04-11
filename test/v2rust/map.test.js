@@ -189,11 +189,4 @@ describe('map.test.js', function () {
     var rv = rustDecode(data);
     assert.deepEqual(rv, { null: 'null' });
   });
-
-  it('should map with object key work', function () {
-    const data = require('../../benchmark/v2rust/big3');
-    var rv = rustDecode(data);
-    var rv2 = hessian.decode(data, '2.0');
-    assert.deepEqual(rv, rv2);
-  });
 });

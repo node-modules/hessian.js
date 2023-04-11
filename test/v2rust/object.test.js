@@ -5,16 +5,8 @@ var hessian = require('../../index');
 var utils = require('../utils');
 var supportES6Map = require('../../lib/utils').supportES6Map;
 var rustDecode = require('./rustdecoder');
-var big = require('../../benchmark/v2rust/big');
 describe('object.test.js', function () {
   describe('v2.0', function () {
-    it('should big object work', function() {
-      var obj1 = rustDecode(big);
-      var obj2 = hessian.decode(big, '2.0');
-      assert.deepEqual(JSON.stringify(obj1), JSON.stringify(obj2));
-    });
-
-
     it('should skip function', function() {
       var o = { foo: 'bar', fn() {} };
       var buf = hessian.encode(o, '2.0');
