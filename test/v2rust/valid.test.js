@@ -56,7 +56,7 @@ describe("valid.test.js", function () {
         assert(rustDecode(bf) === 'hello');
       } catch (e) {
         assert(
-          e ===
+          e.message ===
           "input太长了，达到了outputBufferLength: 1的3/5，可能会产生意想不到的结果，出于安全考虑抛出此异常，请精简返回结果，或加大输出buffer的size"
         );
         return;
@@ -112,7 +112,7 @@ describe("valid.test.js", function () {
       } catch (e) {
         console.log(e);
         assert(
-          e ===
+          e.message ===
           "input太长了，达到了outputBufferLength: 5242880的3/5，可能会产生意想不到的结果，出于安全考虑抛出此异常，请精简返回结果，或加大输出buffer的size"
         );
         return;
