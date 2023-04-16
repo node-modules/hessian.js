@@ -1,8 +1,8 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
-var utils = require('./utils');
+const assert = require('assert');
+const hessian = require('..');
+const utils = require('./utils');
 
 describe('date.test.js', function () {
   var dateBuffer = new Buffer(['d'.charCodeAt(0), 0x00, 0x00, 0x00, 0xd0, 0x4b, 0x92, 0x84, 0xb8]);

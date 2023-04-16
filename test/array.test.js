@@ -1,7 +1,7 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
+const assert = require('assert');
+const hessian = require('..');
 
 describe('array.test.js', function () {
   it('should write null v1', function () {

@@ -1,12 +1,12 @@
 'use strict';
 
-var assert = require('assert');
-var fs = require('fs');
-var path = require('path');
-var hessian = require('../');
-var Encoder = hessian.Encoder;
-var Decoder = hessian.Decoder;
-var utils = require('../lib/utils');
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const hessian = require('..');
+const Encoder = hessian.Encoder;
+const Decoder = hessian.Decoder;
+const utils = require('../lib/utils');
 
 var encoder = new Encoder();
 var decoder = new Decoder();
@@ -40,7 +40,7 @@ describe('hessian v1', function () {
 
     it('should write and read false ok', function () {
       var buf = encoder.writeBool(false).get();
-      assert.deepEqual(buf, new Buffer('F'));
+      assert.deepEqual(buf, Buffer.from('F'));
 
       assert(decoder.init(buf).readBool() === false);
     });
@@ -208,7 +208,7 @@ describe('hessian v1', function () {
     it('should write and read small bytes ok', function () {
       var inputBuffer = new Buffer([1, 2, 3, 4, 5]);
       var buf = encoder.writeBytes(inputBuffer).get();
-      assert(buf.inspect() === '<Buffer 42 00 05 01 02 03 04 05>');
+      assert.equal(buf.inspect(), '<Buffer 42 00 05 01 02 03 04 05>');
       assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
 
@@ -216,7 +216,7 @@ describe('hessian v1', function () {
       var inputBuffer = fixtureBytes;
       var inputLength = inputBuffer.length;
       var buf = encoder.writeBytes(inputBuffer).get();
-      assert(buf.length === inputLength +
+      assert.equal(buf.length, inputLength +
         Math.ceil(inputLength / utils.MAX_BYTE_TRUNK_SIZE) * 3);
       assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
@@ -235,12 +235,12 @@ describe('hessian v1', function () {
     });
 
     it('should bytes length equal MAX_BYTE_TRUNK_SIZE work', function () {
-      var oneTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE);
+      var oneTrunkBuf = Buffer.alloc(utils.MAX_BYTE_TRUNK_SIZE);
       var buf = encoder.writeBytes(oneTrunkBuf).get();
       assert.deepEqual(decoder.init(buf).readBytes(), oneTrunkBuf);
 
       encoder.clean();
-      var twoTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE * 2);
+      var twoTrunkBuf = Buffer.alloc(utils.MAX_BYTE_TRUNK_SIZE * 2);
       buf = encoder.writeBytes(twoTrunkBuf).get();
       assert.deepEqual(decoder.init(buf).readBytes(), twoTrunkBuf);
     });
@@ -280,7 +280,7 @@ describe('hessian v1', function () {
       var inputStr = fixtureString;
       var inputStrLength = inputStr.length;
       var buf = encoder.writeString(inputStr).get();
-      assert(buf.length === new Buffer(inputStr).length +
+      assert.equal(buf.length, Buffer.from(inputStr).length +
         Math.ceil(inputStrLength / utils.MAX_CHAR_TRUNK_SIZE) * 3);
       assert(decoder.init(buf).readString() === inputStr);
     });

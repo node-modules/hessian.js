@@ -1,7 +1,7 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
+const assert = require('assert');
+const hessian = require('..');
 
 describe('boolean.test.js', function () {
   it('should read true and false', function () {

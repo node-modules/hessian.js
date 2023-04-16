@@ -1,8 +1,8 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
-var supportES6Map = require('../lib/utils').supportES6Map;
+const assert = require('assert');
+const hessian = require('..');
+const supportES6Map = require('../lib/utils').supportES6Map;
 
 describe('utils.test.js', function () {
   describe('v1.0', function () {

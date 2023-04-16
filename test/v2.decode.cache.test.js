@@ -1,11 +1,11 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
-var utils = require('./utils');
-var supportES6Map = require('../lib/utils').supportES6Map;
+const assert = require('assert');
+const hessian = require('..');
+const utils = require('./utils');
+const supportES6Map = require('../lib/utils').supportES6Map;
 
-var cache = new Map();
+const cache = new Map();
 
 describe('v2.decode.cache.test.js', function () {
   var decode = hessian.decode;
