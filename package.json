@@ -12,7 +12,8 @@
     "test-cov": "egg-bin cov",
     "lint": "jshint .",
     "ci": "npm run lint && npm run test-cov",
-    "benchmark": "node benchmark/encode.js && node benchmark/decode.js"
+    "benchmark": "node benchmark/encode.js && node benchmark/decode.js",
+    "contributor": "git-contributor"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,7 @@
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
     "egg-bin": "^6.3.0",
+    "git-contributor": "^2.0.0",
     "js-to-java": "^2.6.1",
     "jshint": "^2.10.2"
   },
