@@ -1,6 +1,6 @@
 'use strict';
 
-const { describe, it } = require('test');
+const { describe, it, afterEach } = require('test');
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
@@ -281,7 +281,7 @@ describe('hessian v1', function () {
       var inputStr = fixtureString;
       var inputStrLength = inputStr.length;
       var buf = encoder.writeString(inputStr).get();
-      assert(buf.length === new Buffer(inputStr).length +
+      assert(buf.length === Buffer.from(inputStr).length +
         Math.ceil(inputStrLength / utils.MAX_CHAR_TRUNK_SIZE) * 3);
       assert(decoder.init(buf).readString() === inputStr);
     });
