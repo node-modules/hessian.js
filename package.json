@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
-    "byte": "^1.4.1",
+    "byte": "^2.0.0",
     "is-type-of": "^1.2.1",
     "long": "^4.0.0",
     "utility": "^1.16.1"
