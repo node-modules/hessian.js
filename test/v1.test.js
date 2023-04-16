@@ -209,7 +209,7 @@ describe('hessian v1', function () {
     it('should write and read small bytes ok', function () {
       var inputBuffer = new Buffer([1, 2, 3, 4, 5]);
       var buf = encoder.writeBytes(inputBuffer).get();
-      assert(buf.inspect() === '<Buffer 42 00 05 01 02 03 04 05>');
+      assert.equal(buf.inspect(), '<Buffer 42 00 05 01 02 03 04 05>');
       assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
 
@@ -217,7 +217,7 @@ describe('hessian v1', function () {
       var inputBuffer = fixtureBytes;
       var inputLength = inputBuffer.length;
       var buf = encoder.writeBytes(inputBuffer).get();
-      assert(buf.length === inputLength +
+      assert.equal(buf.length, inputLength +
         Math.ceil(inputLength / utils.MAX_BYTE_TRUNK_SIZE) * 3);
       assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
