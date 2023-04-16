@@ -1,10 +1,11 @@
 'use strict';
 
-var assert = require('assert');
-var java = require('js-to-java');
-var Long = require('long');
-var hessian = require('../');
-var utils = require('./utils');
+const { describe, it } = require('test');
+const assert = require('assert');
+const java = require('js-to-java');
+const Long = require('long');
+const hessian = require('..');
+const utils = require('./utils');
 
 describe('long.test.js', function () {
   var longBuffer = new Buffer(['L'.charCodeAt(0), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x2c]);

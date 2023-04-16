@@ -1,8 +1,9 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
-var utils = require('./utils');
+const { describe, it } = require('test');
+const assert = require('assert');
+const hessian = require('..');
+const utils = require('./utils');
 
 describe('binary.test.js', function () {
   it('should read "foo" binary', function () {

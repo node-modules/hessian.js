@@ -1,11 +1,9 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var hessian = require('../');
-var assert = require('assert');
-var utils = require('../lib/utils');
-var java = require('js-to-java');
+const { describe, it } = require('test');
+const assert = require('assert');
+const java = require('js-to-java');
+const hessian = require('..');
 
 describe('hessian v2', function () {
   it('v2 list encode should ok', function () {

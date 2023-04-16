@@ -1,9 +1,10 @@
 'use strict';
 
-var assert = require('assert');
-var java = require('js-to-java');
-var hessian = require('../');
-var utils = require('./utils');
+const { describe, it } = require('test');
+const assert = require('assert');
+const java = require('js-to-java');
+const hessian = require('..');
+const utils = require('./utils');
 
 describe('list.test.js', function () {
   var intListBuffer = Buffer.concat([

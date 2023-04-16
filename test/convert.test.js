@@ -1,8 +1,9 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
-var java = require('js-to-java');
+const { describe, it } = require('test');
+const assert = require('assert');
+const java = require('js-to-java');
+const hessian = require('..');
 
 describe('test/convert.test.js', function() {
   [

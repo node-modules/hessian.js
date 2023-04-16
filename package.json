@@ -8,8 +8,8 @@
     "lib"
   ],
   "scripts": {
-    "test": "mocha -R spec -t 15000 test/*.test.js",
-    "test-cov": "istanbul cover _mocha -- -t 15000 test/*.test.js",
+    "test": "node--test --test-reporter=spec",
+    "test-cov": "c8 -r lcov npm run test",
     "lint": "jshint .",
     "ci": "npm run lint && npm run test-cov",
     "benchmark": "node benchmark/encode.js && node benchmark/decode.js"
@@ -34,20 +34,17 @@
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
     "byte": "^1.4.1",
-    "debug": "^3.2.6",
     "is-type-of": "^1.2.1",
     "long": "^4.0.0",
     "utility": "^1.16.1"
   },
   "devDependencies": {
-    "autod": "^3.1.0",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
-    "istanbul": "^0.4.5",
+    "c8": "^7.13.0",
     "js-to-java": "^2.6.1",
     "jshint": "^2.10.2",
-    "mm": "^2.5.0",
-    "mocha": "^3.5.3"
+    "test": "^3.3.0"
   },
   "engines": {
     "node": ">= 0.12.0"

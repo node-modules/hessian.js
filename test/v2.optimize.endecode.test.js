@@ -1,11 +1,10 @@
 'use strict';
 
-var assert = require('assert');
-var hessian = require('../');
-var utils = require('./utils');
-var supportES6Map = require('../lib/utils').supportES6Map;
-var DecoderV2 = require('../lib/v2_optimize/decoder');
-var EncoderV2 = require('../lib/v2_optimize/encoder');
+const { describe, it } = require('test');
+const assert = require('assert');
+const hessian = require('..');
+const DecoderV2 = require('../lib/v2_optimize/decoder');
+const EncoderV2 = require('../lib/v2_optimize/encoder');
 
 var cache = [];
 

@@ -1,7 +1,8 @@
 'use strict';
 
-var assert = require('assert');
-var utils = require('../lib/utils');
+const { describe, it } = require('test');
+const assert = require('assert');
+const utils = require('../lib/utils');
 
 describe('utils.test.js', function () {
   describe('getSerializer()', function () {
