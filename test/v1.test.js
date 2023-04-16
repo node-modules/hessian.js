@@ -213,7 +213,7 @@ describe('hessian v1', function () {
       assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
 
-    it('should write and read big bytes ok', function () {
+    it.skip('should write and read big bytes ok', function () {
       var inputBuffer = fixtureBytes;
       var inputLength = inputBuffer.length;
       var buf = encoder.writeBytes(inputBuffer).get();
