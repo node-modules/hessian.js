@@ -1,6 +1,5 @@
 'use strict';
 
-const { describe, it } = require('test');
 const assert = require('assert');
 const java = require('js-to-java');
 const Long = require('long');

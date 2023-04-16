@@ -1,6 +1,5 @@
 'use strict';
 
-const { describe, it } = require('test');
 const assert = require('assert');
 const utils = require('../lib/utils');
 

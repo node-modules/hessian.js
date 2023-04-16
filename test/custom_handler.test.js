@@ -1,6 +1,5 @@
 'use strict';
 
-const { describe, it } = require('test');
 const assert = require('assert');
 const hessian = require('..');
 const supportES6Map = require('../lib/utils').supportES6Map;

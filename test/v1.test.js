@@ -1,6 +1,5 @@
 'use strict';
 
-const { describe, it, afterEach } = require('test');
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
@@ -41,7 +40,7 @@ describe('hessian v1', function () {
 
     it('should write and read false ok', function () {
       var buf = encoder.writeBool(false).get();
-      assert.deepEqual(buf, new Buffer('F'));
+      assert.deepEqual(buf, Buffer.from('F'));
 
       assert(decoder.init(buf).readBool() === false);
     });
@@ -213,7 +212,7 @@ describe('hessian v1', function () {
       assert.deepEqual(decoder.init(buf).readBytes(), inputBuffer);
     });
 
-    it.skip('should write and read big bytes ok', function () {
+    it('should write and read big bytes ok', function () {
       var inputBuffer = fixtureBytes;
       var inputLength = inputBuffer.length;
       var buf = encoder.writeBytes(inputBuffer).get();
@@ -236,12 +235,12 @@ describe('hessian v1', function () {
     });
 
     it('should bytes length equal MAX_BYTE_TRUNK_SIZE work', function () {
-      var oneTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE);
+      var oneTrunkBuf = Buffer.alloc(utils.MAX_BYTE_TRUNK_SIZE);
       var buf = encoder.writeBytes(oneTrunkBuf).get();
       assert.deepEqual(decoder.init(buf).readBytes(), oneTrunkBuf);
 
       encoder.clean();
-      var twoTrunkBuf = new Buffer(utils.MAX_BYTE_TRUNK_SIZE * 2);
+      var twoTrunkBuf = Buffer.alloc(utils.MAX_BYTE_TRUNK_SIZE * 2);
       buf = encoder.writeBytes(twoTrunkBuf).get();
       assert.deepEqual(decoder.init(buf).readBytes(), twoTrunkBuf);
     });
@@ -281,7 +280,7 @@ describe('hessian v1', function () {
       var inputStr = fixtureString;
       var inputStrLength = inputStr.length;
       var buf = encoder.writeString(inputStr).get();
-      assert(buf.length === Buffer.from(inputStr).length +
+      assert.equal(buf.length, Buffer.from(inputStr).length +
         Math.ceil(inputStrLength / utils.MAX_CHAR_TRUNK_SIZE) * 3);
       assert(decoder.init(buf).readString() === inputStr);
     });
