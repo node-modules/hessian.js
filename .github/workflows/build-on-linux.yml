@@ -78,23 +78,37 @@ jobs:
           path: lib/v2rust/harness/dist/
           if-no-files-found: error
     
-  test:
+  test-docker:
     strategy:
       fail-fast: false
       matrix:
         settings:
           - target: x86_64-unknown-linux-gnu
+            docker: node:18-slim
+            setup: 'exit 0'
     runs-on: ubuntu-latest
     needs:
       - build-with-zig
     steps:
+      - run: docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install dependencies
+        run: npm install
       - name: Download bindings
         uses: actions/download-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
           path: lib/v2rust/harness/dist/
       - name: Run tests
-        uses: artusjs/github-actions/.github/workflows/node-test.yml@master
+        uses: addnab/docker-run-action@v3
         with:
-          os: 'ubuntu-latest'
-          version: '8, 10, 12, 14, 16, 18'
+          image: ${{ matrix.settings.docker }}
+          options: -v ${{ github.workspace }}:/build -w /build
+          run: |
+            set -e ${{ matrix.settings.setup }}
+            apt update
+            apt install make
+            make test-v2rust
