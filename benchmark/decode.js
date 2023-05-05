@@ -87,9 +87,11 @@ const options = {
   classCache,
 };
 
-var decoderV2RustState = hessian.DecoderV2Rust.makeState();
+const DecoderV2Rust = require('../lib/v2rust/decoder');
+
+var decoderV2RustState = DecoderV2Rust.makeState();
 function decoderV2Rust(bf) {
-  var decoderV2Rust = new hessian.DecoderV2Rust(bf);
+  var decoderV2Rust = new DecoderV2Rust(bf);
   decoderV2Rust.rustState = decoderV2RustState;
   return decoderV2Rust.read();
 }
