@@ -1,5 +1,5 @@
-TESTS = test/{,!(v2rust)/**}/*.test.js
-TESTS-V2RUST = test/v2rust/**/*.test.js
+TESTS = 'test/{,!(v2rust)/**}/*.test.js'
+TESTS-V2RUST = 'test/v2rust/**/*.test.js'
 
 REPORTER = spec
 TIMEOUT = 10000
