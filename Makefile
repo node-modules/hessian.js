@@ -1,4 +1,6 @@
-TESTS = test/*.test.js
+TESTS = 'test/{,!(v2rust)/**}/*.test.js'
+TESTS-V2RUST = 'test/v2rust/**/*.test.js'
+
 REPORTER = spec
 TIMEOUT = 10000
 MOCHA_OPTS =
@@ -15,6 +17,19 @@ test:
 		--timeout $(TIMEOUT) \
 		$(MOCHA_OPTS) \
 		$(TESTS)
+		
+test-v2rust:
+	@NODE_ENV=test ./node_modules/.bin/mocha \
+		--reporter $(REPORTER) \
+		--timeout $(TIMEOUT) \
+		$(MOCHA_OPTS) \
+		$(TESTS-V2RUST)
+
+	@NODE_ENV=test maxCacheLength=0 ./node_modules/.bin/mocha \
+		--reporter $(REPORTER) \
+		--timeout $(TIMEOUT) \
+		$(MOCHA_OPTS) \
+		$(TESTS-V2RUST)
 
 test-cov cov: install
 	@NODE_ENV=test node \

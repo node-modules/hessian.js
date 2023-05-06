@@ -5,16 +5,20 @@ lib-cov
 *.out
 *.pid
 *.gz
+*.node
+
 
 pids
 logs
 results
-
+target/
+dist/
 npm-debug.log
 node_modules
 
 .DS_Store
 coverage.html
 coverage/
+
 
 .idea/

@@ -10,7 +10,8 @@
   "scripts": {
     "lint": "make jshint",
     "test": "make test",
-    "ci": "npm run lint && npm run test"
+    "ci": "npm run lint && npm run test",
+    "build::platform": "napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
     "jshint": "^2.9.6",
     "mm": "^2.4.1",
     "mocha": "^3.5.3",
+    "@napi-rs/cli": "^2.0.0",
     "should": "^13.2.3"
   },
   "engines": {
