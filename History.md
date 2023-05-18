@@ -1,4 +1,13 @@
 
+1.10.0 / 2023-05-18
+==================
+
+**features**
+  * [[`450dc5c`](http://github.com/node-modules/hessian.js/commit/450dc5cbb68fbf1d60f8644c1dee5c7f54eabea4)] - feat: optimize hessian v2 (#134) (weipeng <<pythonvoid@outlook.com>>)
+
+**others**
+  * [[`ed0af58`](http://github.com/node-modules/hessian.js/commit/ed0af588190fc754d16977fa3c9bd1b2691e243f)] - test: run ci on 1.x (#135) (fengmk2 <<fengmk2@gmail.com>>)
+
 1.9.2 / 2020-09-17
 ==================
 
