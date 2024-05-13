@@ -1,4 +1,10 @@
 
+1.11.0 / 2024-05-13
+==================
+
+**features**
+  * [[`17dc8c6`](http://github.com/node-modules/hessian.js/commit/17dc8c63721211406215275029c18cd793910ddc)] - feat: validate the class name (#139) (fengmk2 <<suqian.yf@antgroup.com>>)
+
 1.10.0 / 2023-05-18
 ==================
 
