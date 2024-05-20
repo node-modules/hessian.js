@@ -612,10 +612,19 @@ describe('hessian v1', function () {
     });
 
     it('should decode error', function () {
-      var buf = new Buffer([0x50, 0x11]);
+      var buf = Buffer.from([0x50, 0x11]);
       assert.throws(function() {
         hessian.decode(buf);
       }, null, 'hessian read got an unexpect code: 0x50');
+    });
+
+    it.only('should decode HashMap SubClass work', function () {
+      const buf = Buffer.from('4D74002A636F6D2E616C697061792E6865737369616E2E6578616D706C652E50726F6365737342617369634D61700668656C6C6F31076C61796F74746F06696E736572744D7590047878787804787878780668656C6C6F32086C61796F74746F327A0668656C6C6F32076C61796F74746F0568656C6C6F076C61796F74746F7A', 'hex');
+      const subMap = hessian.decode(buf, '2.0', { withType: true });
+      console.log(JSON.stringify(subMap, null, 2));
+      subMap.isMap = true;
+      const subMapHessian = hessian.encode(subMap, '2.0');
+      console.log(subMapHessian.toString());
     });
   });
 });
