@@ -1,4 +1,10 @@
 
+1.12.0 / 2024-05-24
+==================
+
+**features**
+  * [[`f45adff`](http://github.com/node-modules/hessian.js/commit/f45adffe9a41fe4e1a8025918244eb2544a049fe)] - feat: use byte@2 and remove debug, utility deps (#140) (fengmk2 <<suqian.yf@antgroup.com>>)
+
 1.11.0 / 2024-05-13
 ==================
 
