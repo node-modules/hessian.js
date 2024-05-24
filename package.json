@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "make jshint",
     "test": "make test",
-    "ci": "npm run lint && npm run test",
+    "ci": "npm run lint && make cov",
     "build::platform": "napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist"
   },
   "repository": {
