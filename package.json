@@ -11,7 +11,8 @@
     "lint": "make jshint",
     "test": "make test",
     "ci": "npm run lint && make cov",
-    "build::platform": "napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist"
+    "build::platform": "napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist",
+    "contributor": "git-contributor"
   },
   "repository": {
     "type": "git",
@@ -38,14 +39,15 @@
     "long": "^4.0.0"
   },
   "devDependencies": {
+    "@napi-rs/cli": "^2.0.0",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
+    "git-contributor": "^2.1.5",
     "istanbul": "^0.4.5",
     "js-to-java": "^2.6.0",
     "jshint": "^2.9.6",
     "mm": "^2.4.1",
     "mocha": "^3.5.3",
-    "@napi-rs/cli": "^2.0.0",
     "should": "^13.2.3"
   },
   "engines": {
