@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "make jshint",
     "test": "make test",
-    "ci": "npm run lint && npm run test",
+    "ci": "npm run lint && make cov",
     "build::platform": "napi build --cargo-cwd ./lib/v2rust --platform --release ./lib/v2rust/harness/dist"
   },
   "repository": {
@@ -33,11 +33,9 @@
   "homepage": "https://github.com/node-modules/hessian.js",
   "dependencies": {
     "@protobufjs/codegen": "^2.0.4",
-    "byte": "^1.4.1",
-    "debug": "^3.2.6",
+    "byte": "^2.0.0",
     "is-type-of": "^1.2.1",
-    "long": "^4.0.0",
-    "utility": "^1.15.0"
+    "long": "^4.0.0"
   },
   "devDependencies": {
     "beautify-benchmark": "^0.2.4",
