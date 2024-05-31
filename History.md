@@ -1,4 +1,13 @@
 
+1.12.1 / 2024-05-31
+==================
+
+**fixes**
+  * [[`13a11f6`](http://github.com/node-modules/hessian.js/commit/13a11f6a3b032fa98dd66448520ee4aa866e4277)] - fix: ignore rust target in pkg files (#141) (killa <<killa07071201@gmail.com>>)
+
+**others**
+  * [[`74bbf3f`](http://github.com/node-modules/hessian.js/commit/74bbf3fbfb9e325aa8bb892abc656608bedf95a2)] - chore: add benchmark new results (fengmk2 <<suqian.yf@antgroup.com>>)
+
 1.12.0 / 2024-05-24
 ==================
 
