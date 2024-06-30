@@ -150,20 +150,24 @@ describe('hessian v1', function () {
         [1.111, '<Buffer 44 3f f1 c6 a7 ef 9d b2 2d>'],
         // 1e320
         [Infinity, '<Buffer 44 7f f0 00 00 00 00 00 00>'],
+        [-Infinity, '<Buffer 44 ff f0 00 00 00 00 00 00>'],
       ];
 
       tests.forEach(function (t) {
         var buf = encoder.writeDouble(t[0]).get();
-        assert(buf.inspect() === t[1]);
-        assert(decoder.init(buf).readDouble() === t[0]);
+        assert.equal(buf.inspect(), t[1]);
+        assert.equal(decoder.init(buf).readDouble(), t[0]);
         encoder.clean();
         decoder.clean();
       });
+      const negativeInfinityBuffer = encoder.writeDouble(-Infinity).get();
+      const v = decoder.init(negativeInfinityBuffer).readDouble();
+      assert.equal(JSON.stringify({ v }), '{"v":null}');
     });
 
     it('should read double error', function () {
       var tests = [
-        [new Buffer([0x45, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
+        [Buffer.from([0x45, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         'hessian readDouble only accept label `D` but got unexpect label `E`']
       ];
       tests.forEach(function (t) {
