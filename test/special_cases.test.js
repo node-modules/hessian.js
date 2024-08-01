@@ -88,5 +88,39 @@ describe('test/special_cases.test', function() {
         ensureValidIdentifier('a+c');
       }, /invalid identifier\: a\+c/);
     });
+
+    it('should write type with ref for the second time', function () {
+      const encoder = hessian.encoderV2.reset();
+      // writeObject
+      encoder._writeObjectBegin('org.bson.Document');
+      encoder.writeInt(2);
+      encoder.writeString('key1');
+      encoder.writeString('key2');
+      encoder._writeObjectBegin('org.bson.Document');
+      // writeMap key1
+      encoder.byteBuffer.put(0x4d);
+      encoder.writeType('org.bson.Column');
+      encoder.byteBuffer.put(0x7a);
+      // writeMap key2
+      encoder.byteBuffer.put(0x4d);
+      encoder.writeType('org.bson.Column');
+      encoder.byteBuffer.put(0x7a);
+
+      const buf = encoder.get();
+      const res = hessian.decode(buf, '2.0', { withType: true });
+      assert.deepEqual(res, {
+        $class: 'org.bson.Document',
+        $: {
+          key1: {
+            $class: 'org.bson.Column',
+            $: {},
+          },
+          key2: {
+            $class: 'org.bson.Column',
+            $: {},
+          },
+        },
+      });
+    });
   });
 });
