@@ -1,4 +1,13 @@
 
+1.12.2 / 2024-08-05
+==================
+
+**fixes**
+  * [[`1de56e9`](http://github.com/node-modules/hessian.js/commit/1de56e93acf475dafd995d8142357dbb9c151177)] - fix: missing ref flag when writing type ref (#143) (Gxkl <<gxkl203@gmail.com>>)
+
+**others**
+  * [[`7c14b64`](http://github.com/node-modules/hessian.js/commit/7c14b640fcbcee5f7301755454de18867982a8e5)] - test: add `-Infinity` double test cases (#142) (fengmk2 <<suqian.yf@antgroup.com>>)
+
 1.12.1 / 2024-05-31
 ==================
 
