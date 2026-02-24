@@ -7,13 +7,13 @@ hessian.js
 [![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/hessian.js.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/hessian.js
+[npm-url]: https://npmx.dev/package/hessian.js
 [github-action-image]: https://github.com/node-modules/hessian.js/actions/workflows/nodejs.yml/badge.svg
 [github-action-url]: https://github.com/node-modules/hessian.js/actions/workflows/nodejs.yml
 [codecov-image]: https://codecov.io/github/node-modules/hessian.js/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/node-modules/hessian.js?branch=master
 [download-image]: https://img.shields.io/npm/dm/hessian.js.svg?style=flat-square
-[download-url]: https://npmjs.org/package/hessian.js
+[download-url]: https://npmx.dev/package/hessian.js
 
 Hessian Serialization [1.0](http://hessian.caucho.com/doc/hessian-1.0-spec.xtp) and
 [2.0](http://hessian.caucho.com/doc/hessian-serialization.html) (base on version [4.0.7](http://mvnrepository.com/artifact/com.caucho/hessian/4.0.7)) written by pure JavaScript.
